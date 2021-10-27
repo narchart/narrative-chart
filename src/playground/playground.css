@@ -1,0 +1,52 @@
+.header {
+    height       : 60px;
+    border-bottom: solid 2px lightgray;
+    display      : flex;
+    align-items  : center;
+    font-size    : 20px;
+    font-weight  : bold;
+}
+
+.pannelWrapper {
+    display       : flex;
+    flex-direction: row;
+    height        : calc(100% - 62px);
+    border-bottom : solid 1px lightgray
+}
+
+.editPannel {
+    flex            : 1;
+    overflow        : scroll;
+    background-color: #F4F5FA;
+    border-right    : solid 1px lightgray
+}
+
+.chartPannel {
+    flex: 1;
+}
+
+pre {
+    outline: 1px solid #ccc;
+    padding: 5px;
+    margin : 5px;
+}
+
+.string {
+    color: green;
+}
+
+.number {
+    color: darkorange;
+}
+
+.boolean {
+    color: blue;
+}
+
+.null {
+    color: magenta;
+}
+
+.key {
+    color: red;
+}

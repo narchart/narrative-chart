@@ -1,0 +1,25 @@
+import Pipeline from './pipeline';
+import {AddChart} from './actions';
+
+class Parser {
+    constructor() {
+        this._parsedData = []
+    }
+
+    parse(spec) {
+        let dataspec = spec.data ? spec.data : {};
+        let factspec = spec.fact ? spec.fact : {};
+        let actionspecs = spec.actions ? spec.actions : [];
+        let pipeline = new Pipeline()
+        if (actionspecs.length > 0) {
+            for (const actionspec in actionspecs) {
+                let action = new AddChart(actionspec);
+                // TODO: deal with actionspec
+                pipeline.add(action)
+            }
+        }
+        return {dataspec, factspec, pipeline};
+    }
+}
+
+export default Parser;

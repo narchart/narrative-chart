@@ -1,0 +1,53 @@
+{
+    "fact": {
+    "type": "trend",
+    "subspace": [],
+    "measure": [
+        {
+        "field": "Recovered",
+        "aggregate": "sum"
+        }
+    ],
+    "breakdown": [
+        {
+        "field": "Date"
+        }
+    ],
+    "focus": [
+    ]
+    },
+    "data": {
+    "url": "http://chart.datacalliope.com/covid19World.csv",
+    "schema": [
+        {
+        "field": "Date",
+        "type": "temporal",
+        "pictype": "time"
+        },
+        {
+        "field": "Country",
+        "type": "geographical",
+        "subtype": "world",
+        "pictype": "map"
+        },
+        {
+        "field": "Confirmed Cases",
+        "type": "numerical"
+        },
+        {
+        "field": "Recovered",
+        "type": "numerical"
+        },
+        {
+        "field": "Deaths",
+        "type": "numerical"
+        }
+    ]
+    },
+    "actions": [
+        {
+            "add": "chart",
+            "mark": "line"
+        }
+    ]
+}

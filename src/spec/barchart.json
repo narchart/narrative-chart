@@ -1,0 +1,46 @@
+{
+    "data": {
+        "url": "http://chart.datacalliope.com/CarSales.csv",
+        "schema": [
+        {
+            "field": "Year",
+            "type": "temporal"
+        },
+        {
+            "field": "Brand",
+            "type": "categorical"
+        },
+        {
+            "field": "Category",
+            "type": "categorical"
+        },
+        {
+            "field": "Sales",
+            "type": "numerical"
+        }
+        ]
+    },
+    "fact": {
+    "type": "distribution",
+    "subspace": [],
+    "measure": [
+        {
+        "field": "Sales",
+        "aggregate": "count"
+        }
+    ],
+    "breakdown": [
+        {
+        "field": "Brand"
+        }
+    ],
+    "focus": [
+    ]
+    },
+    "actions": [
+        {
+            "add": "chart",
+            "mark": "bar"
+        }
+    ]
+}

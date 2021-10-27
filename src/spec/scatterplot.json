@@ -1,0 +1,61 @@
+{
+    "data": {
+    "url": "http://chart.datacalliope.com/covid19World.csv",
+    "schema": [
+        {
+        "field": "Date",
+        "type": "temporal",
+        "pictype": "time"
+        },
+        {
+        "field": "Country",
+        "type": "geographical",
+        "subtype": "world",
+        "pictype": "map"
+        },
+        {
+        "field": "Confirmed Cases",
+        "type": "numerical"
+        },
+        {
+        "field": "Recovered",
+        "type": "numerical"
+        },
+        {
+        "field": "Deaths",
+        "type": "numerical"
+        }
+    ]
+    },
+    "fact": {
+        "type": "association",
+        "subspace": [],
+        "measure": [
+        {
+            "field": "Confirmed Cases",
+            "aggregate": "sum"
+        },
+        {
+            "field": "Deaths",
+            "aggregate": "sum"
+        }
+        ],
+        "breakdown": [
+        {
+            "field": "Country"
+        }
+        ],
+        "focus": [
+        {
+            "field": "Country",
+            "value": "United Kingdom"
+        }
+        ]
+    },
+    "actions": [
+        {
+            "add": "chart",
+            "mark": "point"
+        }
+    ]
+}

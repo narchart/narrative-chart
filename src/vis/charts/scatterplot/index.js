@@ -1,0 +1,171 @@
+import * as d3 from 'd3';
+import Chart from '../chart';
+import Color from '../../visualization/color';
+
+class Scatterplot extends Chart {
+
+    visualize() {
+        if (this.measure().length < 2) return;
+        let margin = {
+                "top": 10,
+                "right": 10,
+                "bottom": 24,
+                "left": 24
+            }
+        this.width(this.width() - margin.left - margin.right);
+        this.height(this.height() - margin.top - margin.bottom);
+
+        this._svg = d3.select(this.container())
+                .append("svg")
+                .attr("width", this.width() + margin.left + margin.right)
+                .attr("height", this.height() + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        
+        this.drawAxis();
+        this.encodeXY();
+
+        return this.svg();
+    }
+
+    drawAxis() {
+        let svg = this.svg();
+        let width = this.width(),
+            height = this.height();
+        const measure = this.measure();
+        let fontsize = 16, strokeWidth = 2;
+        const padding = fontsize * 0.6,
+            triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
+        
+        let axis = svg.select('.axis');
+        svg.select(".axis_x").remove();
+        svg.select(".axis_y").remove();
+
+        axis.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + padding - 1)
+            .attr("font-size", fontsize)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "hanging")
+            .text(measure[0].field || "Count");
+        axis.append("path")
+            .attr("class", "triangle")
+            .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
+            .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
+            .attr("fill", Color.AXIS);
+        axis.append("line")
+            .attr("x1", -strokeWidth / 2)
+            .attr("x2", width)
+            .attr("y1", height)
+            .attr("y2", height)
+            .attr("stroke-width", strokeWidth)
+            .attr("stroke", Color.AXIS);
+        axis.append("text")
+            .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
+            .attr("font-size", fontsize)
+            .attr("text-anchor", "middle")
+            .text(measure[1].field || "Count");
+        axis.append("path")
+            .attr("class", "triangle")
+            .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
+            .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
+            .attr("fill", Color.AXIS);
+        axis.append("line")
+            .attr("y1", 0)
+            .attr("y2", height)
+            .attr("stroke-width", strokeWidth)
+            .attr("stroke", Color.AXIS);
+    }
+
+    encodeXY() {
+        let svg = this.svg();
+        let width = this.width(),
+            height = this.height();
+        const factData = this.factdata();
+        const measure = this.measure();
+        const xEncoding = "measure0:" + (measure[0].aggregate === "count" ? "COUNT" : measure[0].field),
+            yEncoding = "measure1:" + (measure[1].aggregate === "count" ? "COUNT" : measure[1].field);
+        let axis = svg.append("g")
+            .attr("class", "axis"),
+            content = svg.append("g")
+                .attr("class", "content")
+                .attr("chartWidth", width)
+                .attr("chartHeight", height);
+    
+        // set the ranges
+        let xScale = d3.scaleLinear()
+            .range([0, width])
+            .domain([0, d3.max(factData, d => d[xEncoding])])
+            .nice();
+    
+        let yScale = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(factData, d => d[yEncoding])])
+            .nice();
+    
+        let axisX = d3.axisBottom(xScale)
+            .ticks(5)
+            .tickPadding(5)
+            .tickFormat(function (d) {
+                if ((d / 1000000) >= 1) {
+                    d = d / 1000000 + "M";
+                } else if ((d / 1000) >= 1) {
+                    d = d / 1000 + "K";
+                }
+                return d;
+            });
+    
+        let axisY = d3.axisLeft(yScale)
+            .ticks(5)
+            .tickPadding(5)
+            .tickFormat(function (d) {
+                if ((d / 1000000) >= 1) {
+                    d = d / 1000000 + "M";
+                } else if ((d / 1000) >= 1) {
+                    d = d / 1000 + "K";
+                }
+                return d;
+            });
+    
+        axis.append("g")
+            .attr("class", "axis_x")
+            .attr('transform', `translate(0, ${height})`)
+            .call(axisX)
+    
+        axis.append("g")
+            .attr("class", "axis_y")
+            .call(axisY);
+    
+        /* draw points */
+        const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
+        content.append("g")
+            .selectAll("circle")
+            .data(factData)
+            .enter().append("circle")
+            .attr("class", "mark")
+            .attr("r", circleSize)
+            .attr("stroke", "#FFF")
+            .attr("stroke-width", 0)
+            .attr("fill", Color.DEFAULT)
+            .attr("opacity", 1)
+            .attr("cx", d => xScale(d[xEncoding]))
+            .attr("cy", d => yScale(d[yEncoding]));
+
+    }
+
+    encodeColor() {
+
+    }
+
+    encodeOpacity() {
+
+    }
+
+    encodeSize() {
+
+    }
+
+}
+
+export default Scatterplot;

@@ -1,0 +1,14 @@
+@font-face {
+    font-family: "FrancoisOne-Regular";
+    src        : url('https://chart.datacalliope.com/font/FrancoisOne-Regular.ttf');
+}
+
+@font-face {
+    font-family: "RobotoMono-Regular";
+    src        : url('https://chart.datacalliope.com/font/RobotoMono-Regular.ttf');
+}
+
+@font-face {
+    font-family: "RobotoMono-SemiBold";
+    src        : url('https://chart.datacalliope.com/font/RobotoMono-SemiBold.ttf');
+}

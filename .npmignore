@@ -1,0 +1,10 @@
+.nyc_output/
+coverage/
+node_modules/
+src/
+docs/
+public/
+build/
+.idea/
+.vscode/
+.babelrc
