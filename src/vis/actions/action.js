@@ -10,8 +10,8 @@ class Action {
         this._target = value;
     }
 
-    operate(chart) {
-
+    operate(vis) {
+        
     }
 }
 
