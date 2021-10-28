@@ -53,14 +53,14 @@ class Scatterplot extends Chart {
             .attr("class", "triangle")
             .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
             .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-            .attr("fill", Color.AXIS);
+            .attr("fill", Color().AXIS);
         axis.append("line")
             .attr("x1", -strokeWidth / 2)
             .attr("x2", width)
             .attr("y1", height)
             .attr("y2", height)
             .attr("stroke-width", strokeWidth)
-            .attr("stroke", Color.AXIS);
+            .attr("stroke", Color().AXIS);
         axis.append("text")
             .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
             .attr("font-size", fontsize)
@@ -70,12 +70,12 @@ class Scatterplot extends Chart {
             .attr("class", "triangle")
             .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
             .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-            .attr("fill", Color.AXIS);
+            .attr("fill", Color().AXIS);
         axis.append("line")
             .attr("y1", 0)
             .attr("y2", height)
             .attr("stroke-width", strokeWidth)
-            .attr("stroke", Color.AXIS);
+            .attr("stroke", Color().AXIS);
     }
 
     encodeXY() {
@@ -147,7 +147,7 @@ class Scatterplot extends Chart {
             .attr("r", circleSize)
             .attr("stroke", "#FFF")
             .attr("stroke-width", 0)
-            .attr("fill", Color.DEFAULT)
+            .attr("fill", Color().DEFAULT)
             .attr("opacity", 1)
             .attr("cx", d => xScale(d[xEncoding]))
             .attr("cy", d => yScale(d[yEncoding]));
