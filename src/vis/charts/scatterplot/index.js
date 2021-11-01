@@ -7,25 +7,26 @@ class Scatterplot extends Chart {
     visualize() {
         if (this.measure().length < 2) return;
         let margin = {
-                "top": 10,
-                "right": 10,
-                "bottom": 24,
-                "left": 24
-            }
+            "top": 10,
+            "right": 10,
+            "bottom": 24,
+            "left": 24
+        }
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
         this._svg = d3.select(this.container())
-                .append("svg")
-                .attr("width", this.width() + margin.left + margin.right)
-                .attr("height", this.height() + margin.top + margin.bottom)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .append("svg")
+            .attr("width", this.width() + margin.left + margin.right)
+            .attr("height", this.height() + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        
+
         this.drawAxis();
         this.encodeXY();
-
+        this.encodeColor();
+        // this.encodeSize();
         return this.svg();
     }
 
@@ -37,7 +38,7 @@ class Scatterplot extends Chart {
         let fontsize = 16, strokeWidth = 2;
         const padding = fontsize * 0.6,
             triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
-        
+
         let axis = svg.select('.axis');
         svg.select(".axis_x").remove();
         svg.select(".axis_y").remove();
@@ -92,18 +93,18 @@ class Scatterplot extends Chart {
                 .attr("class", "content")
                 .attr("chartWidth", width)
                 .attr("chartHeight", height);
-    
+
         // set the ranges
         let xScale = d3.scaleLinear()
             .range([0, width])
             .domain([0, d3.max(factData, d => d[xEncoding])])
             .nice();
-    
+
         let yScale = d3.scaleLinear()
             .range([height, 0])
             .domain([0, d3.max(factData, d => d[yEncoding])])
             .nice();
-    
+
         let axisX = d3.axisBottom(xScale)
             .ticks(5)
             .tickPadding(5)
@@ -115,7 +116,7 @@ class Scatterplot extends Chart {
                 }
                 return d;
             });
-    
+
         let axisY = d3.axisLeft(yScale)
             .ticks(5)
             .tickPadding(5)
@@ -127,16 +128,16 @@ class Scatterplot extends Chart {
                 }
                 return d;
             });
-    
+
         axis.append("g")
             .attr("class", "axis_x")
             .attr('transform', `translate(0, ${height})`)
             .call(axisX)
-    
+
         axis.append("g")
             .attr("class", "axis_y")
             .call(axisY);
-    
+
         /* draw points */
         const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
         content.append("g")
@@ -155,7 +156,16 @@ class Scatterplot extends Chart {
     }
 
     encodeColor() {
-
+        const breakdown = this.breakdown();
+        if (breakdown[1]) {
+            let categories = Array.from(new Set(this.factdata().map(d => d[breakdown[1].field])))
+            let svg = this.svg();
+            svg.selectAll("circle")
+                .attr("fill", (d) => {
+                    let i = categories.indexOf(d[breakdown[1].field]);
+                    return Color().CATEGORICAL[i % 8]
+                })
+        }
     }
 
     encodeOpacity() {
