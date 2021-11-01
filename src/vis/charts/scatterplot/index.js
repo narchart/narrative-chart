@@ -26,7 +26,7 @@ class Scatterplot extends Chart {
         this.drawAxis();
         this.encodeXY();
         this.encodeColor();
-        // this.encodeSize();
+        this.encodeSize();
         return this.svg();
     }
 
@@ -173,9 +173,20 @@ class Scatterplot extends Chart {
     }
 
     encodeSize() {
-
+        let width = this.width(),
+            height = this.height();
+        let sizeEncoding = "measure2:" + (this.measure()[2].aggregate === "count" ? "COUNT" : this.measure()[2].field);
+        const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
+        const fitSize = 12;
+        let sizeScale = d3.scaleLinear()
+            .range([0, circleSize / fitSize])
+            .domain([0, d3.max(this.factdata(), function (d) {
+                return Math.sqrt(d[sizeEncoding]);
+            })])
+        let svg = this.svg();
+        svg.selectAll("circle")
+            .attr("r", d => sizeScale(d[sizeEncoding]))
     }
-
 }
 
 export default Scatterplot;

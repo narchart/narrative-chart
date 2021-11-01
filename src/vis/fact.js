@@ -387,6 +387,45 @@ class Fact {
                 }
                 aggdata.push(Object.assign(element1, element2));
             }
+        } else if (measures.length === 3) {
+            // 3 measures
+            let aggdata1 = [];
+            let aggdata2 = [];
+            let aggdata3 = [];
+            if (breakdowns.length > 0) {
+                aggdata1 = this.agg(data, measures[0], breakdowns);
+                aggdata2 = this.agg(data, measures[1], breakdowns);
+                aggdata3 = this.agg(data, measures[2], breakdowns);
+            } else {
+                aggdata1 = JSON.parse(JSON.stringify(data));
+                aggdata2 = JSON.parse(JSON.stringify(data));
+                aggdata3 = JSON.parse(JSON.stringify(data));
+            }
+            let breakdownfields = breakdowns.map(x => x.field)
+            for (let index = 0; index < aggdata1.length; index++) {
+                const element1 = aggdata1[index];
+                for (const key in element1) {
+                    if (!breakdownfields.includes(key)) {
+                        element1["measure0:" + key] = element1[key];
+                        delete element1[key];
+                    }
+                }
+                const element2 = aggdata2[index];
+                for (const key in element2) {
+                    if (!breakdownfields.includes(key)) {
+                        element2["measure1:" + key] = element2[key];
+                        delete element2[key];
+                    }
+                }
+                const element3 = aggdata3[index];
+                for (const key in element3) {
+                    if (!breakdownfields.includes(key)) {
+                        element3["measure2:" + key] = element3[key];
+                        delete element3[key];
+                    }
+                }
+                aggdata.push(Object.assign(element1, element2, element3));
+            }
         }
         return aggdata;
     }

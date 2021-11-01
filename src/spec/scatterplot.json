@@ -38,6 +38,10 @@
             {
                 "field": "Deaths",
                 "aggregate": "sum"
+            },
+            {
+                "field": "Recovered",
+                "aggregate": "sum"
             }       
         ],
         "breakdown": [
