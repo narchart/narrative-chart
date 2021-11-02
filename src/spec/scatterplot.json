@@ -1,55 +1,62 @@
 {
     "data": {
-    "url": "http://chart.datacalliope.com/covid19World.csv",
-    "schema": [
-        {
-        "field": "Date",
-        "type": "temporal",
-        "pictype": "time"
-        },
-        {
-        "field": "Country",
-        "type": "geographical",
-        "subtype": "world",
-        "pictype": "map"
-        },
-        {
-        "field": "Confirmed Cases",
-        "type": "numerical"
-        },
-        {
-        "field": "Recovered",
-        "type": "numerical"
-        },
-        {
-        "field": "Deaths",
-        "type": "numerical"
-        }
-    ]
+        "url": "http://chart.datacalliope.com/covid19World.csv",
+        "schema": [
+            {
+                "field": "Date",
+                "type": "temporal",
+                "pictype": "time"
+            },
+            {
+                "field": "Country",
+                "type": "geographical",
+                "subtype": "world",
+                "pictype": "map"
+            },
+            {
+                "field": "Confirmed Cases",
+                "type": "numerical"
+            },
+            {
+                "field": "Recovered",
+                "type": "numerical"
+            },
+            {
+                "field": "Deaths",
+                "type": "numerical"
+            }
+        ]
     },
     "fact": {
         "type": "association",
         "subspace": [],
         "measure": [
-        {
-            "field": "Confirmed Cases",
-            "aggregate": "sum"
-        },
-        {
-            "field": "Deaths",
-            "aggregate": "sum"
-        }
+            {
+                "field": "Confirmed Cases",
+                "aggregate": "sum"
+            },
+            {
+                "field": "Deaths",
+                "aggregate": "sum"
+            },
+            {
+                "field": "Recovered",
+                "aggregate": "sum"
+            }       
         ],
         "breakdown": [
-        {
-            "field": "Country"
-        }
+            {
+                "field": "Country"
+            },
+            {
+                "field": "Date"
+            }
         ],
         "focus": [
-        {
-            "field": "Country",
-            "value": "United Kingdom"
-        }
+            {
+                "field": "Country",
+                "value": "United Kingdom"
+            }
         ]
     },
     "actions": [
