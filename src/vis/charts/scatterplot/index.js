@@ -22,7 +22,6 @@ class Scatterplot extends Chart {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-
         this.drawAxis();
         this.encodeXY();
         this.encodeColor();

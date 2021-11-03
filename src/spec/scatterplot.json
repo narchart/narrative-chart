@@ -4,14 +4,11 @@
         "schema": [
             {
                 "field": "Date",
-                "type": "temporal",
-                "pictype": "time"
+                "type": "temporal"
             },
             {
                 "field": "Country",
-                "type": "geographical",
-                "subtype": "world",
-                "pictype": "map"
+                "type": "geographical"
             },
             {
                 "field": "Confirmed Cases",
@@ -28,7 +25,6 @@
         ]
     },
     "fact": {
-        "type": "association",
         "subspace": [],
         "measure": [
             {
@@ -46,16 +42,7 @@
         ],
         "breakdown": [
             {
-                "field": "Country"
-            },
-            {
                 "field": "Date"
-            }
-        ],
-        "focus": [
-            {
-                "field": "Country",
-                "value": "United Kingdom"
             }
         ]
     },
@@ -63,6 +50,16 @@
         {
             "add": "chart",
             "mark": "point"
+        },
+        {
+            "add": "annotation",
+            "target": [
+                {
+                    "field": "Date",
+                    "value": "2020/3/6"
+                }
+            ],
+            "method": "fill"
         }
     ]
 }

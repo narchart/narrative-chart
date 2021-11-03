@@ -75,13 +75,6 @@ export default class Playground extends React.Component {
       <option value="barchart">barchart</option>
     </select>
 
-    const sizeselector = <select style={{ marginLeft: '20px' }} onChange={this.changeSize}>
-      <option value="large">large</option>
-      <option value="wide">wide</option>
-      <option value="middle">middle</option>
-      <option value="small">small</option>
-    </select>
-
     let specselector;
     let displayview;
     let shownspec;
@@ -103,7 +96,6 @@ export default class Playground extends React.Component {
                 <div className="header">
                   Narrative Charts
                   {specselector}
-                  {sizeselector}
                   <button style={{ marginLeft: '20px' }} onClick={this.updateChart}>update</button>
 
                 </div>

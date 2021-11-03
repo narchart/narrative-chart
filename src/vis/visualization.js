@@ -79,44 +79,7 @@ class Visualization {
         pipeline.actions().forEach(action => {
             action.operate(this);
         });
-        // for (const action in pipeline.actions()) {
-        //     console.log(action)
-        //     action.operate(this.chart());
-        // }
     }
-
-    // visualize(spec) {
-    //     this._mark = spec.mark;
-    //     let factdata = this.factdata();
-    //     let fact = this.fact();
-    //     this.chart(this._mark2chart(spec.mark));
-    //     // let chart = this._type2chart(spec.type);
-    //     let chart = this.chart();
-    //     chart.size(this._size);
-    //     chart.height(this._height);
-    //     chart.width(this._width);
-    //     chart.data(this._data);
-    //     chart.factdata(factdata);
-    //     chart.subspace(fact.subspace);
-    //     chart.measure(fact.measure);
-    //     chart.breakdown(fact.breakdown);
-    //     chart.focus(fact.focus);
-    //     chart.container(this._container);
-    //     chart.visualize();
-    // }
-
-    // _mark2chart(type) {
-    //     switch (type) {
-    //         case MarkType.POINT:
-    //             return new Scatterplot();
-    //         case MarkType.BAR:
-    //             return new BarChart();
-    //         case MarkType.LINE:
-    //             return new LineChart();
-    //         default:
-    //             return new Scatterplot();
-    //     }
-    // }
 }
 
 export default Visualization;
