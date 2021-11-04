@@ -1,4 +1,20 @@
 export {
+    default as Arrow
+} from "./arrow";
+
+export {
+    default as Band
+} from "./band";
+
+export {
+    default as Circle
+} from "./circle";
+
+export {
+    default as Contour
+} from "./contour";
+
+export {
     default as Fill
 } from "./fill";
 
@@ -7,13 +23,41 @@ export {
 } from "./desaturate";
 
 export {
-    default as Circle
-} from "./circle";
+    default as Distribution
+} from "./distribution";
+
+export {
+    default as Fade
+} from "./fade";
+
+export {
+    default as Glow
+} from "./glow";
 
 export {
     default as Label
 } from "./label";
 
 export {
+    default as Reference
+} from "./reference";
+
+export {
     default as Regression
-} from "./label";
+} from "./regression";
+
+export {
+    default as Separate
+} from "./separate";
+
+export {
+    default as Shade
+} from "./shade";
+
+export {
+    default as Symbol
+} from "./symbol";
+
+export {
+    default as Texture
+} from "./texture";

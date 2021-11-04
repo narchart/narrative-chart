@@ -1,6 +1,6 @@
 import Annotator from './annotator'
 
-class Desaturate extends Annotator {
+class Distribution extends Annotator {
     annotate(chart, target) {
         let svg = chart.svg();
         svg.selectAll(".mark")
@@ -14,10 +14,8 @@ class Desaturate extends Annotator {
                     }
                 }
                 return false
-            })
-            .attr("fill", "lightgray")
-            .attr("opacity", 1)
+            });
     }
 }
 
-export default Desaturate
+export default Distribution;

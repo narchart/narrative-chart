@@ -32,9 +32,6 @@
     "breakdown": [
         {
         "field": "Brand"
-        },
-        {
-        "field": "Category"
         }
     ],
     "focus": [

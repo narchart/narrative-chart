@@ -53,10 +53,15 @@
         },
         {
             "add": "annotation",
+            "target": [],
+            "method": "fade"
+        },
+        {
+            "add": "annotation",
             "target": [
                 {
                     "field": "Date",
-                    "value": "2020/3/6"
+                    "value": "2020/3/20"
                 }
             ],
             "method": "fill"
