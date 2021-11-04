@@ -26,12 +26,15 @@
     "measure": [
         {
         "field": "Sales",
-        "aggregate": "count"
+        "aggregate": "min"
         }
     ],
     "breakdown": [
         {
         "field": "Brand"
+        },
+        {
+        "field": "Category"
         }
     ],
     "focus": [
