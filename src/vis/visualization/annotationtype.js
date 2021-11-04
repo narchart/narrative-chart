@@ -1,4 +1,5 @@
 export default {
     LABEL: 'label',
-    FILL: 'fill'
+    FILL: 'fill',
+    DESATURATE: 'desaturate'
 }

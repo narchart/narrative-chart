@@ -3,6 +3,10 @@ export {
 } from "./fill";
 
 export {
+    default as Desaturate
+} from "./desaturate";
+
+export {
     default as Circle
 } from "./circle";
 

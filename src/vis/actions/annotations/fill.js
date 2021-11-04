@@ -31,6 +31,7 @@ class Fill extends Annotator {
                 return false
             })
             .attr("fill", Color().ANNOTATION)
+            .attr("opacity", 1)
             .moveToFront();
     }
 }

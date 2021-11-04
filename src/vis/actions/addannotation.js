@@ -1,6 +1,6 @@
 import Action from './action';
 import AnnotationType from '../visualization/annotationtype';
-import {Label, Fill} from './annotations'
+import {Label, Fill, Desaturate} from './annotations'
 
 class AddAnnotation extends Action {
     constructor(spec) {
@@ -18,10 +18,12 @@ class AddAnnotation extends Action {
 
     _type2annotator(type) {
         switch (type) {
-            case AnnotationType.Label:
+            case AnnotationType.LABEL:
                 return new Label();
-            case AnnotationType.Fill:
+            case AnnotationType.FILL:
                 return new Fill();
+            case AnnotationType.DESATURATE:
+                return new Desaturate()
 
             default:
                 return new Fill();
