@@ -178,7 +178,7 @@ class Scatterplot extends Chart {
                 height = this.height();
             let sizeEncoding = "measure2:" + (measure[2].aggregate === "count" ? "COUNT" : measure[2].field);
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
-            const fitSize = 12;
+            const fitSize = 20;
             let sizeScale = d3.scaleLinear()
                 .range([0, circleSize / fitSize])
                 .domain([0, d3.max(this.factdata(), function (d) {

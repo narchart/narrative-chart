@@ -1,10 +1,11 @@
 import Annotator from './annotator'
+import Color from '../../visualization/color';
 
 class Circle extends Annotator {
     annotate(chart, target) {
         let svg = chart.svg();
-        svg.selectAll(".mark")
-            .filter(function(d) {
+        let selected = svg.selectAll(".mark")
+            .filter(function (d) {
                 if (target.length === 0) {
                     return true
                 }
@@ -14,7 +15,39 @@ class Circle extends Annotator {
                     }
                 }
                 return false
-            });
+            })
+
+        const padding = 5;
+        selected.nodes().forEach(item => {
+            if (item.nodeName === "circle") {
+                let circleR = Number(item.getAttribute("r")) + padding,
+                    circleX = item.getAttribute("cx"),
+                    circleY = item.getAttribute("cy");
+
+                svg.append("circle")
+                    .attr("fill", "none")
+                    .attr("stroke", Color().ANNOTATION)
+                    .attr("stroke-width", 2)
+                    .attr("x", circleX)
+                    .attr("y", circleY)
+                    .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                    .attr("r", circleR)
+            } else if (item.nodeName === "rect") {
+                let circleY = item.getAttribute("y"),
+                    width = item.getAttribute("width"),
+                    circleX = Number(item.getAttribute("x")) + width / 2,
+                    circleR = width / 2 + padding;
+                svg.append("circle")
+                    .attr("fill", "none")
+                    .attr("stroke", Color().ANNOTATION)
+                    .attr("stroke-width", 2)
+                    .attr("x", circleX)
+                    .attr("y", circleY)
+                    .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                    .attr("r", circleR)
+            }
+
+        });
     }
 }
 
