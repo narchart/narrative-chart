@@ -174,26 +174,6 @@ class BarChart extends Chart {
             .attr("height", d => height - yScale(d[yEncoding]))
             .attr("fill", Color().DEFAULT);
 
-         /** draw text label */
-         content.append("g")
-            .attr("class", "texts")
-            .selectAll("text")
-            .data(processedData)
-            .enter().append("text")
-            .attr("x", d => xScale(d[xEncoding]) - 6)
-            .attr("y", d => yScale(d[yEncoding]) - 10)
-            .text(d => {
-                let formatData = d[yEncoding];
-                if ((formatData / 1000000) >= 1) {
-                    formatData = formatData / 1000000 + "M";
-                } else if ((formatData / 1000) >= 1) {
-                    formatData = formatData / 1000 + "K";
-                }
-                return formatData;
-            })
-            .style("font-size", "12px");
-            // to do: text position
-            // .attr("justify-content", "center");
     }
 
     encodeColor() {
