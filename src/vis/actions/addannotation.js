@@ -1,6 +1,6 @@
 import Action from './action';
 import AnnotationType from '../visualization/annotationtype';
-import {Arrow, Band, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Label, Reference, Regression, Separate, Shade, Symbol, Texture} from './annotations'
+import {Arrow, Coloredarea, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Label, Reference, Regression, Separate, Shade, Symbol, Texture} from './annotations'
 
 class AddAnnotation extends Action {
     constructor(spec) {
@@ -20,8 +20,8 @@ class AddAnnotation extends Action {
         switch (type) {
             case AnnotationType.ARROW:
                 return new Arrow()
-            case AnnotationType.BAND:
-                return new Band()
+            case AnnotationType.COLOREDAREA:
+                return new Coloredarea()
             case AnnotationType.CIRCLE:
                 return new Circle()
             case AnnotationType.CONTOUR:

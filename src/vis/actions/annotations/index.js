@@ -3,8 +3,8 @@ export {
 } from "./arrow";
 
 export {
-    default as Band
-} from "./band";
+    default as Coloredarea
+} from "./coloredarea";
 
 export {
     default as Circle
