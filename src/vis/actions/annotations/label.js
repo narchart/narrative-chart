@@ -13,7 +13,7 @@ class Label extends Annotator {
             yEncoding = measure[0].aggregate === "count" ? "COUNT" : measure[0].field;
         }
          
-        let focus_element = svg.selectAll(".mark")
+        let focus_elements = svg.selectAll(".mark")
             .filter(function(d) {
                 if (target.length === 0) {
                     return true
@@ -25,50 +25,56 @@ class Label extends Annotator {
                 }
                 return false
             });
-
+        
         // if the focus defined in the spec does not exist
-        if (focus_element.empty()) {
+        if (focus_elements.length === 0) {
             return;
         }
 
-        // get data info
-        let data_d = parseFloat(focus_element.node().__data__[yEncoding]);
-        let formatData;
-        if ((data_d / 1000000) >= 1) {
-            formatData = data_d / 1000000 + "M";
-        } else if ((data_d / 1000) >= 1) {
-            formatData = data_d / 1000 + "K";
-        }
+        for(let focus_element of focus_elements.nodes()) {
 
-        // identify the position
-        let data_x, data_y, data_r, offset_x, offset_y;
-        const fontSize = 12;
-        const nodeName = focus_element.node().nodeName;
-        if (nodeName === "circle") { // get center 
-            data_x = parseFloat(focus_element.attr("cx"));
-            data_y = parseFloat(focus_element.attr("cy"));
-            data_r = parseFloat(focus_element.attr("r"));
-            offset_x = - fontSize / window.devicePixelRatio * formatData.length / 2;
-            offset_y = fontSize / window.devicePixelRatio - data_r - 10;
+            // get node data info
+            let data_d = parseFloat(focus_element.__data__[yEncoding]);
+            let formatData;
+            if ((data_d / 1000000) >= 1) {
+                formatData = data_d / 1000000 + "M";
+            } else if ((data_d / 1000) >= 1) {
+                formatData = data_d / 1000 + "K";
+            }else {
+                formatData = data_d + "";
+            }
 
-        } else if (nodeName === "rect") {
-            const bbox = focus_element.node().getBBox();
-            data_x = bbox.x + bbox.width / 2;
-            data_y = bbox.y;
-            offset_x = - fontSize / window.devicePixelRatio * formatData.length / 2;
-            offset_y = - fontSize / window.devicePixelRatio;
-        } else { // currently not support
-            return;
-        }
+            // identify the position
+            let data_x, data_y, data_r, offset_x, offset_y;
+            const fontSize = 12;
+            const nodeName = focus_element.nodeName;
+            if (nodeName === "circle") { // get center
+                data_x = parseFloat(focus_element.getAttribute("cx"));
+                data_y = parseFloat(focus_element.getAttribute("cy"));
+                data_r = parseFloat(focus_element.getAttribute("r"));
+                offset_x = - fontSize / window.devicePixelRatio * formatData.length / 2;
+                offset_y = fontSize / window.devicePixelRatio - data_r - 10;
 
-        // draw text
-        svg.append("text")
-            .attr("class", "text")
-            .attr("x", data_x + offset_x)
-            .attr("y", data_y + offset_y)
-            .text(formatData)
-            .attr("font-size", fontSize)
-            .attr("fill", Color().TEXT);
+            } else if (nodeName === "rect") {
+                const bbox = focus_element.getBBox();
+                data_x = bbox.x + bbox.width / 2;
+                data_y = bbox.y;
+                offset_x = - fontSize / window.devicePixelRatio * formatData.length / 2;
+                offset_y = - fontSize / window.devicePixelRatio;
+            } else { // currently not support
+                return;
+            }
+
+            // draw text
+            svg.append("text")
+                .attr("class", "text")
+                .attr("x", data_x + offset_x)
+                .attr("y", data_y + offset_y)
+                .text(formatData)
+                .attr("font-size", fontSize)
+                .attr("fill", Color().TEXT);
+        
+        }   
             
     }
 }
