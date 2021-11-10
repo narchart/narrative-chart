@@ -45,22 +45,19 @@ class Label extends Annotator {
             }
 
             // identify the position
-            let data_x, data_y, data_r, offset_x, offset_y;
+            let data_x, data_y, data_r, offset_y;
             const fontSize = 12;
             const nodeName = focus_element.nodeName;
             if (nodeName === "circle") { // get center
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
                 data_r = parseFloat(focus_element.getAttribute("r"));
-                offset_x = - fontSize / window.devicePixelRatio * formatData.length / 2;
-                offset_y = fontSize / window.devicePixelRatio - data_r - 10;
-
+                offset_y = - data_r - 5;
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
                 data_x = bbox.x + bbox.width / 2;
                 data_y = bbox.y;
-                offset_x = - fontSize / window.devicePixelRatio * formatData.length / 2;
-                offset_y = - fontSize / window.devicePixelRatio;
+                offset_y = -5;
             } else { // currently not support
                 return;
             }
@@ -68,11 +65,13 @@ class Label extends Annotator {
             // draw text
             svg.append("text")
                 .attr("class", "text")
-                .attr("x", data_x + offset_x)
+                .attr("x", data_x)
                 .attr("y", data_y + offset_y)
                 .text(formatData)
                 .attr("font-size", fontSize)
-                .attr("fill", Color().TEXT);
+                .attr("fill", Color().TEXT)
+                .attr("text-anchor", "middle")
+                .attr("alignment-baseline", "Alphabetic");
         
         }   
             
