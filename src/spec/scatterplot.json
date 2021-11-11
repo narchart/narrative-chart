@@ -64,7 +64,10 @@
                     "value": "2020/3/17"
                 }
             ],
-            "method": "fill"
+            "method": "fill",
+            "style": {
+                "color": "red"
+            }
         },
         {
             "add": "annotation",

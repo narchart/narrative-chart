@@ -11,14 +11,19 @@ class AddAnnotation extends Action {
         } else {
             this._target = []
         }
-            
+        if ('style' in spec) {
+            this._style = spec.style;
+        } else {
+            this._style = {}
+        }
     }
 
     operate(vis) {
         let annotator = this._type2annotator(this._method)
         let chart = vis.chart();
         let target = this._target;
-        annotator.annotate(chart, target);
+        let style = this._style;
+        annotator.annotate(chart, target, style);
     }
 
     _type2annotator(type) {

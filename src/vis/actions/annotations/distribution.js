@@ -3,7 +3,7 @@ import * as d3 from 'd3';
 import Color from '../../visualization/color';
 
 class Distribution extends Annotator {
-    annotate(chart, target) {
+    annotate(chart, target, style) {
         let svg = chart.svg();
         let focus_elements = svg.selectAll(".mark")
             .filter(function(d) {

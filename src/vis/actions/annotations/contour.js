@@ -1,7 +1,7 @@
 import Annotator from './annotator'
 
 class Contour extends Annotator {
-    annotate(chart, target) {
+    annotate(chart, target, style) {
         let svg = chart.svg();
         svg.selectAll(".mark")
             .filter(function(d) {

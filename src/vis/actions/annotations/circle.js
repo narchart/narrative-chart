@@ -2,7 +2,7 @@ import Annotator from './annotator'
 import Color from '../../visualization/color';
 
 class Circle extends Annotator {
-    annotate(chart, target) {
+    annotate(chart, target, style) {
         let svg = chart.svg();
         let selected = svg.selectAll(".mark")
             .filter(function (d) {

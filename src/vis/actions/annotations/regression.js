@@ -2,7 +2,7 @@ import Annotator from './annotator';
 import Color from '../../visualization/color';
 
 class Regression extends Annotator {
-    annotate(chart, target) {
+    annotate(chart, target, style) {
         let svg = chart.svg();
         let focus_elements = svg.selectAll(".mark")
             .filter(function (d) {

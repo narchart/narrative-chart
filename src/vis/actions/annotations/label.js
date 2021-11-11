@@ -3,7 +3,7 @@ import { Scatterplot } from '../../charts';
 import Color from '../../visualization/color';
 
 class Label extends Annotator {
-    annotate(chart, target) {
+    annotate(chart, target, style) {
         let svg = chart.svg();
         const measure = chart.measure();
         let yEncoding;
