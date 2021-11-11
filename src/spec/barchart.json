@@ -41,6 +41,24 @@
         {
             "add": "chart",
             "mark": "bar"
+        },
+        {
+            "add": "annotation",
+            "method": "regression",
+            "target": [
+                {
+                    "field": "Brand",
+                    "value": "BMW"
+                },
+                {
+                    "field": "Brand",
+                    "value": "GMC"
+                },
+                {
+                    "field": "Brand",
+                    "value": "Honda"
+                }
+            ]
         }
     ]
 }

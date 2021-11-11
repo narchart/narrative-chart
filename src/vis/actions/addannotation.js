@@ -6,7 +6,12 @@ class AddAnnotation extends Action {
     constructor(spec) {
         super(spec);
         this._method = spec.method;
-        this._target = spec.target;
+        if ('target' in spec) {
+            this._target = spec.target;
+        } else {
+            this._target = []
+        }
+            
     }
 
     operate(vis) {
