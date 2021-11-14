@@ -9,8 +9,8 @@ class Scatterplot extends Chart {
         let margin = {
             "top": 10,
             "right": 10,
-            "bottom": 24,
-            "left": 24
+            "bottom": 30,
+            "left": 30
         }
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
@@ -137,9 +137,51 @@ class Scatterplot extends Chart {
             .attr("class", "axis_y")
             .call(axisY);
 
+        // for grid line
+        axis.selectAll(".axis_y .tick")
+            .append("line")
+            .attr("stroke", (d, i) => {
+                if (i === 0) return Color().AXIS;
+                else return Color().DIVIDER;
+            })
+            .attr("class", "gridline")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", width)
+            .attr("y2", 0);
+
+        axis.selectAll(".axis_x .tick")
+            .append("line")
+            .attr("stroke", (d, i) => {
+                if (i === 0) return Color().AXIS;
+                else return Color().DIVIDER;
+            })
+            .attr("class", "gridline")
+            .attr("x1", 0)
+            .attr("y1", -height)
+            .attr("x2", 0)
+            .attr("y2", 0);
+
+        axis.append("line")
+            .attr("stroke", Color().DIVIDER)
+            .attr("class", "gridline")
+            .attr("x1", width)
+            .attr("y1", height)
+            .attr("x2", width)
+            .attr("y2", 0);
+
+        axis.append("line")
+            .attr("stroke", Color().DIVIDER)
+            .attr("class", "gridline")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", width)
+            .attr("y2", 0);
+
         /* draw points */
         const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
         content.append("g")
+            .attr("class", "circleGroup")
             .selectAll("circle")
             .data(factData)
             .enter().append("circle")
@@ -177,16 +219,15 @@ class Scatterplot extends Chart {
             let width = this.width(),
                 height = this.height();
             let sizeEncoding = "measure2:" + (measure[2].aggregate === "count" ? "COUNT" : measure[2].field);
-            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
-            const fitSize = 20;
-            let sizeScale = d3.scaleLinear()
-                .range([0, circleSize / fitSize])
-                .domain([0, d3.max(this.factdata(), function (d) {
-                    return Math.sqrt(d[sizeEncoding]);
-                })])
+            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 40), 15);
+            const maxR = circleSize;
+            const minR = circleSize / 10;
+            let minValue = d3.min(this.factdata(), d => d[sizeEncoding]),
+                maxValue = d3.max(this.factdata(), d => d[sizeEncoding]);
+            let scale = d3.scaleSqrt([minValue, maxValue], [minR, maxR]);
             let svg = this.svg();
             svg.selectAll("circle")
-                .attr("r", d => sizeScale(d[sizeEncoding]))
+                .attr("r", d => scale(d[sizeEncoding]))
         }
     }
 }
