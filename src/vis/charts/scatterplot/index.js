@@ -9,8 +9,8 @@ class Scatterplot extends Chart {
         let margin = {
             "top": 10,
             "right": 10,
-            "bottom": 30,
-            "left": 30
+            "bottom": 50,
+            "left": 50
         }
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
@@ -140,8 +140,9 @@ class Scatterplot extends Chart {
         // for grid line
         axis.selectAll(".axis_y .tick")
             .append("line")
-            .attr("stroke", (d, i) => {
-                if (i === 0) return Color().AXIS;
+            // TODO:
+            .attr("stroke", d => {
+                if (d === 0) return Color().AXIS;
                 else return Color().DIVIDER;
             })
             .attr("class", "gridline")
@@ -152,10 +153,7 @@ class Scatterplot extends Chart {
 
         axis.selectAll(".axis_x .tick")
             .append("line")
-            .attr("stroke", (d, i) => {
-                if (i === 0) return Color().AXIS;
-                else return Color().DIVIDER;
-            })
+            .attr("stroke", Color().DIVIDER)
             .attr("class", "gridline")
             .attr("x1", 0)
             .attr("y1", -height)
@@ -177,6 +175,23 @@ class Scatterplot extends Chart {
             .attr("y1", 0)
             .attr("x2", width)
             .attr("y2", 0);
+
+        /* draw labels */
+        const labelPadding = 20, fontsize = 12;
+
+        axis.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "hanging")
+            .attr("font-size", fontsize)
+            .text(`${measure[0].field} (${measure[0].aggregate})` || "Count");
+
+        axis.append("text")
+            .attr("transform", `translate(${-labelPadding - svg.selectAll(".axis_y").select("path").node().getBBox().width}, ${height / 2}) rotate(-90)`)
+            .attr("text-anchor", "middle")
+            .attr("font-size", fontsize)
+            .text(`${measure[1].field} (${measure[1].aggregate})` || "Count");
 
         /* draw points */
         const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
