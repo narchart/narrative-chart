@@ -47,7 +47,13 @@ class Distribution extends Annotator {
         svg.append("path")
             .attr("class", "regression")
             .attr("d", line_generator(positions))
-            .attr("stroke", Color().ANNOTATION)
+            .attr("stroke", () => {
+                if ("color" in style) {
+                    return style["color"];
+                } else {
+                    return Color().ANNOTATION;
+                }
+            })
             .attr("stroke-width", 3)
             .attr("fill", "none");
 
