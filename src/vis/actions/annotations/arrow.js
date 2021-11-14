@@ -58,7 +58,13 @@ class Arrow extends Annotator {
             svg.append("path")
                 .attr("class", "arrow")
                 .attr("d", d3.line()(new_arrow_points))
-                .attr('fill', Color().ANNOTATION);
+                .attr("fill", () => {
+                    if ("color" in style) {
+                        return style["color"];
+                    } else {
+                        return Color().ANNOTATION;
+                    }
+                });
         })
 
 

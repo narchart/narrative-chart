@@ -90,7 +90,13 @@ class Regression extends Annotator {
             .attr("x2", x2)
             .attr("y1", y1)
             .attr("y2", y2)
-            .attr("stroke", Color().ANNOTATION)
+            .attr("stroke", () => {
+                if ("color" in style) {
+                    return style["color"];
+                } else {
+                    return Color().ANNOTATION;
+                }
+            })
             .attr("stroke-width", 2)
             .attr("stroke-dasharray", "8, 4");
 
