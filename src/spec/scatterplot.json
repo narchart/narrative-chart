@@ -1,26 +1,42 @@
 {
     "data": {
-        "url": "http://chart.datacalliope.com/covid19World.csv",
+        "url": "http://localhost:3000/spreadsheets/cars.csv",
         "schema": [
             {
-                "field": "Date",
+                "field": "Name",
+                "type": "categorical"
+            },
+            {
+                "field": "Miles per Gallon",
+                "type": "numerical"
+            },
+            {
+                "field": "Cylinders",
+                "type": "numerical"
+            },
+            {
+                "field": "Displacement",
+                "type": "numerical"
+            },
+            {
+                "field": "Horsepower",
+                "type": "numerical"
+            },
+            {
+                "field": "Weight",
+                "type": "numerical"
+            },
+            {
+                "field": "Acceleration",
+                "type": "numerical"
+            },
+            {
+                "field": "Year",
                 "type": "temporal"
             },
             {
-                "field": "Country",
-                "type": "geographical"
-            },
-            {
-                "field": "Confirmed Cases",
-                "type": "numerical"
-            },
-            {
-                "field": "Recovered",
-                "type": "numerical"
-            },
-            {
-                "field": "Deaths",
-                "type": "numerical"
+                "field": "Origin",
+                "type": "categorical"
             }
         ]
     },
@@ -28,21 +44,21 @@
         "subspace": [],
         "measure": [
             {
-                "field": "Confirmed Cases",
+                "field": "Horsepower",
                 "aggregate": "sum"
             },
             {
-                "field": "Deaths",
+                "field": "Miles per Gallon",
                 "aggregate": "sum"
             },
             {
-                "field": "Recovered",
+                "field": "Weight",
                 "aggregate": "sum"
             }       
         ],
         "breakdown": [
             {
-                "field": "Date"
+                "field": "Name"
             }
         ]
     },
@@ -53,74 +69,68 @@
         },
         {
             "add": "annotation",
-            "target": [],
-            "method": "fade"
+            "method": "fade",
+            "target": []
         },
         {
             "add": "annotation",
-            "target": [
-                {
-                    "field": "Date",
-                    "value": "2020/3/17"
-                }
-            ],
             "method": "fill",
-            "style": {
-                "color": "red"
-            }
-        },
-        {
-            "add": "annotation",
             "target": [
                 {
-                    "field": "Date",
-                    "value": "2020/3/16"
+                    "field": "Name",
+                    "value": "pontiac grand prix"
                 }
-            ],
-            "method": "glow"
+            ]
         },
         {
             "add": "annotation",
+            "method": "label",
             "target": [
                 {
-                    "field": "Date",
-                    "value": "2020/3/14"
+                    "field": "Name",
+                    "value": "pontiac grand prix"
                 }
-            ],
-            "method": "circle"
+            ]
         },
         {
             "add": "annotation",
+            "method": "fill",
             "target": [
                 {
-                    "field": "Date",
-                    "value": "2020/3/15"
+                    "field": "Name",
+                    "value": "mazda glc"
                 }
-            ],
-            "method": "arrow"
+            ]
         },
         {
             "add": "annotation",
+            "method": "label",
             "target": [
                 {
-                    "field": "Date",
-                    "value": "2020/3/15"
-                },
-                {
-                    "field": "Date",
-                    "value": "2020/3/16"
-                },
-                {
-                    "field": "Date",
-                    "value": "2020/3/17"
+                    "field": "Name",
+                    "value": "mazda glc"
                 }
-            ],
-            "method": "label"
+            ]
         },
         {
             "add": "annotation",
-            "target": [],
-            "method": "regression"
+            "method": "fill",
+            "target": [
+                {
+                    "field": "Name",
+                    "value": "pontiac safari (sw)"
+                }
+            ]
+        },
+        {
+            "add": "annotation",
+            "method": "label",
+            "target": [
+                {
+                    "field": "Name",
+                    "value": "pontiac safari (sw)"
+                }
+            ]
         }
     ]
 }

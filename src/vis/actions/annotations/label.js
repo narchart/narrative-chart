@@ -6,9 +6,10 @@ class Label extends Annotator {
     annotate(chart, target, style) {
         let svg = chart.svg();
         const measure = chart.measure();
+        const breakdown = chart.breakdown()
         let yEncoding;
         if(chart instanceof Scatterplot) {
-            yEncoding = "measure1:" + (measure[1].aggregate === "count" ? "COUNT" : measure[1].field);
+            yEncoding = breakdown[0].field;
         } else {
             yEncoding = measure[0].aggregate === "count" ? "COUNT" : measure[0].field;
         }
@@ -34,14 +35,19 @@ class Label extends Annotator {
         for(let focus_element of focus_elements.nodes()) {
 
             // get node data info
-            let data_d = parseFloat(focus_element.__data__[yEncoding]);
-            let formatData;
-            if ((data_d / 1000000) >= 1) {
-                formatData = data_d / 1000000 + "M";
-            } else if ((data_d / 1000) >= 1) {
-                formatData = data_d / 1000 + "K";
-            }else {
-                formatData = data_d + "";
+            let formatData
+            if(chart instanceof Scatterplot) {
+                formatData = focus_element.__data__[yEncoding]
+                
+            } else {
+                let data_d = parseFloat(focus_element.__data__[yEncoding]);
+                if ((data_d / 1000000) >= 1) {
+                    formatData = data_d / 1000000 + "M";
+                } else if ((data_d / 1000) >= 1) {
+                    formatData = data_d / 1000 + "K";
+                }else {
+                    formatData = data_d + "";
+                }
             }
 
             // identify the position
