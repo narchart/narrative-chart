@@ -75,7 +75,13 @@ class Label extends Annotator {
                 .attr("y", data_y + offset_y)
                 .text(formatData)
                 .attr("font-size", fontSize)
-                .attr("fill", Color().TEXT)
+                .attr("fill", () => {
+                    if ("color" in style) {
+                        return style["color"];
+                    } else {
+                        return Color().TEXT;
+                    }
+                })
                 .attr("text-anchor", "middle")
                 .attr("alignment-baseline", "Alphabetic");
         
