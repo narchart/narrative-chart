@@ -58,12 +58,12 @@ class Label extends Annotator {
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
                 data_r = parseFloat(focus_element.getAttribute("r"));
-                offset_y = - data_r - 5;
+                offset_y = - data_r - 10;
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
                 data_x = bbox.x + bbox.width / 2;
                 data_y = bbox.y;
-                offset_y = -5;
+                offset_y = -10;
             } else { // currently not support
                 return;
             }

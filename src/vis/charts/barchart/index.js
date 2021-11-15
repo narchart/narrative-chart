@@ -8,8 +8,8 @@ class BarChart extends Chart {
         let margin = {
                 "top": 10,
                 "right": 10,
-                "bottom": 24,
-                "left": 24
+                "bottom": 65,
+                "left": 70
             }
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
@@ -152,6 +152,27 @@ class BarChart extends Chart {
         axis.selectAll(".axis_y")
             .selectAll(".domain")
             .attr("opacity", 0);
+        
+        // axis-text translate
+        axis.selectAll(".axis_x")
+            .selectAll("text")
+            .attr("transform", "translate(0, 3)"); 
+        
+        axis.selectAll(".axis_y")
+            .selectAll("text")
+            .attr("transform", "translate(-3, 0)"); 
+        
+        // axix-label
+        axis.append("text") // axis_y-label
+            .text("V1")
+            .attr("x", - height / 2)
+            .attr("y", -40)
+            .attr("transform", "rotate(-90,0,0)");
+        
+        axis.append("text") // axis_x-label
+            .text("V2")
+            .attr("x", width / 2)
+            .attr("y", height + 45);
         
         /** draw grid */
         axis.selectAll(".axis_y")
