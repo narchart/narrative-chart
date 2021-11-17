@@ -76,9 +76,7 @@ class Visualization {
     }
 
     run(pipeline) {
-        pipeline.actions().forEach(action => {
-            action.operate(this);
-        });
+        pipeline.operate(this);
     }
 }
 

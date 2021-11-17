@@ -11,8 +11,10 @@ class Pipeline {
         return this._actions;
     }
 
-    operate() {
-        
+    operate(vis) {
+        this.actions().forEach(action => {
+            action.operate(vis);
+        });
     }
 }
 

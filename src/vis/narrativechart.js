@@ -71,6 +71,9 @@ class NarrativeChart {
                 this._vis.run(pipeline)
                 // this._vis.visualize(chartspec);
             })
+            .catch((reason) => {
+                console.log(reason);
+            })
     }
 }
 

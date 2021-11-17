@@ -74,17 +74,7 @@
         },
         {
             "add": "annotation",
-            "method": "fill",
-            "target": [
-                {
-                    "field": "Name",
-                    "value": "pontiac grand prix"
-                }
-            ]
-        },
-        {
-            "add": "annotation",
-            "method": "label",
+            "method": ["fill", "label"],
             "target": [
                 {
                     "field": "Name",
