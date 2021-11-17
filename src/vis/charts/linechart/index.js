@@ -8,8 +8,8 @@ class LineChart extends Chart {
         let margin = {
                 "top": 10,
                 "right": 10,
-                "bottom": 24,
-                "left": 24
+                "bottom": 50,
+                "left": 50
             }
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
@@ -122,10 +122,10 @@ class LineChart extends Chart {
         /** draw axis */
         let axis = svg.append("g")
             .attr("class", "axis"),
-            content = svg.append("g")
-                .attr("class", "content")
-                .attr("chartWidth", width)
-                .attr("chartHeight", height);
+        content = svg.append("g")
+            .attr("class", "content")
+            .attr("chartWidth", width)
+            .attr("chartHeight", height);
         let axisX = d3.axisBottom(xScale);
     
         let axisY = d3.axisLeft(yScale)
@@ -144,10 +144,8 @@ class LineChart extends Chart {
         axis.append("g")
             .attr("class", "axis_x")
             .attr('transform', `translate(0, ${height})`)
-            .call(axisX)
-            // .selectAll("text")
-            // .style("text-anchor","start")
-            // .attr("transform","rotate(45 -10 10)");
+            .call(axisX);
+    
     
         axis.append("g")
             .attr("class", "axis_y")
@@ -160,10 +158,44 @@ class LineChart extends Chart {
          /** draw grid */
         axis.selectAll(".axis_y")
             .selectAll("line")
-            .attr("opacity", (d, i) => {
-                if(i === 0) return 1;
-                else return 0.2;
-            });
+            .attr("stroke", d => {
+                if (d === 0) return Color().AXIS;
+                else return Color().DIVIDER;
+            })
+            .attr("class", "gridline")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", width)
+            .attr("y2", 0)
+            .attr("opacity", 1);
+
+        axis.selectAll(".axis_x")
+            .append("line")
+            .attr("stroke", Color().AXIS)
+            .attr("class", "gridline")
+            .attr("x1", 0)
+            .attr("y1", -height)
+            .attr("x2", 0)
+            .attr("y2", 0);
+
+        /* draw labels */
+        const labelPadding = 20, fontsize = 12;
+        console.log("measure:", measure)
+        console.log("breakdown:",breakdown)
+
+        axis.append("text")
+            .attr("x", width / 2)
+            .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "hanging")
+            .attr("font-size", fontsize)
+            .text(`${breakdown[0].field} (${breakdown[0].pictype})` || "Catogory");
+
+        axis.append("text")
+            .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`) 
+            .attr("text-anchor", "middle")
+            .attr("font-size", fontsize)
+            .text(`${measure[0].field} (${measure[0].aggregate})` || "Count");
 
         /* draw lines */
         const line = d3.line()
@@ -174,7 +206,7 @@ class LineChart extends Chart {
             .attr("class", "lineGroup")
             .attr("fill", "none")
             .attr("stroke", Color().DEFAULT)
-            .attr("stroke-width", 3)
+            .attr("stroke-width", 2)
             .attr("opacity", 1)
             .selectAll("path")
             .data(processedData)
