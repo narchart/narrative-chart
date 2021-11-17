@@ -8,8 +8,8 @@ class BarChart extends Chart {
         let margin = {
                 "top": 10,
                 "right": 10,
-                "bottom": 65,
-                "left": 70
+                "bottom": 50,
+                "left": 50
             }
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
@@ -149,37 +149,40 @@ class BarChart extends Chart {
             .attr("class", "axis_y")
             .call(axisY);
         
-        axis.selectAll(".axis_y")
-            .selectAll(".domain")
+        // draw y axis path
+        axis.selectAll(".axis_y .domain")
             .attr("opacity", 0);
-        
-        // axis-text translate
-        axis.selectAll(".axis_x")
-            .selectAll("text")
-            .attr("transform", "translate(0, 3)"); 
-        
         axis.selectAll(".axis_y")
-            .selectAll("text")
-            .attr("transform", "translate(-3, 0)"); 
+            .append("line")
+            .attr("x1", 0)
+            .attr("y1", 0)
+            .attr("x2", 0)
+            .attr("y2", height)
+            .attr("stroke", Color().AXIS);
         
         // axix-label
-        axis.append("text") // axis_y-label
-            .text("V1")
-            .attr("x", - height / 2)
-            .attr("y", -40)
-            .attr("transform", "rotate(-90,0,0)");
-        
-        axis.append("text") // axis_x-label
-            .text("V2")
+        const labelPadding = 25, fontsize = 12;
+
+        axis.append("text")
             .attr("x", width / 2)
-            .attr("y", height + 45);
+            .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
+            .attr("text-anchor", "middle")
+            .attr("dominant-baseline", "hanging")
+            .attr("font-size", fontsize)
+            .text(`${breakdown[0].field}`);
+
+        axis.append("text")
+            .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
+            .attr("text-anchor", "middle")
+            .attr("font-size", fontsize)
+            .text(`${measure[0].field} (${measure[0].aggregate})` || "Count");
         
         /** draw grid */
-        axis.selectAll(".axis_y")
-            .selectAll("line")
-            .attr("opacity", (d, i) => {
-                if(i === 0) return 1;
-                else return 0.2;
+        axis.selectAll(".axis_y .tick line")
+            .attr("class", "gridline")
+            .attr("stroke", d => {
+                if(d ===0) return 0;
+                else return Color().DIVIDER;
             });
         
         /* draw rects */
