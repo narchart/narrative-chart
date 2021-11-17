@@ -43,7 +43,13 @@ class Glow extends Annotator {
                 }
                 return false
             })
-            .style("stroke",  Color().ANNOTATION)
+            .style("stroke",  function() {
+                if ('color' in style) {
+                    return style['color']
+                } else {
+                    return Color().ANNOTATION
+                }
+            })
             .style("stroke-width", 2)
             .style("filter", "url(#drop-shadow)")
             .attr("opacity", 1)

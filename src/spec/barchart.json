@@ -1,6 +1,6 @@
 {
     "data": {
-        "url": "http://chart.datacalliope.com/CarSales.csv",
+        "url": "http://localhost:3000/spreadsheets/cars.csv",
         "schema": [
         {
             "field": "Year",

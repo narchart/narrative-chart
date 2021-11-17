@@ -2,7 +2,7 @@ import Annotator from './annotator';
 import Color from '../../visualization/color';
 
 class Reference extends Annotator {
-    annotate(chart, target) {
+    annotate(chart, target, style) {
         let svg = chart.svg();
         let focus_elements = svg.selectAll(".mark")
             .filter(function (d) {
@@ -71,7 +71,13 @@ class Reference extends Annotator {
             .attr("x2", x2)
             .attr("y1", y1)
             .attr("y2", y2)
-            .attr("stroke", Color().ANNOTATION)
+            .attr("stroke", function() {
+                if ('color' in style) {
+                    return style['color']
+                } else {
+                    return Color().ANNOTATION
+                }
+            })
             .attr("stroke-width", 2)
             .attr("stroke-dasharray", "8, 4");
 
