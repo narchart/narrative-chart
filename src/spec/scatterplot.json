@@ -79,48 +79,19 @@
                 {
                     "field": "Name",
                     "value": "pontiac grand prix"
-                }
-            ]
-        },
-        {
-            "add": "annotation",
-            "method": "fill",
-            "target": [
+                },
                 {
                     "field": "Name",
                     "value": "mazda glc"
-                }
-            ]
-        },
-        {
-            "add": "annotation",
-            "method": "label",
-            "target": [
-                {
-                    "field": "Name",
-                    "value": "mazda glc"
-                }
-            ]
-        },
-        {
-            "add": "annotation",
-            "method": "fill",
-            "target": [
+                },
                 {
                     "field": "Name",
                     "value": "pontiac safari (sw)"
                 }
-            ]
-        },
-        {
-            "add": "annotation",
-            "method": "label",
-            "target": [
-                {
-                    "field": "Name",
-                    "value": "pontiac safari (sw)"
-                }
-            ]
+            ],
+            "style": {
+                "font-size": 16
+            }
         }
     ]
 }

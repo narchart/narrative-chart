@@ -52,7 +52,6 @@ class Label extends Annotator {
 
             // identify the position
             let data_x, data_y, data_r, offset_y;
-            const fontSize = 12;
             const nodeName = focus_element.nodeName;
             if (nodeName === "circle") { // get center
                 data_x = parseFloat(focus_element.getAttribute("cx"));
@@ -74,7 +73,13 @@ class Label extends Annotator {
                 .attr("x", data_x)
                 .attr("y", data_y + offset_y)
                 .text(formatData)
-                .attr("font-size", fontSize)
+                .attr("font-size", () => {
+                    if ("font-size" in style) {
+                        return style["font-size"];
+                    } else {
+                        return 12;
+                    }
+                })
                 .attr("fill", () => {
                     if ("color" in style) {
                         return style["color"];
