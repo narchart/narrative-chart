@@ -21,7 +21,6 @@
         ]
     },
     "fact": {
-    "type": "distribution",
     "subspace": [],
     "measure": [
         {
@@ -35,12 +34,20 @@
         }
     ],
     "focus": [
+        {
+            "field": "Brand",
+            "value": "Ford"
+        }
     ]
     },
     "actions": [
         {
             "add": "chart",
             "mark": "bar"
+        },
+        {
+            "add": "annotation",
+            "method": ["fill", "label"]
         },
         {
             "add": "annotation",
@@ -63,6 +70,27 @@
                     "value": "Hyundai"
                 }
             ]
+        },
+        {
+            "add": "annotation",
+            "method": ["desaturate", "reference"],
+            "target": [
+                {
+                    "field": "Brand",
+                    "value": "Mazda"
+                },
+                {
+                    "field": "Brand",
+                    "value": "Toyota"
+                },
+                {
+                    "field": "Brand",
+                    "value": "Volkswagen"
+                }
+            ],
+            "style": {
+                "color": "lightgray"
+            }
         }
     ]
 }

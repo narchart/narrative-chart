@@ -1,21 +1,4 @@
 {
-    "fact": {
-    "type": "trend",
-    "subspace": [],
-    "measure": [
-        {
-        "field": "Recovered",
-        "aggregate": "sum"
-        }
-    ],
-    "breakdown": [
-        {
-        "field": "Date"
-        }
-    ],
-    "focus": [
-    ]
-    },
     "data": {
     "url": "http://chart.datacalliope.com/covid19World.csv",
     "schema": [
@@ -44,6 +27,20 @@
         }
     ]
     },
+    "fact": {
+        "subspace": [],
+        "measure": [
+            {
+            "field": "Recovered",
+            "aggregate": "sum"
+            }
+        ],
+        "breakdown": [
+            {
+            "field": "Date"
+            }
+        ]
+        },
     "actions": [
         {
             "add": "chart",

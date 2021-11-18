@@ -9,6 +9,7 @@ class Parser {
     parse(spec) {
         let dataspec = spec.data ? spec.data : {};
         let factspec = spec.fact ? spec.fact : {};
+        let focus_target = 'focus' in factspec ? factspec['focus'] : []
         let actionspecs = spec.actions ? spec.actions : [];
         let pipeline = new Pipeline()
         if (actionspecs.length > 0) {
@@ -22,6 +23,9 @@ class Parser {
                             actions_to_add.push(action);
                             break;
                         case 'annotation':
+                            if (!('target' in actionspec)) {
+                                actionspec['target'] = focus_target // default is focus
+                            }
                             if (('method' in actionspec) && Array.isArray(actionspec['method'])) {
                                 for (const submethod of actionspec['method']) {
                                     let subactionspec = {...actionspec}; // copy a dict
