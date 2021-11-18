@@ -51,10 +51,6 @@ export {
 } from "./separate";
 
 export {
-    default as Shade
-} from "./shade";
-
-export {
     default as Symbol
 } from "./symbol";
 

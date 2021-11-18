@@ -59,6 +59,9 @@
         "breakdown": [
             {
                 "field": "Name"
+            },
+            {
+                "field": "Origin"
             }
         ]
     },
