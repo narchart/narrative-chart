@@ -95,7 +95,6 @@ class Reference extends Annotator {
         for (let i = 0; i < N; ++i) {
             sumY += points[i][1]
         }
-        console.log(points, sumY, N, sumY/N)
 
         return sumY/N;
     }
