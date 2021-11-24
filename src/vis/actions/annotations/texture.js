@@ -9,13 +9,13 @@ class Texture extends Annotator {
             });
         };
         var config = {
-            "avatar_size" : 300
+            "texture_size" : 300
         }
         var defs = svg.append('svg:defs');
         defs.append("svg:pattern")
-            .attr("id", "grump_avatar")
-            .attr("width", config.avatar_size)
-            .attr("height", config.avatar_size)
+            .attr("id", "texture_background")
+            .attr("width", config.texture_size)
+            .attr("height", config.texture_size)
             .attr("patternUnits", "userSpaceOnUse")
             .append("svg:image")
             .attr("xlink:href", style["background-image"])
@@ -33,7 +33,7 @@ class Texture extends Annotator {
                 }
                 return false
             })
-            .style("fill", "url(#grump_avatar)")
+            .style("fill", "url(#texture_background)")
             .moveToFront();
     }
 }

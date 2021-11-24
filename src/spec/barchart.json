@@ -52,10 +52,7 @@
         {
             "add": "annotation",
             "method": "texture",
-            "target": [{
-                "field": "Brand",
-                "value": "Ford"
-            },
+            "target": [
             {
                 "field": "Brand",
                 "value": "GMC"
@@ -67,34 +64,26 @@
         },
         {
             "add": "annotation",
-            "method": "texture",
+            "method": "symbol",
             "target": [{
                 "field": "Brand",
                 "value": "Ford"
-            },
-            {
-                "field": "Brand",
-                "value": "GMC"
             }
             ],
             "style": {
-              "background-image": "http://localhost:3000/texture/stripe.png"
+              "icon-url": "http://localhost:3000/icon/rank-1.png"
             }
         },
         {
             "add": "annotation",
-            "method": "texture",
+            "method": "symbol",
             "target": [{
                 "field": "Brand",
-                "value": "Ford"
-            },
-            {
-                "field": "Brand",
-                "value": "GMC"
+                "value": "Hyundai"
             }
             ],
             "style": {
-              "background-image": "http://localhost:3000/texture/circle.png"
+              "icon-url": "http://localhost:3000/icon/rank-2.png"
             }
         },
         {
