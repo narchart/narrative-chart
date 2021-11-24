@@ -51,6 +51,54 @@
         },
         {
             "add": "annotation",
+            "method": "texture",
+            "target": [{
+                "field": "Brand",
+                "value": "Ford"
+            },
+            {
+                "field": "Brand",
+                "value": "GMC"
+            }
+            ],
+            "style": {
+              "background-image": "http://localhost:3000/texture/stripe.png"
+            }
+        },
+        {
+            "add": "annotation",
+            "method": "texture",
+            "target": [{
+                "field": "Brand",
+                "value": "Ford"
+            },
+            {
+                "field": "Brand",
+                "value": "GMC"
+            }
+            ],
+            "style": {
+              "background-image": "http://localhost:3000/texture/stripe.png"
+            }
+        },
+        {
+            "add": "annotation",
+            "method": "texture",
+            "target": [{
+                "field": "Brand",
+                "value": "Ford"
+            },
+            {
+                "field": "Brand",
+                "value": "GMC"
+            }
+            ],
+            "style": {
+              "background-image": "http://localhost:3000/texture/circle.png"
+            }
+        },
+        {
+            "add": "annotation",
             "method": ["regression", "contour", "label"],
             "target": [
                 {
