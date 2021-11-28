@@ -35,6 +35,10 @@ export {
 } from "./glow";
 
 export {
+    default as Hide
+} from "./hide";
+
+export {
     default as Label
 } from "./label";
 
@@ -49,6 +53,10 @@ export {
 export {
     default as Separate
 } from "./separate";
+
+export {
+    default as Show
+} from "./show";
 
 export {
     default as Symbol

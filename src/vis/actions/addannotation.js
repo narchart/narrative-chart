@@ -1,6 +1,6 @@
 import Action from './action';
 import AnnotationType from '../visualization/annotationtype';
-import {Arrow, Coloredarea, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Label, Reference, Regression, Separate, Symbol, Texture} from './annotations'
+import {Arrow, Coloredarea, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Hide, Label, Reference, Regression, Separate, Show, Symbol, Texture} from './annotations'
 
 class AddAnnotation extends Action {
     constructor(spec) {
@@ -46,6 +46,8 @@ class AddAnnotation extends Action {
                 return new Fill()
             case AnnotationType.GLOW:
                 return new Glow()
+            case AnnotationType.HIDE:
+                return new Hide()
             case AnnotationType.LABEL:
                 return new Label()
             case AnnotationType.REFERENCE:
@@ -54,6 +56,8 @@ class AddAnnotation extends Action {
                 return new Regression()
             case AnnotationType.SEPARATE:
                 return new Separate()
+            case AnnotationType.SHOW:
+                return new Show()
             case AnnotationType.SYMBOL:
                 return new Symbol()
             case AnnotationType.TEXTURE:

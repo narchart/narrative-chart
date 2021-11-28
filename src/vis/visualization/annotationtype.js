@@ -8,10 +8,12 @@ export default {
     FADE: 'fade',
     FILL: 'fill',
     GLOW: 'glow',
+    HIDE: 'hide',
     LABEL: 'label',
     REFERENCE: 'reference',
     REGRESSION: 'regression',
     SEPARATE: 'separate',
+    SHOW: 'show',
     SYMBOL: 'symbol',
     TEXTURE: 'texture'
 }
