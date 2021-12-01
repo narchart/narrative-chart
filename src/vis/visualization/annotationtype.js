@@ -15,5 +15,6 @@ export default {
     SEPARATE: 'separate',
     SHOW: 'show',
     SYMBOL: 'symbol',
-    TEXTURE: 'texture'
+    TEXTURE: 'texture',
+    TIP: 'tip'
 }

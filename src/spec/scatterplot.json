@@ -103,13 +103,23 @@
                 {
                     "field": "Name",
                     "value": "mazda glc"
-                },
+                }
+            ],
+            "style": {
+                "font-size": 16
+            }
+        },
+        {
+            "add": "annotation",
+            "method": "tip",
+            "target": [
                 {
                     "field": "Name",
                     "value": "pontiac safari (sw)"
                 }
             ],
             "style": {
+                "content": "This is the pontiac safari (sw)",
                 "font-size": 16
             }
         },
