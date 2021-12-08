@@ -26,7 +26,13 @@ class Circle extends Annotator {
 
                 svg.append("circle")
                     .attr("fill", "none")
-                    .attr("stroke", Color().ANNOTATION)
+                    .attr("stroke", function(d) {
+                        if ('color' in style) {
+                            return style['color']
+                        } else {
+                            return Color().ANNOTATION
+                        }
+                    })
                     .attr("stroke-width", 2)
                     .attr("x", circleX)
                     .attr("y", circleY)
@@ -39,7 +45,13 @@ class Circle extends Annotator {
                     circleR = width / 2 + padding;
                 svg.append("circle")
                     .attr("fill", "none")
-                    .attr("stroke", Color().ANNOTATION)
+                    .attr("stroke", function(d) {
+                        if ('color' in style) {
+                            return style['color']
+                        } else {
+                            return Color().ANNOTATION
+                        }
+                    })
                     .attr("stroke-width", 2)
                     .attr("x", circleX)
                     .attr("y", circleY)
