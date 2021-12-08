@@ -36,9 +36,10 @@ class Label extends Annotator {
 
             // get node data info
             let formatData
-            if(chart instanceof Scatterplot) {
+            if ("text" in style) {
+                formatData = style["text"];
+            } else if (chart instanceof Scatterplot) {
                 formatData = focus_element.__data__[yEncoding]
-                
             } else {
                 let data_d = parseFloat(focus_element.__data__[yEncoding]);
                 if ((data_d / 1000000) >= 1) {
