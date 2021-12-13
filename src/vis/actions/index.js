@@ -9,3 +9,11 @@ export {
 export {
     default as AddEncoding
 } from "./addencoding";
+
+export {
+    default as ModifyEncoding
+} from "./modifyencoding";
+
+export {
+    default as RemoveEncoding
+} from "./removeencoding";
