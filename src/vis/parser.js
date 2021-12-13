@@ -1,5 +1,5 @@
 import Pipeline from './pipeline';
-import {AddAnnotation, AddChart} from './actions';
+import {AddAnnotation, AddChart, AddEncoding} from './actions';
 
 class Parser {
     constructor() {
@@ -19,8 +19,7 @@ class Parser {
                 if ('add' in actionspec) {
                     switch (actionspec['add']) {
                         case 'chart':
-                            let action = new AddChart(actionspec);
-                            actions_to_add.push(action);
+                            actions_to_add.push(new AddChart(actionspec));
                             break;
                         case 'annotation':
                             if (!('target' in actionspec)) {
@@ -38,7 +37,9 @@ class Parser {
                                 actions_to_add.push(action);
                             }
                             break;
-                    
+                        case 'encoding':
+                            actions_to_add.push(new AddEncoding(actionspec));
+                            break;
                         default:
                             break;
                     }

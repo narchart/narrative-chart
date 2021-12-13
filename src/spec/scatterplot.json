@@ -71,6 +71,14 @@
             "mark": "point"
         },
         {
+            "add": "encoding",
+            "channel": "x",
+            "data": {
+                "field": "Cylinders",
+                "aggregate": "sum"
+            }
+        },
+        {
             "add": "annotation",
             "method": "fade",
             "target": []

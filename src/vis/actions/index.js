@@ -5,3 +5,7 @@ export {
 export {
     default as AddAnnotation
 } from "./addannotation";
+
+export {
+    default as AddEncoding
+} from "./addencoding";

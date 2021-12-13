@@ -129,8 +129,6 @@ class Chart {
 
     encodeColor() {}
 
-    encodeOpacity() {}
-
     encodeSize() {}
 
     encodeShape() {}
