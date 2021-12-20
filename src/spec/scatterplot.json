@@ -73,10 +73,22 @@
         {
             "add": "encoding",
             "channel": "x",
-            "data": {
-                "field": "Cylinders",
-                "aggregate": "sum"
-            }
+            "field": "Horsepower"
+        },
+        {
+            "add": "encoding",
+            "channel": "y",
+            "field": "Miles per Gallon"
+        },
+        {
+            "add": "encoding",
+            "channel": "size",
+            "field": "Weight"
+        },
+        {
+            "add": "encoding",
+            "channel": "color",
+            "field": "Origin"
         },
         {
             "add": "annotation",

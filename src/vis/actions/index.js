@@ -1,4 +1,8 @@
 export {
+    default as DataProcess
+} from "./dataprocess";
+
+export {
     default as AddChart
 } from "./addchart";
 

@@ -8,31 +8,6 @@ class RemoveEncoding extends Action {
 
     operate(vis) {
         
-        // let chart = vis.chart();
-        // switch (this.channel) {
-        //     case "x":
-                
-        //         break;
-
-        //     case "y":
-                
-        //         break;
-
-        //     case "color":
-                
-        //         break;
-
-        //     case "size":
-                
-        //         break;
-
-        //     case "shape":
-                
-        //         break;
-        
-        //     default:
-        //         break;
-        // }
     }
 }
 
