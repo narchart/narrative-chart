@@ -5,7 +5,7 @@ import Color from '../../visualization/color';
 class Scatterplot extends Chart {
 
     visualize() {
-        if (this.measure().length < 2) return;
+        // if (this.measure().length < 2) return;
         let margin = {
             "top": 10,
             "right": 10,
@@ -34,7 +34,7 @@ class Scatterplot extends Chart {
         if (breakdown[1]) {
             this.color = breakdown[1]
         }
-        
+
         this.drawAxis();
         this.encodeXY();
         this.encodeColor();
@@ -44,7 +44,7 @@ class Scatterplot extends Chart {
 
     drawAxis() {
         if (this.x && this.y) {
-            let x = this.x, 
+            let x = this.x,
                 y = this.y;
             let svg = this.svg();
             let width = this.width(),
@@ -63,7 +63,7 @@ class Scatterplot extends Chart {
                 .attr("font-size", fontsize)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
-                .text(x.field || "Count");
+                .text(x || "Count");
             axis.append("path")
                 .attr("class", "triangle")
                 .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
@@ -80,7 +80,7 @@ class Scatterplot extends Chart {
                 .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
                 .attr("font-size", fontsize)
                 .attr("text-anchor", "middle")
-                .text(y.field || "Count");
+                .text(y || "Count");
             axis.append("path")
                 .attr("class", "triangle")
                 .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
@@ -96,14 +96,13 @@ class Scatterplot extends Chart {
 
     encodeXY() {
         if (this.x && this.y) {
-            let x = this.x, 
-                y = this.y;
             let svg = this.svg();
             let width = this.width(),
                 height = this.height();
-            const factData = this.factdata();
-            const xEncoding = "measure0:" + (x.aggregate === "count" ? "COUNT" : x.field),
-                yEncoding = "measure1:" + (y.aggregate === "count" ? "COUNT" : y.field);
+            const processedData = this.processedData();
+            const xEncoding = this.x,
+                yEncoding = this.y;
+
             let axis = svg.append("g")
                 .attr("class", "axis"),
                 content = svg.append("g")
@@ -114,12 +113,12 @@ class Scatterplot extends Chart {
             // set the ranges
             let xScale = d3.scaleLinear()
                 .range([0, width])
-                .domain([0, d3.max(factData, d => d[xEncoding])])
+                .domain([0, d3.max(processedData, d => d[xEncoding])])
                 .nice();
 
             let yScale = d3.scaleLinear()
                 .range([height, 0])
-                .domain([0, d3.max(factData, d => d[yEncoding])])
+                .domain([0, d3.max(processedData, d => d[yEncoding])])
                 .nice();
 
             let axisX = d3.axisBottom(xScale)
@@ -202,20 +201,20 @@ class Scatterplot extends Chart {
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
-                .text(`${x.field} (${x.aggregate})` || "Count");
+                .text(xEncoding);
 
             axis.append("text")
                 .attr("transform", `translate(${-labelPadding - svg.selectAll(".axis_y").select("path").node().getBBox().width}, ${height / 2}) rotate(-90)`)
                 .attr("text-anchor", "middle")
                 .attr("font-size", fontsize)
-                .text(`${y.field} (${y.aggregate})` || "Count");
+                .text(yEncoding);
 
             /* draw points */
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
             content.append("g")
                 .attr("class", "circleGroup")
                 .selectAll("circle")
-                .data(factData)
+                .data(processedData)
                 .enter().append("circle")
                 .attr("class", "mark")
                 .attr("r", circleSize)
@@ -232,11 +231,11 @@ class Scatterplot extends Chart {
     encodeColor() {
         if (this.color) {
             let color = this.color;
-            let categories = Array.from(new Set(this.factdata().map(d => d[color.field])))
+            let categories = Array.from(new Set(this.processedData().map(d => d[color])))
             let svg = this.svg();
             svg.selectAll("circle")
                 .attr("fill", (d) => {
-                    let i = categories.indexOf(d[color.field]);
+                    let i = categories.indexOf(d[color]);
                     return Color().CATEGORICAL[i % 8]
                 })
         }
@@ -247,12 +246,12 @@ class Scatterplot extends Chart {
             let size = this.size;
             let width = this.width(),
                 height = this.height();
-            let sizeEncoding = "measure2:" + (size.aggregate === "count" ? "COUNT" : size.field);
+            let sizeEncoding = size;
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 40), 15);
             const maxR = circleSize;
             const minR = circleSize / 10;
-            let minValue = d3.min(this.factdata(), d => d[sizeEncoding]),
-                maxValue = d3.max(this.factdata(), d => d[sizeEncoding]);
+            let minValue = d3.min(this.processedData(), d => d[sizeEncoding]),
+                maxValue = d3.max(this.processedData(), d => d[sizeEncoding]);
             let scale = d3.scaleSqrt([minValue, maxValue], [minR, maxR]);
             let svg = this.svg();
             svg.selectAll("circle")
@@ -262,6 +261,36 @@ class Scatterplot extends Chart {
 
     encodeShape() {
 
+    }
+
+    addEncoding(channel, field) {
+        if (!this[channel]) {
+            this[channel] = field;
+            d3.selectAll("svg > g > *").remove();
+            this.drawAxis();
+            if (this.x && this.y) this.encodeXY();
+            if (this.color) this.encodeColor();
+            if (this.size) this.encodeSize();
+        }
+    }
+
+    modifyEncoding(channel, field) {
+        if (this[channel]) {
+            this[channel] = field;
+            d3.selectAll("svg > g > *").remove();
+            this.drawAxis();
+            if (this.x && this.y) this.encodeXY();
+            if (this.color) this.encodeColor();
+            if (this.size) this.encodeSize();
+        }
+    }
+
+    removeEncoding(channel) {
+        this[channel] = null;
+        d3.selectAll("svg > g > *").remove();
+        if (this.x && this.y) this.encodeXY();
+        if (this.color) this.encodeColor();
+        if (this.size) this.encodeSize();
     }
 }
 

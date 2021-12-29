@@ -7,6 +7,7 @@ class Visualization {
         this._data = [];
         this._fact = {};
         this._factdata = [];
+        this._processedData = [];
         this._size = Size.LARGE;
         this._width = 0;
         this._height = 0;
@@ -45,6 +46,7 @@ class Visualization {
             return this._data;
         }
         this._data = value;
+        this._processedData = value;
     }
 
     factdata(value) {
@@ -52,6 +54,13 @@ class Visualization {
             return this._factdata;
         }
         this._factdata = value;
+    }
+
+    processedData(value) {
+        if (!value) {
+            return this._processedData;
+        }
+        this._processedData = value;
     }
 
     fact(value) {

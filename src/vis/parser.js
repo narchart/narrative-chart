@@ -1,5 +1,5 @@
 import Pipeline from './pipeline';
-import {AddAnnotation, AddChart, AddEncoding} from './actions';
+import { AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess } from './actions';
 
 class Parser {
     constructor() {
@@ -15,7 +15,7 @@ class Parser {
         if (actionspecs.length > 0) {
             for (const actionspec of actionspecs) {
                 // TODO: deal with actionspec
-                let actions_to_add = []
+                let actions_to_add = [];
                 if ('add' in actionspec) {
                     switch (actionspec['add']) {
                         case 'chart':
@@ -27,7 +27,7 @@ class Parser {
                             }
                             if (('method' in actionspec) && Array.isArray(actionspec['method'])) {
                                 for (const submethod of actionspec['method']) {
-                                    let subactionspec = {...actionspec}; // copy a dict
+                                    let subactionspec = { ...actionspec }; // copy a dict
                                     subactionspec['method'] = submethod
                                     let action = new AddAnnotation(subactionspec);
                                     actions_to_add.push(action);
@@ -43,14 +43,21 @@ class Parser {
                         default:
                             break;
                     }
-                    
+                } else if ('modify' in actionspec) {
+                    actions_to_add.push(new ModifyEncoding(actionspec));
+                } else if ('remove' in actionspec) {
+                    actions_to_add.push(new RemoveEncoding(actionspec));
+                }
+                else if ('select' in actionspec || 'groupby' in actionspec || 'filter' in actionspec) {
+                    // data processing
+                    actions_to_add.push(new DataProcess(actionspec));
                 }
                 for (const action of actions_to_add) {
                     pipeline.add(action)
                 }
             }
         }
-        return {dataspec, factspec, pipeline};
+        return { dataspec, factspec, pipeline };
     }
 }
 

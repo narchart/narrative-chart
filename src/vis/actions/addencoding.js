@@ -8,7 +8,7 @@ class AddEncoding extends Action {
     }
 
     operate(vis) {
-      
+        vis.chart().addEncoding(this.channel, this.field);
     }
 }
 

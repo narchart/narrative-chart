@@ -8,7 +8,7 @@ class ModifyEncoding extends Action {
     }
 
     operate(vis) {
-        
+        vis.chart().modifyEncoding(this.channel, this.field);
     }
 }
 

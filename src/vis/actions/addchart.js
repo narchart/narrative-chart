@@ -16,11 +16,11 @@ class AddChart extends Action {
         vis.chart(this._mark2chart(this._mark));
         // let chart = this._type2chart(spec.type);
         let chart = vis.chart();
-        chart.size(vis._size);
         chart.height(vis._height);
         chart.width(vis._width);
         chart.data(vis._data);
         chart.factdata(factdata);
+        chart.processedData(vis._processedData)
         chart.subspace(fact.subspace);
         chart.measure(fact.measure);
         chart.breakdown(fact.breakdown);

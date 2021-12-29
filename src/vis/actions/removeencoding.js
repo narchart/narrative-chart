@@ -7,7 +7,7 @@ class RemoveEncoding extends Action {
     }
 
     operate(vis) {
-        
+        vis.chart().removeEncoding(this.channel);
     }
 }
 
