@@ -67,6 +67,24 @@
     },
     "actions": [
         {
+            "select": [
+                {
+                    "field": "Horsepower",
+                    "aggregate": "sum"
+                },
+                {
+                    "field": "Miles per Gallon",
+                    "aggregate": "sum"
+                }, 
+                {
+                    "field": "Origin"
+                },
+                {
+                    "field": "Weight"
+                }
+            ]
+        },
+        {
             "add": "chart",
             "mark": "point"
         },
