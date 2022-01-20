@@ -1,6 +1,6 @@
 import MarkType from '../visualization/marktype';
 import Action from './action';
-import { BarChart, LineChart, Scatterplot } from '../charts';
+import { BarChart, LineChart, Scatterplot, Unitvis } from '../charts';
 
 class AddChart extends Action {
     constructor(spec) {
@@ -37,6 +37,8 @@ class AddChart extends Action {
                 return new BarChart();
             case MarkType.LINE:
                 return new LineChart();
+            case MarkType.UNIT:
+                return new Unitvis();
             default:
                 return new Scatterplot();
         }

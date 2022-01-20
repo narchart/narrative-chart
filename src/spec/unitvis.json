@@ -12,7 +12,7 @@
             },
             {
                 "field": "Cylinders",
-                "type": "numerical"
+                "type": "categorical"
             },
             {
                 "field": "Displacement",
@@ -32,7 +32,7 @@
             },
             {
                 "field": "Year",
-                "type": "temporal"
+                "type": "categorical"
             },
             {
                 "field": "Origin",
@@ -64,6 +64,12 @@
                 },
                 {
                     "field": "Origin"
+                },
+                {
+                    "field": "Cylinders"
+                },
+                {
+                    "field": "Year"
                 }
             ],
             "groupby": [
@@ -75,37 +81,56 @@
         },
         {
             "add": "chart",
-            "mark": "point"
+            "mark": "unit"
         },
         {
             "add": "encoding",
             "channel": "x",
-            "field": {"field":"Horsepower","type":"numerical"}
+            "field": {"field":"Year","type":"categorical"}
         },
         {
             "add": "encoding",
             "channel": "y",
-            "field": {"field":"Miles per Gallon","type":"numerical"}
-        },
-        {
-            "add": "encoding",
-            "channel": "color",
             "field": {"field":"Origin","type":"categorical"}
         },
         {
             "add": "encoding",
             "channel": "size",
-            "field": {"field":"Acceleration","type":"numerical"}
+            "field": {"field":"Horsepower","type":"numerical"}
         },
-       
+        {
+            "modify": "encoding",
+            "channel": "size",
+            "field": {"field":"Miles per Gallon","type":"numerical"}
+        },
+        {
+            "add": "encoding",
+            "channel": "color",
+            "field": {"field":"Cylinders","type":"numerical"}
+        },
+        {
+            "remove": "encoding",
+            "channel": "y",
+            "field": {"field":"Year","type":"numerical"}
+        },
+        {
+            "modify": "encoding",
+            "channel": "x",
+            "field": {"field":"Origin","type":"numerical"}
+        },
+        {
+            "add": "encoding",
+            "channel": "y",
+            "field": {"field":"Year","type":"numerical"}
+        },
         {
             "add": "annotation",
             "method": ["fill"],
             "target": [
                 {
-                    "field": "Origin",
-                    "value": "Japan"
-                }]
-        }    
+                    "field": "Year",
+                    "value": "1978"
+            }]
+        }
     ]
 }

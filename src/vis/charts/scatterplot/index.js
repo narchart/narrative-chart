@@ -264,8 +264,9 @@ class Scatterplot extends Chart {
     }
 
     addEncoding(channel, field) {
+        console.log(field)
         if (!this[channel]) {
-            this[channel] = field;
+            this[channel] = field.field;
             d3.selectAll("svg > g > *").remove();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();

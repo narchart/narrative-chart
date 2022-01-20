@@ -16,7 +16,7 @@ export default class Playground extends React.Component {
   constructor(props) {
     super(props);
     let status = 'static';
-    let spec = require('../spec/scatterplot.json');
+    let spec = require('../spec/unitvis.json');
     this.state = {
       spec: spec,
       status: status,
@@ -74,6 +74,7 @@ export default class Playground extends React.Component {
       <option value="linechart">linechart</option>
       <option value="barchart">barchart</option>
       <option value="test">test</option>
+      <option value="unitvis">unitvis</option>
     </select>
 
     let specselector;

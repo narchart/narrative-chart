@@ -9,3 +9,7 @@ export {
 export {
     default as Scatterplot
 } from "./scatterplot";
+
+export {
+    default as Unitvis
+} from "./unitvis";
