@@ -16,7 +16,7 @@ export default class Playground extends React.Component {
   constructor(props) {
     super(props);
     let status = 'static';
-    let spec = require('../spec/unitvis.json');
+    let spec = require('../spec/scatterplot.json');
     this.state = {
       spec: spec,
       status: status,

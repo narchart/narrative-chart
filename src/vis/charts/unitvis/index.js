@@ -2,7 +2,6 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 import Unit from './unit';
-import { text } from 'd3';
 class Unitvis extends Chart {
 
     visualize() {
@@ -269,7 +268,7 @@ class Unitvis extends Chart {
             }
 
             let xmaxCount = 0
-            for (const [key, value] of Object.entries(ymax)) {
+            for (const [, value] of Object.entries(ymax)) {
                 xmaxCount += Math.ceil(value / length);
             }
 
@@ -287,6 +286,8 @@ class Unitvis extends Chart {
                     let s=(0.9*width-2*(xbar)*length*radius)/(radius)/(xbar+3)/2<1?0.2:Math.floor((0.9*width-2*(xbar)*length*radius)/(radius)/(xbar+3)/2)         
                     let leftPadding = (1* width -xbar*length*2*radius-(xbar-1)*s*2*radius ) / 2+1*margin.left
                     return leftPadding + (width-2*leftPadding)/(xbar-1)*i;
+                } else {
+                    return null
                 }
             })
 
@@ -547,8 +548,6 @@ class Unitvis extends Chart {
             } else {
                 rowTotalWidth = 2.1 * maxR * (column + 1);
             }
-            let strlen = yValueFreq.map(d => d['key'].length)
-            let strmax = d3.max(strlen)
 
             let twosideleft = 30
             let Minleftpadding = 2 * maxR + 3 * textSize + twosideleft
@@ -735,7 +734,6 @@ class Unitvis extends Chart {
 
     encodeColor() {
         if (this.color) {
-            let svg = this.svg()
             let colorField = this.color.field;
             let colorFreqValue = d3.nest().key(function (d) { return d[colorField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
             let colorValue = colorFreqValue.map(d => d['key']);
@@ -870,6 +868,9 @@ class Unitvis extends Chart {
                         return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column))
 
                         
+                    }
+                    else {
+                        return null
                     }
                 }
             })

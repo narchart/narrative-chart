@@ -1,11 +1,11 @@
 # Narrative Charts
 
-# Documentation Overview
-
 - [Narrative Charts](#narrative-charts)
-- [Documentation Overview](#documentation-overview)
   - [Getting Started](#getting-started)
-  - [Single Visualization Specification](#single-visualization-specification)
+    - [Installation](#installation)
+    - [Import narrative-chart](#import-narrative-chart)
+    - [Usage](#usage)
+  - [Visualization Specification](#visualization-specification)
     - [Properties for data](#properties-for-data)
       - [1. Data from URL](#1-data-from-url)
       - [2. Inline Data](#2-inline-data)
@@ -15,12 +15,69 @@
         - [Add Marks](#add-marks)
         - [Encode Visual Channels](#encode-visual-channels)
       - [3. Annotation](#3-annotation)
+        - [Arrow](#arrow)
+        - [Circle](#circle)
+        - [Contour](#contour)
+        - [Desaturate](#desaturate)
+        - [Distribution](#distribution)
+        - [Fade](#fade)
+        - [Fill](#fill)
+        - [Glow](#glow)
+        - [Label](#label)
+        - [Reference](#reference)
+        - [Regression](#regression)
+        - [Symbol](#symbol)
+        - [Texture](#texture)
     - [An Example](#an-example)
+  - [Development](#development)
+    - [Playground](#playground)
 
 ## Getting Started
 
+### Installation
 
-## Single Visualization Specification
+Use npm/yarn to install the libraries
+
+```
+npm install narrative-chart
+```
+
+or
+
+```
+yarn add narrative-chart
+```
+
+### Import narrative-chart
+
+```
+import {NarrativeChart} from "narrative-chart";
+```
+
+### Usage
+
+(1) Create a DOM element that the visualization will be attached to.
+
+```
+<div id="vis"></div>
+```
+
+(2) Then, build your [visualization specification](#visualization-specification).
+   
+```
+var yourSpec = {...}
+```
+
+(3) Finally, visualize the chart with the specification.
+
+```
+const vis = new NarrativeChart();
+vis.container('#vis');
+vis.load(yourSpec);
+vis.generate();
+```
+
+## Visualization Specification
 
 ```
 {
@@ -88,7 +145,7 @@
 ```
 {
     "add": "chart",
-    "mark": point/line/bar
+    "mark": point/line/bar/unit
 }
 ```
 
@@ -100,7 +157,10 @@
 | Scatterplot | y | numerical |
 | Scatterplot | size | numerical |
 | Scatterplot | color | categorical |
-| Scatterplot | shape | categorical |
+| Unitvis | x | numerical |
+| Unitvis | y | numerical |
+| Unitvis | size | numerical |
+| Unitvis | color | categorical |
 | Bar Chart | x | categorical |
 | Bar Chart | y | numerical |
 | Bar Chart | color | categorical |
@@ -113,8 +173,8 @@ Add Encoding
 ```
 {
 	"add": "encoding",
-	"channel": [x/y/color/size/shape],
-	"field": [field]
+	"channel": x/y/color/size/shape],
+	"field": field
 }
 ```
 
@@ -123,8 +183,8 @@ Modify Encoding
 ```
 {
 	"modify": "encoding",
-	"channel": [x/y/color/size/shape],
-	"field": [field]
+	"channel": x/y/color/size,
+	"field": field
 }
 ```
 
@@ -133,7 +193,7 @@ Remove Encoding
 ```
 {
 	"remove": "encoding",
-	"channel": [x/y/color/size/shape]
+	"channel": x/y/color/size/shape
 }
 ```
 
@@ -148,7 +208,234 @@ Remove Encoding
             "field": field,
             "value": value
         }
+    ],
+    "style": {
+        ...
+    }
+}
+```
+
+##### Arrow
+
+```
+{
+    "add": "annotation",
+    "method": "arrow",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    }
+}
+```
+
+##### Circle
+
+```
+{
+    "add": "annotation",
+    "method": "circle",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    }
+}
+```
+
+##### Contour
+
+```
+{
+    "add": "annotation",
+    "method": "contour",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    }
+}
+```
+
+##### Desaturate
+
+```
+{
+    "add": "annotation",
+    "method": "desaturate",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
     ]
+}
+```
+
+##### Distribution
+
+```
+{
+    "add": "annotation",
+    "method": "distribution",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ]
+}
+```
+
+##### Fade
+
+```
+{
+    "add": "annotation",
+    "method": "fade",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ]
+}
+```
+
+##### Fill
+
+```
+{
+    "add": "annotation",
+    "method": "fill",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    }
+}
+```
+
+##### Glow
+
+```
+{
+    "add": "annotation",
+    "method": "glow",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    }
+}
+```
+
+##### Label
+
+```
+{
+    "add": "annotation",
+    "method": "label",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "text": text,
+        "font-size": font-size,
+        "color": color
+    }
+}
+```
+
+##### Reference
+
+```
+{
+    "add": "annotation",
+    "method": "reference",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ]
+}
+```
+
+##### Regression
+
+```
+{
+    "add": "annotation",
+    "method": "regression",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    }
+}
+```
+
+##### Symbol
+
+```
+{
+    "add": "annotation",
+    "method": "symbol",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "icon-url": icon-url
+    }
+}
+```
+
+##### Texture
+
+```
+{
+    "add": "annotation",
+    "method": "texture",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "background-image": background-image-url
+    }
 }
 ```
 
@@ -278,4 +565,27 @@ Remove Encoding
     }
   ]
 }
+```
+
+## Development
+
+### Playground
+
+Clone repository
+
+```
+git clone https://github.com/idvxlab/NarrativeChart.git
+```
+
+Switch to the Master branch
+
+```
+cd NarrativeChart
+git checkout master
+```
+
+Use yarn to start the playground
+
+```
+yarn start
 ```

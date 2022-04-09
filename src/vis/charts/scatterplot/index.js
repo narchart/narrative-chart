@@ -267,7 +267,7 @@ class Scatterplot extends Chart {
         console.log(field)
         if (!this[channel]) {
             this[channel] = field.field;
-            this.svg().selectAll("g > *").remove();
+            d3.selectAll("svg > g > *").remove();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();
             if (this.color) this.encodeColor();
@@ -278,7 +278,7 @@ class Scatterplot extends Chart {
     modifyEncoding(channel, field) {
         if (this[channel]) {
             this[channel] = field;
-            this.svg().selectAll("g > *").remove();
+            d3.selectAll("svg > g > *").remove();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();
             if (this.color) this.encodeColor();
@@ -288,7 +288,7 @@ class Scatterplot extends Chart {
 
     removeEncoding(channel) {
         this[channel] = null;
-        this.svg().selectAll("g > *").remove();
+        d3.selectAll("svg > g > *").remove();
         if (this.x && this.y) this.encodeXY();
         if (this.color) this.encodeColor();
         if (this.size) this.encodeSize();
