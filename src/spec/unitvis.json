@@ -77,7 +77,7 @@
                     "field": "Name"
                 }
             ],
-            "filter": []
+            "filter": [ { "field": "Weight", "op":"less" ,"value": 4000}]
         },
         {
             "add": "chart",

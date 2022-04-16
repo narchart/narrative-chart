@@ -27,9 +27,37 @@ class DataProcess extends Action {
             if (this._filter.length !== 0) {
                 data = data.filter(row => {
                     for (const f of this._filter) {
-                        if (!(f.field in row && row[f.field] === f.value)) {
+                        if ("op" in f) {
+                            switch (f.op) {
+                                case "equal":
+                                    if (!(f.field in row && row[f.field] === Number(f.value))) {
+                                        return false;
+                                    }
+                                    break;
+                                case "inequal":
+                                    if (!(f.field in row && row[f.field] !== Number(f.value))) {
+                                        return false;
+                                    }
+                                    break;
+                                case "greater":
+                                    if (!(f.field in row && row[f.field] >= Number(f.value))) {
+                                        return false;
+                                    }
+                                    break;
+                                case "less":
+                                    if (!(f.field in row && row[f.field] <= Number(f.value))) {
+                                        return false;
+                                    }
+                                    break;
+                                default:
+                                    console.error('Data Processing: Error In Filter By:\n' + Error);
+                                    return true;
+                            }
+                        } else {
+                            if (!(f.field in row && row[f.field] === f.value)) {
                                 return false;
                             }
+                        }
                     }
                     return true;
                 })
@@ -37,7 +65,6 @@ class DataProcess extends Action {
         } catch (error) {
             console.error('Data Processing: Error In Filtering:\n' + Error);
         }
-        
         // Step 2: Groupby
         // aggregate(被select的数值列) by groupby
         // 如果有 agg 和 groupby ==> 根据 groupby 整理所有数值然后做 min/max/...
@@ -66,7 +93,6 @@ class DataProcess extends Action {
         } catch (error) {
             console.error('Data Processing: Error In Select:\n' + Error);
         }
-        
         // 处理完的 processedData 存进 vis 里
         vis.processedData(processedData);
     }
@@ -82,16 +108,16 @@ class DataProcess extends Action {
         if (selects.length === 0 && groupbys.length === 0) {
             return data;
         }
-        const groupbyCols = groupbys.map(g => g.field); 
+        const groupbyCols = groupbys.map(g => g.field);
         const aggCols = selects.filter(s => 'aggregate' in s && s.aggregate !== 'None') // filter for cols needed to be aggregated
-                                .reduce(function(res, col) {
-                                    res[col.field] = col.aggregate;
-                                    return res;
-                                }, {});
+            .reduce(function (res, col) {
+                res[col.field] = col.aggregate;
+                return res;
+            }, {});
         // restore records by groupby values
         const result = data.reduce(function (res, obj) {
             // 为了在 res 中存储每组unique 的 groupby 记录
-            let recordName = groupbyCols.reduce(function(res, col) {
+            let recordName = groupbyCols.reduce(function (res, col) {
                 return res + col + ':' + obj[col] + ';';
             }, "");
 
@@ -108,7 +134,6 @@ class DataProcess extends Action {
                 })
             }
             return res;
-            
         }, []);
 
         // aggregate data with min/max/sum/count
@@ -119,7 +144,6 @@ class DataProcess extends Action {
                 }
             })
         })
-        
         return [...result];
     }
 
@@ -130,7 +154,7 @@ class DataProcess extends Action {
      * @returns 
      */
     aggFuncRouter(colData, aggFunc) {
-        switch(aggFunc.toLowerCase()) {
+        switch (aggFunc.toLowerCase()) {
             case 'min':
                 return min(colData);
             case 'max':
