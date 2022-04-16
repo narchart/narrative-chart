@@ -22,6 +22,8 @@ class Contour extends Annotator {
                 }
                 return false
             })
+            .transition()
+            .duration('duration' in animation ? animation['duration']: 0)
             .attr("stroke-width", 2)
             .attr("stroke-alignment", "outer")
             .attr("opacity", 1)
@@ -32,7 +34,7 @@ class Contour extends Annotator {
                     return Color().ANNOTATION
                 }
             })
-            .moveToFront();
+            // .moveToFront();
 
     }
 }

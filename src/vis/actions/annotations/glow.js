@@ -43,6 +43,8 @@ class Glow extends Annotator {
                 }
                 return false
             })
+            .transition()
+            .duration('duration' in animation ? animation['duration']: 0)
             .style("stroke",  function() {
                 if ('color' in style) {
                     return style['color']

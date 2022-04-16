@@ -7,6 +7,7 @@ export default function Color(mode = "light") {
         TEXT: '#000000',
         ANNOTATION: '#FFBE32',
         DEFAULT: '#73C8F3',
+        TOOLTIP: '#F28787',
 
         //Qualitative（categorical)
         CATEGORICAL: ['#73C8F3', '#FFE86D', '#F6B0A7', '#B2DBC1', '#EAE2B7', '#F3705C', '#4ECBC4', '#96A7CE'],

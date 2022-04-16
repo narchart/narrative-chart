@@ -32,12 +32,16 @@ class Band extends Annotator {
 
                 svg.select(".content").select(".circleGroup").append("circle")
                     .attr("fill", Color().ANNOTATION)
-                    .attr("opacity", 0.3)
                     .attr("stroke-width", 0)
                     .attr("x", circleX)
                     .attr("y", circleY)
                     .attr("transform", "translate(" + circleX + "," + circleY + ")")
                     .attr("r", circleR)
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']: 0)
+                    .attr("fill-opacity", 0.3)
+
+                    
                 svg.select(".lineGroup").moveToFront();
 
             } else if (item.nodeName === "rect") {
@@ -47,17 +51,17 @@ class Band extends Annotator {
                     height = Number(item.getAttribute("height")) + padding;
 
                 svg.select(".content").select("g").append("rect")
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']: 0)
                     .attr("fill", Color().ANNOTATION)
-                    .attr("opacity", 0.3)
+                    .attr("fill-opacity", 0.3)
                     .attr("stroke-width", 0)
                     .attr("x", rectX)
                     .attr("y", rectY)
                     .attr("width", width)
                     .attr("height", height)
             }
-
         });
-        selected.moveToFront();
     }
 }
 

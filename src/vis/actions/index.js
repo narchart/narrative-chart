@@ -15,6 +15,18 @@ export {
 } from "./addencoding";
 
 export {
+    default as AddAggregation
+} from "./addaggregation";
+
+export {
+    default as AddTitle
+} from "./addtitle";
+
+export {
+    default as AddCaption
+} from "./addcaption";
+
+export {
     default as ModifyEncoding
 } from "./modifyencoding";
 

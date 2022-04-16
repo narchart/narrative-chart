@@ -21,6 +21,8 @@ class Hide extends Annotator {
                 }
                 return false
             })
+            .transition()
+            .duration('duration' in animation ? animation['duration']: 0)
             .attr("opacity", 0);
     }
 }

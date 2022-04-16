@@ -38,7 +38,10 @@ export default class Chart extends Component {
                     height = 150;
                     width = 235;
                     break;
-
+                case 'unitvis':
+                    height = 720;
+                    width = 680;
+                    break;               
                 default:
                     break;
             }
@@ -52,7 +55,7 @@ export default class Chart extends Component {
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
-                        justifyContent: "center"
+                        // justifyContent: "center"
                     }} />
             </div>
         )

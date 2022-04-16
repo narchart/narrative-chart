@@ -12,6 +12,7 @@ class Texture extends Annotator {
             "texture_size" : 300
         }
         var defs = svg.append('svg:defs');
+        console.log(animation)
         defs.append("svg:pattern")
             .attr("id", "texture_background")
             .attr("width", config.texture_size)
@@ -33,8 +34,11 @@ class Texture extends Annotator {
                 }
                 return false
             })
+            .transition()
+            .duration('duration' in animation ? animation['duration']: 0)
             .style("fill", "url(#texture_background)")
-            .moveToFront();
+            // .moveToFront();
+
     }
 }
 

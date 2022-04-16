@@ -32,6 +32,9 @@ class Label extends Annotator {
             let formatData
             if ("text" in style) {
                 formatData = style["text"];
+            }
+            else if ("field" in style) {
+                formatData = focus_element.__data__[style["field"]]
             } else if (chart instanceof Scatterplot) {
                 formatData = focus_element.__data__[yEncoding]
             } else {
@@ -48,6 +51,7 @@ class Label extends Annotator {
             // identify the position
             let data_x, data_y, data_r, offset_y;
             const nodeName = focus_element.nodeName;
+
             if (nodeName === "circle") { // get center
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
@@ -61,7 +65,6 @@ class Label extends Annotator {
             } else { // currently not support
                 return;
             }
-
             // draw text
             svg.append("text")
                 .attr("class", "text")
@@ -83,9 +86,14 @@ class Label extends Annotator {
                     }
                 })
                 .attr("text-anchor", "middle")
-                .attr("alignment-baseline", "Alphabetic");
+                .attr("alignment-baseline", "Alphabetic")
+                .attr("fill-opacity", 0)
+                .transition()
+                .duration('duration' in animation ? animation['duration']: 0)
+                .attr("fill-opacity", 1);
+            
         
-        }   
+    }
             
     }
 }

@@ -18,6 +18,7 @@ class Circle extends Annotator {
             })
 
         const padding = 5;
+        
         selected.nodes().forEach(item => {
             if (item.nodeName === "circle") {
                 let circleR = Number(item.getAttribute("r")) + padding,
@@ -37,7 +38,11 @@ class Circle extends Annotator {
                     .attr("x", circleX)
                     .attr("y", circleY)
                     .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                    .transition()
                     .attr("r", circleR)
+                    .duration('duration' in animation ? animation['duration']: 0)    
+                    .attr("fill-opacity", 1)
+
             } else if (item.nodeName === "rect") {
                 let circleY = item.getAttribute("y"),
                     width = item.getAttribute("width"),
@@ -60,6 +65,7 @@ class Circle extends Annotator {
             }
 
         });
+        
     }
 }
 

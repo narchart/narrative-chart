@@ -1,5 +1,5 @@
 import Pipeline from './pipeline';
-import { AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess } from './actions';
+import { AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddAggregation, AddTitle, AddCaption} from './actions';
 
 class Parser {
     constructor() {
@@ -40,6 +40,15 @@ class Parser {
                         case 'encoding':
                             actions_to_add.push(new AddEncoding(actionspec));
                             break;
+                        case 'aggregation':
+                            actions_to_add.push(new AddAggregation(actionspec));
+                            break;     
+                        case 'title':
+                            actions_to_add.push(new AddTitle(actionspec)); 
+                            break;   
+                        case 'caption':
+                            actions_to_add.push(new AddCaption(actionspec)); 
+                            break;              
                         default:
                             break;
                     }
@@ -54,6 +63,7 @@ class Parser {
                 }
                 for (const action of actions_to_add) {
                     pipeline.add(action)
+                
                 }
             }
         }

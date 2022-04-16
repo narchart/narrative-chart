@@ -35,6 +35,8 @@ class Arrow extends Annotator {
             [0, 0]
         ];
 
+        
+
         focus_elements.nodes().forEach((one_element) => {
             // identify the position
             let data_x, data_y, offset;
@@ -58,14 +60,19 @@ class Arrow extends Annotator {
             svg.append("path")
                 .attr("class", "arrow")
                 .attr("d", d3.line()(new_arrow_points))
+                .transition()
+                .duration('duration' in animation ? animation['duration']: 0)
                 .attr("fill", () => {
                     if ("color" in style) {
                         return style["color"];
                     } else {
                         return Color().ANNOTATION;
                     }
-                });
-        })
+                })
+                .attr("fill-opacity", 1)
+                ;
+    })
+        
 
 
     }

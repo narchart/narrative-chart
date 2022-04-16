@@ -28,7 +28,12 @@
         - [Regression](#regression)
         - [Symbol](#symbol)
         - [Texture](#texture)
-    - [An Example](#an-example)
+        - [Tooltip](#tooltip)
+      - [4. Title](#4-Title)
+    - [Animations](#animations)
+    - [Examples](#examples)
+      - [1. Without Animation](#1-without-animation)
+      - [2. With Animation](#2-with-animation)
   - [Development](#development)
     - [Playground](#playground)
 
@@ -157,8 +162,8 @@ vis.generate();
 | Scatterplot | y | numerical |
 | Scatterplot | size | numerical |
 | Scatterplot | color | categorical |
-| Unitvis | x | numerical |
-| Unitvis | y | numerical |
+| Unitvis | x | categorical |
+| Unitvis | y | categorical |
 | Unitvis | size | numerical |
 | Unitvis | color | categorical |
 | Bar Chart | x | categorical |
@@ -507,7 +512,57 @@ Remove Encoding
 }
 ```
 
-### An Example
+##### Tooltip
+
+```
+{
+    "add": "annotation",
+    "method": "tooltip",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "text": text,
+        "font-size": font-size
+      },
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
+
+    
+}
+```
+
+#### 4. Title
+
+```
+{
+    "add": "title",
+    "style": {
+        "text": text
+      },
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
+
+}
+```
+
+### Animations
+
+
+Narrative Charts supports animated transitions between actions by specifying "duration" and "delay". "Duration" represents per-action duration in milliseconds. "Delay" represents per-action delay in milliseconds.
+
+
+
+### Examples
+
+#### 1. Without Animations
 
 ```
 {
@@ -629,15 +684,150 @@ Remove Encoding
           "field": "Origin",
           "value": "Japan"
         }
-      ],
-      "animation": {
-        "delay": 1000,
-        "duration": 1000
-      }
+      ]
     }
   ]
 }
 ```
+#### 2. With Animations
+
+```
+{
+    "data": {
+        "url": "http://localhost:3000/spreadsheets/cars.csv",
+        "schema": [
+            {
+                "field": "Name",
+                "type": "categorical"
+            },
+            {
+                "field": "Miles per Gallon",
+                "type": "numerical"
+            },
+            {
+                "field": "Cylinders",
+                "type": "categorical"
+            },
+            {
+                "field": "Displacement",
+                "type": "numerical"
+            },
+            {
+                "field": "Horsepower",
+                "type": "numerical"
+            },
+            {
+                "field": "Weight",
+                "type": "numerical"
+            },
+            {
+                "field": "Acceleration",
+                "type": "numerical"
+            },
+            {
+                "field": "Year",
+                "type": "categorical"
+            },
+            {
+                "field": "Origin",
+                "type": "categorical"
+            },
+            {
+                "field": "dataid",
+                "type": "categorical"
+            }
+        ]
+    },
+    "actions": [
+        {
+            "select": [
+                {
+                    "field": "Name"
+                },
+                {
+                    "field": "Miles per Gallon",
+                    "aggregate": "sum"
+                },
+                {
+                    "field": "Cylinders"
+                },
+                {
+                    "field": "Displacement",
+                    "aggregate": "sum"
+                },
+                {
+                    "field": "Horsepower",
+                    "aggregate": "sum"
+                },
+                {
+                    "field": "Weight",
+                    "aggregate": "sum"
+                },
+                {
+                    "field": "Acceleration",
+                    "aggregate": "sum"
+                },
+                {
+                    "field": "Year"
+                },
+                {
+                    "field": "Origin"
+                },
+                {
+                    "field": "dataid"
+                }
+            ],
+            "groupby": [
+                {
+                    "field": "dataid"
+                }
+            ],
+            "filter": []
+        },
+        {
+            "add": "chart",
+            "mark": "unit"
+        },
+        {
+            "add": "encoding",
+            "channel": "x",
+            "field": {
+                "field": "Year",
+                "type": "categorical"
+            },
+            "animation": {
+                "duration": 1000,
+                "delay": 0
+            }
+        },
+        {
+            "add": "annotation",
+            "method": "fill",
+            "target": [{
+                "field": "Origin",
+                "value": "Japan"
+              }],
+            "animation": {
+                "duration": 1000,
+                "delay": 1000
+            }
+        },
+        {
+            "add": "encoding",
+            "channel": "size",
+            "field": {
+                "field": "Horsepower",
+                "type": "numerical"
+            },
+            "animation": {
+                "duration": 1000,
+                "delay": 2000
+            }
+        }
+    ]
+}
+```
+
 
 ## Development
 

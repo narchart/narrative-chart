@@ -1,6 +1,6 @@
 import Action from './action';
 import AnnotationType from '../visualization/annotationtype';
-import {Arrow, Coloredarea, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Hide, Label, Reference, Regression, Separate, Show, Symbol, Texture, Tip} from './annotations'
+import {Arrow, Coloredarea, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Hide, Label, Reference, Regression, Separate, Show, Symbol, Texture, Tip, Tooltip} from './annotations'
 
 class AddAnnotation extends Action {
     constructor(spec) {
@@ -9,6 +9,8 @@ class AddAnnotation extends Action {
         if ('target' in spec) {
             this._target = spec.target;
         }
+        
+        
         if ('style' in spec) {
             this._style = spec.style;
         }
@@ -64,7 +66,8 @@ class AddAnnotation extends Action {
                 return new Texture()
             case AnnotationType.TIP:
                 return new Tip()
-
+            case AnnotationType.TOOLTIP:
+                return new Tooltip()
             default:
                 return new Fill();
         }
