@@ -172,13 +172,13 @@ Add Encoding
 
 ```
 {
-	"add": "encoding",
-	"channel": x/y/color/size,
-	"field": field,
-  "animation": {
-    "delay": number,
-    "duration": number
-  }
+    "add": "encoding",
+    "channel": x/y/color/size,
+    "field": field,
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
 }
 ```
 
@@ -186,13 +186,13 @@ Modify Encoding
 
 ```
 {
-	"modify": "encoding",
-	"channel": x/y/color/size,
-	"field": field,
-  "animation": {
-    "delay": number,
-    "duration": number
-  }
+    "modify": "encoding",
+    "channel": x/y/color/size,
+    "field": field,
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
 }
 ```
 
@@ -200,12 +200,12 @@ Remove Encoding
 
 ```
 {
-	"remove": "encoding",
-	"channel": x/y/color/size,
-  "animation": {
-    "delay": number,
-    "duration": number
-  }
+    "remove": "encoding",
+    "channel": x/y/color/size,
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
 }
 ```
 
