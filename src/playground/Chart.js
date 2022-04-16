@@ -16,6 +16,7 @@ export default class Chart extends Component {
         let container = "#demo-chart";
         let spec = this.props.spec;
         this.vis.container(container);
+        this.vis.stop()
         this.vis.load(spec);
         this.vis.generate();
     }

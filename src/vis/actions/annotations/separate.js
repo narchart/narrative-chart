@@ -1,7 +1,7 @@
 import Annotator from './annotator'
 
 class Separate extends Annotator {
-    annotate(chart, target, style) {
+    annotate(chart, target, style, animation) {
         let svg = chart.svg();
         svg.selectAll(".mark")
             .filter(function(d) {

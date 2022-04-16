@@ -8,13 +8,12 @@ class AddAnnotation extends Action {
         this._method = spec.method;
         if ('target' in spec) {
             this._target = spec.target;
-        } else {
-            this._target = []
         }
         if ('style' in spec) {
             this._style = spec.style;
-        } else {
-            this._style = {}
+        }
+        if ('animation' in spec) {
+            this._animation = spec.animation;
         }
     }
 
@@ -23,7 +22,8 @@ class AddAnnotation extends Action {
         let chart = vis.chart();
         let target = this._target;
         let style = this._style;
-        annotator.annotate(chart, target, style);
+        let animation = this._animation;
+        annotator.annotate(chart, target, style, animation);
     }
 
     _type2annotator(type) {

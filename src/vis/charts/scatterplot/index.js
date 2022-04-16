@@ -94,7 +94,7 @@ class Scatterplot extends Chart {
         }
     }
 
-    encodeXY() {
+    encodeXY(animation = {}) {
         if (this.x && this.y) {
             let svg = this.svg();
             let width = this.width(),
@@ -228,7 +228,7 @@ class Scatterplot extends Chart {
 
     }
 
-    encodeColor() {
+    encodeColor(animation = {}) {
         if (this.color) {
             let color = this.color;
             let categories = Array.from(new Set(this.processedData().map(d => d[color])))
@@ -241,7 +241,7 @@ class Scatterplot extends Chart {
         }
     }
 
-    encodeSize() {
+    encodeSize(animation = {}) {
         if (this.size) {
             let size = this.size;
             let width = this.width(),
@@ -259,39 +259,38 @@ class Scatterplot extends Chart {
         }
     }
 
-    encodeShape() {
+    encodeShape(animation = {}) {
 
     }
 
-    addEncoding(channel, field) {
-        console.log(field)
+    addEncoding(channel, field, animation = {}) {
         if (!this[channel]) {
             this[channel] = field.field;
             d3.selectAll("svg > g > *").remove();
             this.drawAxis();
-            if (this.x && this.y) this.encodeXY();
-            if (this.color) this.encodeColor();
-            if (this.size) this.encodeSize();
+            if (this.x && this.y) this.encodeXY(animation);
+            if (this.color) this.encodeColor(animation);
+            if (this.size) this.encodeSize(animation);
         }
     }
 
-    modifyEncoding(channel, field) {
+    modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field;
             d3.selectAll("svg > g > *").remove();
             this.drawAxis();
-            if (this.x && this.y) this.encodeXY();
-            if (this.color) this.encodeColor();
-            if (this.size) this.encodeSize();
+            if (this.x && this.y) this.encodeXY(animation);
+            if (this.color) this.encodeColor(animation);
+            if (this.size) this.encodeSize(animation);
         }
     }
 
-    removeEncoding(channel) {
+    removeEncoding(channel, animation = {}) {
         this[channel] = null;
         d3.selectAll("svg > g > *").remove();
-        if (this.x && this.y) this.encodeXY();
-        if (this.color) this.encodeColor();
-        if (this.size) this.encodeSize();
+        if (this.x && this.y) this.encodeXY(animation);
+        if (this.color) this.encodeColor(animation);
+        if (this.size) this.encodeSize(animation);
     }
 }
 

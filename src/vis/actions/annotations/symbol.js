@@ -1,7 +1,7 @@
 import Annotator from './annotator';
 
 class Symbol extends Annotator {
-    annotate(chart, target, style) {
+    annotate(chart, target, style, animation) {
         let svg = chart.svg();
         let focus_elements = svg.selectAll(".mark")
             .filter(function(d) {

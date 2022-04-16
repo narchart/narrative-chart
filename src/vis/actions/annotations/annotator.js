@@ -1,6 +1,6 @@
 class Annotator {
 
-    annotate(chart, target, style) {}
+    annotate(chart, target, style, animation) {}
 
 }
 

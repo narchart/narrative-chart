@@ -3,7 +3,7 @@ import Annotator from './annotator'
 import Color from '../../visualization/color';
 
 class Band extends Annotator {
-    annotate(chart, target, style) {
+    annotate(chart, target, style, animation) {
         let svg = chart.svg();
         d3.selection.prototype.moveToFront = function () {
             return this.each(function () {

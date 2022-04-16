@@ -2,7 +2,6 @@ import DataLoader from './dataloader';
 import Fact from './fact';
 import Visualization from './visualization';
 import Parser from './parser';
-import Sentencer from './sentencer';
 
 class NarrativeChart {
     constructor() {
@@ -60,20 +59,17 @@ class NarrativeChart {
                 this._vis.data(fact.data());
                 this._vis.fact(fact.fact());
                 this._vis.factdata(fact.factdata());
-                // TODO: deal with actions
-                try {
-                    let caption = Sentencer(fact.fact());
-                    this._vis.caption(caption);
-                    // console.log("Caption: "+caption);
-                } catch (error) {
-                    console.log(error);
-                }
-                this._vis.run(pipeline)
+                this._vis.pipeline(pipeline);
+                this._vis.run();
                 // this._vis.visualize(chartspec);
             })
             .catch((reason) => {
                 console.log(reason);
             })
+    }
+
+    stop() {
+        this._vis.stop();
     }
 }
 

@@ -2,7 +2,7 @@ import Color from '../../visualization/color';
 import Annotator from './annotator'
 
 class Glow extends Annotator {
-    annotate(chart, target, style) {
+    annotate(chart, target, style, animation) {
         let svg = chart.svg();
         var defs = svg.append("defs");
         var filter = defs.append("filter")

@@ -1,111 +1,127 @@
 {
     "data": {
-        "url": "http://localhost:3000/spreadsheets/cars.csv",
-        "schema": [
-            {
-                "field": "Name",
-                "type": "categorical"
-            },
-            {
-                "field": "Miles per Gallon",
-                "type": "numerical"
-            },
-            {
-                "field": "Cylinders",
-                "type": "numerical"
-            },
-            {
-                "field": "Displacement",
-                "type": "numerical"
-            },
-            {
-                "field": "Horsepower",
-                "type": "numerical"
-            },
-            {
-                "field": "Weight",
-                "type": "numerical"
-            },
-            {
-                "field": "Acceleration",
-                "type": "numerical"
-            },
-            {
-                "field": "Year",
-                "type": "temporal"
-            },
-            {
-                "field": "Origin",
-                "type": "categorical"
-            }
-        ]
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
+      "schema": [
+        {
+          "field": "Name",
+          "type": "categorical"
+        },
+        {
+          "field": "Miles per Gallon",
+          "type": "numerical"
+        },
+        {
+          "field": "Cylinders",
+          "type": "numerical"
+        },
+        {
+          "field": "Displacement",
+          "type": "numerical"
+        },
+        {
+          "field": "Horsepower",
+          "type": "numerical"
+        },
+        {
+          "field": "Weight",
+          "type": "numerical"
+        },
+        {
+          "field": "Acceleration",
+          "type": "numerical"
+        },
+        {
+          "field": "Year",
+          "type": "temporal"
+        },
+        {
+          "field": "Origin",
+          "type": "categorical"
+        }
+      ]
     },
     "actions": [
-        {
-            "select": [
-                {
-                    "field": "Horsepower",
-                    "aggregate": "sum"
-                },
-                {
-                    "field": "Miles per Gallon",
-                    "aggregate": "sum"
-                },
-                {
-                    "field": "Acceleration",
-                    "aggregate": "sum"
-                },
-                {
-                    "field": "Weight",
-                    "aggregate": "sum"
-                },
-                {
-                    "field": "Name"
-                },
-                {
-                    "field": "Origin"
-                }
-            ],
-            "groupby": [
-                {
-                    "field": "Name"
-                }
-            ],
-            "filter": []
-        },
-        {
-            "add": "chart",
-            "mark": "point"
-        },
-        {
-            "add": "encoding",
-            "channel": "x",
-            "field": {"field":"Horsepower","type":"numerical"}
-        },
-        {
-            "add": "encoding",
-            "channel": "y",
-            "field": {"field":"Miles per Gallon","type":"numerical"}
-        },
-        {
-            "add": "encoding",
-            "channel": "color",
-            "field": {"field":"Origin","type":"categorical"}
-        },
-        {
-            "add": "encoding",
-            "channel": "size",
-            "field": {"field":"Acceleration","type":"numerical"}
-        },
-       
-        {
-            "add": "annotation",
-            "method": ["fill"],
-            "target": [
-                {
-                    "field": "Origin",
-                    "value": "Japan"
-                }]
-        }    
+      {
+        "select": [
+          {
+            "field": "Horsepower",
+            "aggregate": "sum"
+          },
+          {
+            "field": "Miles per Gallon",
+            "aggregate": "sum"
+          },
+          {
+            "field": "Acceleration",
+            "aggregate": "sum"
+          },
+          {
+            "field": "Weight",
+            "aggregate": "sum"
+          },
+          {
+            "field": "Name"
+          },
+          {
+            "field": "Origin"
+          }
+        ],
+        "groupby": [
+          {
+            "field": "Name"
+          }
+        ],
+        "filter": []
+      },
+      {
+        "add": "chart",
+        "mark": "point"
+      },
+      {
+        "add": "encoding",
+        "channel": "x",
+        "field": {
+          "field": "Horsepower",
+          "type": "numerical"
+        }
+      },
+      {
+        "add": "encoding",
+        "channel": "y",
+        "field": {
+          "field": "Miles per Gallon",
+          "type": "numerical"
+        }
+      },
+      {
+        "add": "encoding",
+        "channel": "color",
+        "field": {
+          "field": "Origin",
+          "type": "categorical"
+        }
+      },
+      {
+        "add": "encoding",
+        "channel": "size",
+        "field": {
+          "field": "Acceleration",
+          "type": "numerical"
+        }
+      },
+      {
+        "add": "annotation",
+        "method": "fill",
+        "target": [
+          {
+            "field": "Origin",
+            "value": "Japan"
+          }
+        ],
+        "animation": {
+          "delay": 1000,
+          "duration": 1000
+        }
+      }
     ]
-}
+  }

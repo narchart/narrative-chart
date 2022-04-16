@@ -3,7 +3,7 @@ import Color from '../../visualization/color';
 import Annotator from './annotator';
 
 class Contour extends Annotator {
-    annotate(chart, target, style) {
+    annotate(chart, target, style, animation) {
         let svg = chart.svg();
         d3.selection.prototype.moveToFront = function() {  
             return this.each(function(){

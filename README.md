@@ -173,8 +173,12 @@ Add Encoding
 ```
 {
 	"add": "encoding",
-	"channel": x/y/color/size/shape],
-	"field": field
+	"channel": x/y/color/size,
+	"field": field,
+  "animation": {
+    "delay": number,
+    "duration": number
+  }
 }
 ```
 
@@ -184,7 +188,11 @@ Modify Encoding
 {
 	"modify": "encoding",
 	"channel": x/y/color/size,
-	"field": field
+	"field": field,
+  "animation": {
+    "delay": number,
+    "duration": number
+  }
 }
 ```
 
@@ -193,7 +201,11 @@ Remove Encoding
 ```
 {
 	"remove": "encoding",
-	"channel": x/y/color/size/shape
+	"channel": x/y/color/size,
+  "animation": {
+    "delay": number,
+    "duration": number
+  }
 }
 ```
 
@@ -211,6 +223,10 @@ Remove Encoding
     ],
     "style": {
         ...
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -229,6 +245,10 @@ Remove Encoding
     ],
     "style": {
         "color": color
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -247,6 +267,10 @@ Remove Encoding
     ],
     "style": {
         "color": color
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -265,6 +289,10 @@ Remove Encoding
     ],
     "style": {
         "color": color
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -280,7 +308,11 @@ Remove Encoding
             "field": field,
             "value": value
         }
-    ]
+    ],
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
 }
 ```
 
@@ -295,7 +327,11 @@ Remove Encoding
             "field": field,
             "value": value
         }
-    ]
+    ],
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
 }
 ```
 
@@ -310,7 +346,11 @@ Remove Encoding
             "field": field,
             "value": value
         }
-    ]
+    ],
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
 }
 ```
 
@@ -328,6 +368,10 @@ Remove Encoding
     ],
     "style": {
         "color": color
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -346,6 +390,10 @@ Remove Encoding
     ],
     "style": {
         "color": color
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -366,6 +414,10 @@ Remove Encoding
         "text": text,
         "font-size": font-size,
         "color": color
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -381,7 +433,11 @@ Remove Encoding
             "field": field,
             "value": value
         }
-    ]
+    ],
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
 }
 ```
 
@@ -399,6 +455,10 @@ Remove Encoding
     ],
     "style": {
         "color": color
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -417,6 +477,10 @@ Remove Encoding
     ],
     "style": {
         "icon-url": icon-url
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -435,6 +499,10 @@ Remove Encoding
     ],
     "style": {
         "background-image": background-image-url
+    },
+    "animation": {
+      "delay": number,
+      "duration": number
     }
 }
 ```
@@ -561,7 +629,11 @@ Remove Encoding
           "field": "Origin",
           "value": "Japan"
         }
-      ]
+      ],
+      "animation": {
+        "delay": 1000,
+        "duration": 1000
+      }
     }
   ]
 }

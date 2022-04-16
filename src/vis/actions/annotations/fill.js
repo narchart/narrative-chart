@@ -3,7 +3,7 @@ import Color from '../../visualization/color';
 import Annotator from './annotator'
 
 class Fill extends Annotator {
-    annotate(chart, target, style) {
+    annotate(chart, target, style, animation) {
         let svg = chart.svg();
         d3.selection.prototype.moveToFront = function() {  
             return this.each(function(){
@@ -22,6 +22,9 @@ class Fill extends Annotator {
                 }
                 return false
             })
+            // .moveToFront()
+            .transition()
+            .duration('duration' in animation ? animation['duration']: 0)
             .attr("fill", function(d) {
                 if ('color' in style) {
                     return style['color']
@@ -29,8 +32,7 @@ class Fill extends Annotator {
                     return Color().ANNOTATION
                 }
             })
-            .attr("opacity", 1)
-            .moveToFront();
+            .attr("opacity", 1);
     }
 }
 

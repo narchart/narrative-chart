@@ -106,19 +106,19 @@ class Chart {
 
     drawAxis() { }
 
-    encodeXY() { }
+    encodeXY(animation = {}) { }
 
-    encodeColor() { }
+    encodeColor(animation = {}) { }
 
-    encodeSize() { }
+    encodeSize(animation = {}) { }
 
-    encodeShape() { }
+    encodeShape(animation = {}) { }
 
-    addEncoding(channel, field) { }
+    addEncoding(channel, field, animation = {}) { }
 
-    modifyEncoding(channel, field) { }
+    modifyEncoding(channel, field, animation = {}) { }
 
-    removeEncoding(channel, field) { }
+    removeEncoding(channel, field, animation = {}) { }
 
 }
 

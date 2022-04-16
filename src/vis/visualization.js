@@ -14,6 +14,7 @@ class Visualization {
         this._mark = MarkType.POINT;
         this._chart = {};
         this._caption = "";
+        this._pipeline = null;
     }
 
     container(value) {
@@ -84,8 +85,21 @@ class Visualization {
         this._caption = value;
     }
 
-    run(pipeline) {
-        pipeline.operate(this);
+    pipeline(value) {
+        if (!value) {
+            return this._pipeline;
+        }
+        this._pipeline = value;
+    }
+
+    run() {
+        this.pipeline().operate(this);
+    }
+
+    stop() {
+        if (this.pipeline()) {
+            this.pipeline().stop();
+        }
     }
 }
 

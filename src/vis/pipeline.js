@@ -1,6 +1,7 @@
 class Pipeline {
     constructor() {
         this._actions = []
+        this._timeouts = []
     }
 
     add(action) {
@@ -12,9 +13,22 @@ class Pipeline {
     }
 
     operate(vis) {
+        let delayTime = 0;
         this.actions().forEach(action => {
-            action.operate(vis);
+            if ('delay' in action.animation()) {
+                delayTime += action.animation()['delay']
+            }
+            this._timeouts.push(setTimeout(function(){
+                // Code to run after the pause
+                action.operate(vis);
+            }, delayTime));
         });
+    }
+
+    stop() {
+        for (var i = 0; i < this._timeouts.length; i++) {
+            clearTimeout(this._timeouts[i]);
+        }
     }
 }
 
