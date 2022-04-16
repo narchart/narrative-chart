@@ -27,24 +27,37 @@
         }
     ]
     },
-    "fact": {
-        "subspace": [],
-        "measure": [
-            {
-            "field": "Recovered",
-            "aggregate": "sum"
-            }
-        ],
-        "breakdown": [
-            {
-            "field": "Date"
-            }
-        ]
-        },
     "actions": [
+        {
+            "select": [
+                {
+                    "field": "Recovered",
+                    "aggregate": "sum"
+                },
+                {
+                    "field": "Date"
+                }
+            ],
+            "groupby": [
+                {
+                    "field": "Date"
+                }
+            ],
+            "filter": []
+        },
         {
             "add": "chart",
             "mark": "line"
+        },
+        {
+            "add": "encoding",
+            "channel": "x",
+            "field": {"field":"Date","type":"temporal"}
+        },
+        {
+            "add": "encoding",
+            "channel": "y",
+            "field": {"field":"Recovered","type":"numerical"}
         }
     ]
 }

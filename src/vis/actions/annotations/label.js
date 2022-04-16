@@ -4,19 +4,9 @@ import Color from '../../visualization/color';
 
 class Label extends Annotator {
     annotate(chart, target, style, animation) {
-      
         let svg = chart.svg();
-        // const measure = chart.measure();
-        // const breakdown = chart.breakdown()
-        // let yEncoding;
-        // if(chart instanceof Scatterplot) {
-        //     yEncoding = breakdown[0].field;
-        // } else {
-        //     yEncoding = measure[0].aggregate === "count" ? "COUNT" : measure[0].field;
-        // }
 
-        let yEncoding = chart.y.field;
-        // console.log('yEncoding', yEncoding)
+        const yEncoding = chart.y;
          
         let focus_elements = svg.selectAll(".mark")
             .filter(function(d) {

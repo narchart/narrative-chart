@@ -20,30 +20,38 @@
         }
         ]
     },
-    "fact": {
-    "subspace": [],
-    "measure": [
-        {
-        "field": "Sales",
-        "aggregate": "min"
-        }
-    ],
-    "breakdown": [
-        {
-        "field": "Brand"
-        }
-    ],
-    "focus": [
-        {
-            "field": "Brand",
-            "value": "Ford"
-        }
-    ]
-    },
+   
     "actions": [
+        {
+            "select": [
+                {
+                    "field": "Sales",
+                    "aggregate": "min"
+                },
+                {
+                    "field": "Brand"
+                }
+            ],
+            "groupby": [
+                {
+                    "field": "Brand"
+                }
+            ],
+            "filter": []
+        },
         {
             "add": "chart",
             "mark": "bar"
+        },
+        {
+            "add": "encoding",
+            "channel": "x",
+            "field": {"field":"Brand","type":"categorical"}
+        },
+        {
+            "add": "encoding",
+            "channel": "y",
+            "field": {"field":"Sales","type":"numerical"}
         },
         {
             "add": "annotation",
