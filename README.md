@@ -1,6 +1,10 @@
 # Narrative Charts
 
 - [Narrative Charts](#narrative-charts)
+  - [Introduction](#introduction)
+    - [What is Narrative Charts?](#what-is-narrative-charts)
+    - [Differences from other visualization libraries?](#differences-from-other-visualization-libraries)
+    - [Features](#features)
   - [Getting Started](#getting-started)
     - [Installation](#installation)
     - [Import narrative-chart](#import-narrative-chart)
@@ -29,13 +33,35 @@
         - [Symbol](#symbol)
         - [Texture](#texture)
         - [Tooltip](#tooltip)
-      - [4. Title](#4-Title)
+      - [4. Title](#4-title)
     - [Animations](#animations)
     - [Examples](#examples)
-      - [1. Without Animation](#1-without-animation)
-      - [2. With Animation](#2-with-animation)
+      - [1. Without Animations](#1-without-animations)
+      - [2. With Animations](#2-with-animations)
   - [Development](#development)
     - [Playground](#playground)
+    - [How to create a new chart?](#how-to-create-a-new-chart)
+    - [How to create a new annotation?](#how-to-create-a-new-annotation)
+
+## Introduction
+
+### What is Narrative Charts?
+
+**Narrative Charts** is an open-source visualization library for authoring narrative visualization and data storytelling with a high-level domain-specific language (DSL). The library is implemented in JavaScript and compatible with most modern web browsers.
+
+### Differences from other visualization libraries?
+
+There are several mature visualization libraries for the web, such as D3.js, Vega, and ECharts. Users can easily author interactive visualizations for data presentation or data analysis. However, these libraries are all developed for general purposes. Using these tools, users still need to write a hundred lines of code to generate a narrative visualization with expressive annotations, animations, and captions. **Narrative Charts** can make this easier.
+
+### Features
+
+1. Data processing
+2. Data facts
+3. Statistical charts & Unit visualization
+4. Visual encoding
+5. Annotation
+6. Animation
+7. Title & Caption
 
 ## Getting Started
 
@@ -851,3 +877,32 @@ Use yarn to start the playground
 ```
 yarn start
 ```
+
+### How to create a new chart? 
+
+1. Create a new folder named with the chart name (e.g., ``newchart``) in the directory ``src/vis/charts``.
+2. Create a class ``NewChart`` from a class called ``Chart`` in the folder.
+3. Implement 4 methods in the class, including ``visualize()``, ``addEncoding(channel, field, animation)``, ``modifyEncoding(channel, field, animation)``, and ``removeEncoding(channel, field, animation)``. They are the essential methods to build a chart.
+4. Export the class in ``src/vis/charts/index.js``.
+5. Import and setup the chart in ``src/vis/actions/addchart.js``.
+
+Please refer to ``src/vis/charts/scatterplot/index.js`` as an example. **Note**: To support annotations, you should make sure all marks in the chart SVG are set to "mark" class. For example in Scatterplot:
+
+```
+content.append("g")
+    .selectAll("circle")
+    .data(processedData)
+    .enter()
+    .append("circle")
+    .attr("class", "mark")
+    ...
+```
+
+### How to create a new annotation? 
+
+1. Create a new js file named with the annotation name (e.g., ``newannotation.js``) in the directory ``src/vis/actions/annotations``.
+2. Create a class ``NewAnnotation`` from a parent class called ``Annotator``.
+3. Implement a method ``annotate(chart, target, style, animation)``, where ``chart`` is the chart object you can get the SVG, ``target`` can locate the position to add annotation, ``style`` is a dictionary with user-defined style, and ``animation`` is a dictionary with user-defined animation setting.
+4. Import and setup the annotation in ``src/vis/actions/addannotation.js``.
+
+Please refer to ``src/vis/actions/annotations/fill.js`` as an example.
