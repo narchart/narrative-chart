@@ -16,19 +16,6 @@ class Scatterplot extends Chart {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        const measure = this.measure();
-        const breakdown = this.breakdown();
-        if (measure[0] && measure[1]) {
-            this.x = measure[0]
-            this.y = measure[1]
-        }
-        if (measure[2]) {
-            this.size = measure[2]
-        }
-        if (breakdown[1]) {
-            this.color = breakdown[1]
-        }
-
         this.drawAxis();
         this.encodeXY();
         this.encodeColor();

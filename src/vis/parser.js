@@ -1,22 +1,35 @@
 import Pipeline from './pipeline';
+import Translator from './translator';
 import { AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddAggregation, AddTitle, AddCaption} from './actions';
 
+/**
+ * @description A parser for parsing visuaization specifications (https://github.com/sdq/narrative-charts#visualization-specification)
+ * 
+ * @class
+ */
 class Parser {
     constructor() {
         this._parsedData = []
+        this.T = Translator()
     }
 
+    /**
+     * @description Parse visualization spoecification into a data spec and a pipeline pf actions.
+     * @param {Object} spec The input visualization specification.
+     * @returns {{ dataspec: Object, pipeline: Pipeline }}
+     */
     parse(spec) {
         let dataspec = spec.data ? spec.data : {};
-        let factspec = spec.fact ? spec.fact : {};
-        let focus_target = 'focus' in factspec ? factspec['focus'] : []
         let actionspecs = spec.actions ? spec.actions : [];
+        if ('fact' in spec) {
+            let factspec = spec.fact;
+            actionspecs = this.T.translate(factspec);
+        }
         let pipeline = new Pipeline()
         if (actionspecs.length > 0) {
 
             let title_caption_in_actions = actionspecs.some(v => v.add === 'title' || v.add === 'caption')
             for (const actionspec of actionspecs) {
-                // TODO: deal with actionspec
                 let actions_to_add = [];
                 if ('add' in actionspec) {
                     switch (actionspec['add']) {
@@ -26,9 +39,6 @@ class Parser {
                             actions_to_add.push(new AddChart(actionspec));
                             break;
                         case 'annotation':
-                            if (!('target' in actionspec)) {
-                                actionspec['target'] = focus_target // default is focus
-                            }
                             if (('method' in actionspec) && Array.isArray(actionspec['method'])) {
                                 for (const submethod of actionspec['method']) {
                                     let subactionspec = { ...actionspec }; // copy a dict
@@ -71,7 +81,7 @@ class Parser {
                 }
             }
         }
-        return { dataspec, factspec, pipeline };
+        return { dataspec, pipeline };
     }
 }
 

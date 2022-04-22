@@ -13,8 +13,6 @@ class AddChart extends Action {
     operate(vis) {
 
         vis._mark = this._mark;
-        let factdata = vis.factdata();
-        let fact = vis.fact();
         vis.chart(this._mark2chart(this._mark));
         // let chart = this._type2chart(spec.type);
         let chart = vis.chart();
@@ -33,12 +31,7 @@ class AddChart extends Action {
             "left": 50
             })
         chart.data(vis._data);
-        chart.factdata(factdata);
         chart.processedData(vis._processedData)
-        chart.subspace(fact.subspace);
-        chart.measure(fact.measure);
-        chart.breakdown(fact.breakdown);
-        chart.focus(fact.focus);
         chart.container(vis._container);
         chart.visualize();
     }

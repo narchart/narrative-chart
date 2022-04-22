@@ -43,22 +43,13 @@ class NarrativeChart {
     generate() {
         // STEP 0: parse specification
         let spec = this._spec;
-        let { dataspec, factspec, pipeline } = this.parser.parse(spec);
+        let { dataspec, pipeline } = this.parser.parse(spec);
 
-        // STEP 1: data
-        this._loader.load(dataspec)
-            .then((loaded) => {
-                // STEP 2: fact
-                this._fact.data(loaded.data());
-                this._fact.schema(loaded.schema());
-                return this._fact.process(factspec);
-            })
-            .then((fact) => {
-                // STEP 3: generate caption and setup visualization
+        
+        this._loader.load(dataspec) // STEP 1: data
+            .then((loaded) => { // STEP 2: generate visualization
                 this._vis.container(this.container());
-                this._vis.data(fact.data());
-                this._vis.fact(fact.fact());
-                this._vis.factdata(fact.factdata());
+                this._vis.data(loaded.data());
                 this._vis.pipeline(pipeline);
                 this._vis.run();
                 // this._vis.visualize(chartspec);

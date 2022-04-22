@@ -9,12 +9,6 @@ class Chart {
         this._data = [];
         this._processedData = [];
         this._margin = {};
-
-        // this._factdata = [];
-        // this._subspace = [];
-        // this._measure = [];
-        // this._breakdown = [];
-        // this._focus = [];
     }
 
     container(value) {
@@ -91,35 +85,6 @@ class Chart {
         }
         this._processedData = value;
     }
-
-    subspace(value) {
-        if (!value) {
-            return this._subspace;
-        }
-        this._subspace = value;
-    }
-
-    measure(value) {
-        if (!value) {
-            return this._measure;
-        }
-        this._measure = value;
-    }
-
-    breakdown(value) {
-        if (!value) {
-            return this._breakdown;
-        }
-        this._breakdown = value;
-    }
-
-    focus(value) {
-        if (!value) {
-            return this._focus;
-        }
-        this._focus = value
-    }
-
 
     visualize() { }
 

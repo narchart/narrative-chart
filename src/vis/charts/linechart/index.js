@@ -15,16 +15,6 @@ class LineChart extends Chart {
                 .attr("height", this.height() + margin.top + margin.bottom)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-            
-        const measure = this.measure();
-        const breakdown = this.breakdown();
-        if (breakdown[0] && measure[0]) {
-            this.x = breakdown[0]
-            this.y = measure[0]
-        }
-        if (breakdown[1]) {
-            this.color = breakdown[1]
-        }
         
         this.drawAxis();
         this.encodeXY();

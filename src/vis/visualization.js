@@ -5,8 +5,6 @@ class Visualization {
     constructor() {
         this._container = "";
         this._data = [];
-        this._fact = {};
-        this._factdata = [];
         this._processedData = [];
         this._size = Size.LARGE;
         this._width = 0;
@@ -53,25 +51,11 @@ class Visualization {
         this._processedData = value;
     }
 
-    factdata(value) {
-        if (!value) {
-            return this._factdata;
-        }
-        this._factdata = value;
-    }
-
     processedData(value) {
         if (!value) {
             return this._processedData;
         }
         this._processedData = value;
-    }
-
-    fact(value) {
-        if (!value) {
-            return this._fact;
-        }
-        this._fact = value;
     }
 
     chart(value) {
