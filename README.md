@@ -563,13 +563,33 @@ Remove Encoding
 }
 ```
 
-#### 4. Title
+#### 4. Title & Caption
+
+##### Title
 
 ```
 {
     "add": "title",
     "style": {
-        "text": text
+        "text": text,
+        "font-size": font-size
+      },
+    "animation": {
+      "delay": number,
+      "duration": number
+    }
+
+}
+```
+
+##### Caption
+
+```
+{
+    "add": "caption",
+    "style": {
+        "text": text,
+        "font-size": font-size
       },
     "animation": {
       "delay": number,

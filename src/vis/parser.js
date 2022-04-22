@@ -13,12 +13,16 @@ class Parser {
         let actionspecs = spec.actions ? spec.actions : [];
         let pipeline = new Pipeline()
         if (actionspecs.length > 0) {
+
+            let title_caption_in_actions = actionspecs.some(v => v.add === 'title' || v.add === 'caption')
             for (const actionspec of actionspecs) {
                 // TODO: deal with actionspec
                 let actions_to_add = [];
                 if ('add' in actionspec) {
                     switch (actionspec['add']) {
                         case 'chart':
+                        // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
+                            actionspec.leave_space = title_caption_in_actions
                             actions_to_add.push(new AddChart(actionspec));
                             break;
                         case 'annotation':

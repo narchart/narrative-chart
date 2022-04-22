@@ -3,13 +3,15 @@ import Action from './action';
 import { BarChart, LineChart, Scatterplot, Unitvis } from '../charts';
 
 class AddChart extends Action {
+    // mark represents chart type, leave_space represents if needs to reserve space for titles or captions in charts
     constructor(spec) {
         super(spec);
         this._mark = spec.mark;
+        this._leave_space = spec.leave_space
     }
 
     operate(vis) {
-        
+
         vis._mark = this._mark;
         let factdata = vis.factdata();
         let fact = vis.fact();
@@ -18,6 +20,18 @@ class AddChart extends Action {
         let chart = vis.chart();
         chart.height(vis._height);
         chart.width(vis._width);
+        chart.margin(this._leave_space ? 
+            {
+                "top": 70,
+                "right": 20,
+                "bottom": 90,
+                "left": 60
+            }:{
+            "top": 10,
+            "right": 10,
+            "bottom": 50,
+            "left": 50
+            })
         chart.data(vis._data);
         chart.factdata(factdata);
         chart.processedData(vis._processedData)

@@ -18,16 +18,15 @@ class AddTitle extends Action {
             if (!this._animation.duration)
                 this._animation.duration = -1;
         } else {
-            this._animation = { "delay": 0, "duration": 0 }
+            this._animation = { "delay": 0, "duration": -1 }
         }
     }
 
     operate(vis) {
         let titler = this._type2title('fade')
-        let chart = vis.chart();
         let style = this._style;
         let animation = this._animation;
-        titler.maketitle(chart, style, animation);
+        titler.maketitle(vis, style, animation);
     }
 
     _type2title(type) {

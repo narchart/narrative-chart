@@ -2273,7 +2273,7 @@ class Unitvis extends Chart {
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
             })
-            let textSize = 15
+            let textSize = 14
             svg.select(".content").append("text")
                 .text(xField)
                 .attr("x", width / 2)

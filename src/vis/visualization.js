@@ -18,6 +18,9 @@ class Visualization {
     }
 
     container(value) {
+        if (!value) {
+            return this._container;
+        }
         this._container = value;
     }
 

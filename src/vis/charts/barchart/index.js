@@ -5,12 +5,8 @@ import Color from '../../visualization/color';
 class BarChart extends Chart {
 
     visualize() {
-        let margin = {
-                "top": 10,
-                "right": 10,
-                "bottom": 50,
-                "left": 50
-            }
+        let margin = this.margin()
+
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 

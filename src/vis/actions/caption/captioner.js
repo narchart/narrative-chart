@@ -1,6 +1,6 @@
 class Captioner {
 
-    makecaption(chart, style, animation) {}
+    makecaption(vis, style, animation) {}
 
 }
 

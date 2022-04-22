@@ -1,31 +1,37 @@
 import Captioner from './captioner';
-
+import * as d3 from 'd3';
 class Fade extends Captioner {
-    makecaption(chart, style, animation) {
-        let svg = chart.svg();
+    makecaption(vis, style, animation) {
+
+        let margin = {
+            top : 20,
+            left: 30
+        }
+
+        let svg = d3.select(vis.container()).select("svg")
 
         let words = style.text.split(" ").filter(d => d !== "");
+
+        let textsize = style['font-size']? style['font-size']: 14
+
     
         let virtualE = svg.append("text")
             .attr("font-family", 'Arial-Regular')
-            .attr("font-size", 18)
+            .attr("font-size", textsize)
             .text(words[0]);
 
         let textE = svg.append("text")
-            .attr("x","50%")
-            .attr("y",600)
             .attr("dominant-baseline", "central")
-            .attr("transform", "translate(" + 310 + "," + (10) + ")")
+            .attr("transform", "translate(" + margin.left + "," + 580  + ")")
             .attr("font-family", 'Arial-Regular')
-            .attr("font-size", 18)
-            .attr("text-anchor", "middle");
+            .attr("font-size", textsize)
+            .attr("text-anchor", "start");
         
         let maxWidth = Math.max(virtualE.node().getComputedTextLength(), 600);
         const lineHeight = virtualE.node().getBBox().height * 0.9;
-
         let line = '';
         let rowCount = 0;
-        const maxRow = 4;
+        const maxRow = textsize > 14 ? 2: 3;
 
         // 如果没有定义 duration
         if(animation.duration===-1){
@@ -49,7 +55,7 @@ class Fade extends Captioner {
                             .attr("dy", lineHeight)
                             .text(line)
                             .transition()
-                            .duration(2000)
+                            .duration(0)
                             .attr("fill-opacity", 1);
                         line = words[n];
                         rowCount ++;
@@ -64,7 +70,7 @@ class Fade extends Captioner {
                 .attr("dy", lineHeight)
                 .text(line)
                 .transition()
-                .duration(2000)
+                .duration(0)
                 .attr("fill-opacity", 1);
             virtualE.remove();
         }

@@ -8,6 +8,7 @@ class Chart {
         this._height = 0;
         this._data = [];
         this._processedData = [];
+        this._margin = {};
 
         // this._factdata = [];
         // this._subspace = [];
@@ -27,6 +28,23 @@ class Chart {
     svg() {
         return this._svg;
     }
+
+    margin(value) {
+        if (!value) {
+            if (this._margin !== 0 && this._margin !== '') {
+                return this._margin;
+            } else {
+                return {
+                    "top": 0,
+                    "right": 0,
+                    "bottom": 0,
+                    "left": 0
+                };
+            }
+        }
+        this._margin = value;
+    }
+
 
     width(value) {
         if (!value) {
@@ -101,6 +119,7 @@ class Chart {
         }
         this._focus = value
     }
+
 
     visualize() { }
 

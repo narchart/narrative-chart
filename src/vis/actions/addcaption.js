@@ -16,16 +16,15 @@ class AddCaption extends Action {
             if (!this._animation.duration)
                 this._animation.duration = -1;
         } else {
-            this._animation = { "delay": 0, "duration": 0 }
+            this._animation = { "delay": 0, "duration": -1 }
         }
     }
 
     operate(vis) {
         let Captioner = this._type2caption('fade')
-        let chart = vis.chart();
         let style = this._style;
         let animation = this._animation;
-        Captioner.makecaption(chart, style, animation);
+        Captioner.makecaption(vis, style, animation);
     }
 
     _type2caption(type) {
