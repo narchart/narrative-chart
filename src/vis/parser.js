@@ -9,8 +9,8 @@ import { AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, D
  */
 class Parser {
     constructor() {
-        this._parsedData = []
-        this.T = Translator()
+        this._parsedData = [];
+        this.T = new Translator();
     }
 
     /**
