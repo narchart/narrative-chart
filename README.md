@@ -14,6 +14,7 @@
       - [1. Data from URL](#1-data-from-url)
       - [2. Inline Data](#2-inline-data)
     - [Action List](#action-list)
+      - [0. Configuation](#0-configuation)
       - [1. Data Preprocessing](#1-data-preprocessing)
       - [2. Visualization](#2-visualization)
         - [Add Marks](#add-marks)
@@ -144,6 +145,16 @@ vis.generate();
 | schema  | Object[] | An array of *field* objects. <br>**Default**: [] |
 
 ### Action List
+
+#### 0. Configuation
+
+```
+{
+	"mode": light/dark, // (default: light)
+	"emotion": none/calm/exciting/positive/negative/serious/playful/trustworthy/disturbing, // (default: none)
+  "background-image": image-url // (optional)
+}
+```
 
 #### 1. Data Preprocessing
 
