@@ -1,7 +1,27 @@
 import Titler from './titler'
 import * as d3 from 'd3';
+
+/**
+ * @description An titler for adding title with fade animation
+ * 
+ * @class
+ * @extends Titler
+ */
+
+
 class Fade extends Titler {
-    maketitle(vis, style, animation) {
+    /**
+     * @description Add the caption at the bottom of chart
+     * 
+     * @param {vis} visualization src/vis/visualization.js
+     * @param {{text: text, font-size:font-size}} style Style parameters of the title.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the caption.
+     * 
+     * 
+     * @return {void}
+     */
+
+     maketitle(vis, style, animation) {
 
         let margin = {
             top : 20,

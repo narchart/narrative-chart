@@ -1,6 +1,24 @@
 import Captioner from './captioner';
 import * as d3 from 'd3';
+/**
+ * @description An captioner for adding caption with fade animation
+ * 
+ * @class
+ * @extends Captioner
+ */
+
 class Fade extends Captioner {
+    /**
+     * @description Add the caption at the bottom of chart
+     * 
+     * @param {vis} visualization src/vis/visualization.js
+     * @param {{text: text, font-size:font-size}} style Style parameters of the caption.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the caption.
+     * 
+     * 
+     * @return {void}
+     */
+
     makecaption(vis, style, animation) {
 
         let margin = {

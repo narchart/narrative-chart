@@ -2,7 +2,23 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 import Unit from './unit';
+
+/**
+ * @description unit visualization
+ * 
+ * @class
+ * @extends Chart
+ */
+
+
 class Unitvis extends Chart {
+
+    /**
+     * @description generating the unit visualization
+     *      * 
+     * @return {void}
+    */
+
 
     visualize() {
         let margin = {
@@ -28,6 +44,13 @@ class Unitvis extends Chart {
         return this.svg();
     }
 
+    /**
+     * @description assigning identity and data information for each unit mark
+     *      * 
+     * @return {void}
+    */
+
+
     data() {
         let processedData = this.processedData();
         processedData.forEach((d, i) => {
@@ -39,7 +62,12 @@ class Unitvis extends Chart {
         return this;
     }
 
-    // The initial status of unit vis (square layout)
+    /**
+     * @description The initial status of unit vis (square layout)
+     *      * 
+     * @return {void}
+    */
+
     initvis() {
         let svg = this.svg();
         let width = this.width(),
@@ -105,6 +133,13 @@ class Unitvis extends Chart {
             ;
 
     }
+
+    /**
+     * @description Using X-axis to encode a data field
+     *      * 
+     * @return {void}
+    */
+    
     // Draw X axis
     encodeX() {
         let svg = this.svg();
@@ -458,7 +493,12 @@ class Unitvis extends Chart {
             }   
         }
 
-    //  Draw y axis
+    /**
+     * @description Using Y-axis to encode a data field
+     *      * 
+     * @return {void}
+    */
+
     encodeY() {
         let svg = this.svg();
         let width = this.width(),
@@ -996,6 +1036,12 @@ class Unitvis extends Chart {
     }
     }
 
+    /**
+     * @description Using mark color to encode a data field
+     *      * 
+     * @return {void}
+    */
+
     //  add color to the unit circle
     encodeColor() {
         // situation 1
@@ -1019,6 +1065,12 @@ class Unitvis extends Chart {
             })
         }
     }
+
+    /**
+     * @description Using mark size to encode a data field
+     *      * 
+     * @return {void}
+    */
 
     //  add size to the unit circle
     encodeSize() {
@@ -1496,11 +1548,26 @@ class Unitvis extends Chart {
     }
 
 
+    /**
+     * @description Using the shape of mark to encode a data field
+     *      * 
+     * @return {void}
+    */
+
     encodeShape() {
 
     }
 
-    // allocating the encoding actions based on spec and then update the chart.
+    /**
+     * @description allocating the encoding actions based on spec and then update the chart.
+     * 
+     * @param {string} channel A encoding channel
+     * @param {string} field A data field
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+    */
+
     addEncoding(channel, field, animation) {
         if (!this[channel]) {
             this[channel] = field;
@@ -1569,7 +1636,16 @@ class Unitvis extends Chart {
 
     }
 
-    // modify existing encoding action and update the chart
+    /**
+     * @description Modifying a current encoding channel and then update the chart.
+     * 
+     * @param {string} channel A encoding channel
+     * @param {string} field A data field
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+    */
+
     modifyEncoding(channel, field, animation) {
         if (this[channel]) {
             this[channel] = field;
@@ -1634,7 +1710,16 @@ class Unitvis extends Chart {
         }
     }
 
-    // remove existing encoding action and update the chart
+    /**
+     * @description Removing an existing encoding action and update the chart
+     * 
+     * @param {string} channel A encoding channel
+     * @param {string} field A data field
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+    */
+
     removeEncoding(channel, animation) {
         this[channel] = null;
         this.delay = animation.delay
@@ -1684,9 +1769,17 @@ class Unitvis extends Chart {
 
     }
 
-    // unitvis only, aggregate many unit circle into one circle
-    addAggregation(field, operator, style, animation) {
-        //  min max average sum
+    /**
+     * @description Aggregating the marks.
+     * 
+     * @param {string} operator An aggregation type, such as min, max, average, sum
+     * @param {{aggregated_point: aggregated_point}} style Style parameters of the aggregation
+     * @param {{delay: number, duration: number}} animation Animation parameters of the aggregation.
+     * 
+     * @return {void}
+    */
+
+    addAggregation(operator, style, animation) {
         let svg = this.svg();
         let width = this.width(),
             height = this.height();

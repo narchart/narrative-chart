@@ -3,7 +3,29 @@ import { Scatterplot } from '../../charts';
 import Color from '../../visualization/color';
 import * as d3 from 'd3';
 
+/**
+ * @description An annotator for adding tooltip
+ * 
+ * @class
+ * @extends Annotator
+ */
+
+
 class Tooltip extends Annotator {
+
+    /**
+     * @description Add the text into the tooltip and Automatic break the text line.
+     * 
+     * @param {container} container The svg used to contain the tooltip
+     * @param {text} text The text in tooltip 
+     * @param {number} textSize The font size of text in tooltip
+     * @param {number} maxWidth The maximum width of tooltip.
+     * @param {number} x The x coordinate of the mark which needs to add tooltip .
+     * @param {number} y The y coordinate of the mark which needs to add tooltip .
+     * 
+     * @return {void}
+     */
+
 
     textMultiline (container, text, textSize, maxWidth, x, y, textAnchor = "middle"){
 
@@ -61,6 +83,17 @@ class Tooltip extends Annotator {
         return textE;
     }
     
+    /**
+     * @description Add a tooltip above a mark
+     * 
+     * @param {Chart} chart src/vis/charts/chart.js
+     * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
+     * @param {{text: text}} style Style parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+     */
+
 
     annotate(chart, target, style, animation) {
       
