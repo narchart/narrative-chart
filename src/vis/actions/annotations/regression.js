@@ -1,9 +1,26 @@
 import Annotator from './annotator';
 import Color from '../../visualization/color';
 
+/**
+ * @description An annotator for drawing regression line.
+ * 
+ * @class
+ * @extends Annotator
+ */
 class Regression extends Annotator {
+    /**
+     * @description Annotate targeted elements with contour.
+     * 
+     * @param {Chart} chart src/vis/charts/chart.js
+     * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
+     * @param {{color: string}} style Style parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+     */
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
+        // filter for elements that meet the conditions(`target`)
         let focus_elements = svg.selectAll(".mark")
             .filter(function (d) {
                 if (target.length === 0) {
@@ -16,7 +33,8 @@ class Regression extends Annotator {
                 }
                 return false
             });
-
+            
+        // return if the focus defined in the spec does not exist
         if (focus_elements.empty()) return;
 
         // step 1: get all focused elements position
@@ -103,9 +121,10 @@ class Regression extends Annotator {
     }
 
     /**
-     * least squares on given data points
-     * @param {*} points positions of points to draw a regression line
-     * @returns ret {m: gradient, b: intercept}
+     * @description Compute least squares on given data points.
+     * 
+     * @param {Array} points positions of points to draw a regression line
+     * @returns {{m: number, b: number}} params of the least squares results {m: gradient, b: intercept}
      */
     getLeastSquares(points) {
         let ret = {}

@@ -1,6 +1,12 @@
 import { max, min, sum } from 'd3';
 import Action from './action';
 
+/**
+ * @description An action for processing data given the spec.
+ * 
+ * @class
+ * @extends Action
+ */
 class DataProcess extends Action {
     constructor(spec) {
         super(spec);
@@ -18,8 +24,14 @@ class DataProcess extends Action {
         }
     }
 
+    /**
+     * @description Perform the data action listed in the spec.
+     * 
+     * @param {Visualization} vis src/vis/visualization.js
+     * 
+     * @return {void}
+     */
     operate(vis) {
-        // 根据 spec 处理 data
         let data = vis.data();
 
         // Step 1: Filter 
@@ -66,11 +78,12 @@ class DataProcess extends Action {
             console.error('Data Processing: Error In Filtering:\n' + Error);
         }
         // Step 2: Groupby
-        // aggregate(被select的数值列) by groupby
-        // 如果有 agg 和 groupby ==> 根据 groupby 整理所有数值然后做 min/max/...
-        // 如果没有 agg 和 groupby ==> filter 后直接返回
-        // 如果有 agg 没有 groupby ==> 整张表做 agg
-        // 如果没有 agg 有 groupby ==> 返回对应的首个值
+        // aggregate(selected numerical columns) by groupby
+        // if the spec specifies:
+        // ... both `agg` and `groupby` ==> groupby all the related records for aggregate(e.g. min/max/...)
+        // ... neither `agg` nor `groupby` ==> filter then return
+        // ... only `agg` but no `groupby` ==> aggregate on the whole dataset
+        // ... no `agg` but `groupby` ==> return the first value of matching records
         let processedData = data;
         try {
             processedData = this.aggregate(data, this._select, this._groupby);
@@ -93,16 +106,17 @@ class DataProcess extends Action {
         } catch (error) {
             console.error('Data Processing: Error In Select:\n' + Error);
         }
-        // 处理完的 processedData 存进 vis 里
+        // store the processed data in `vis` object
         vis.processedData(processedData);
     }
 
     /**
-     * aggregating data specified in 'select'
-     * @param {*} data 
-     * @param {*} selects selected cols
-     * @param {*} groupbys aggregate with groupby
-     * @returns 
+     * @description Aggregate data specified in 'select'.
+     * 
+     * @param {Array} data 
+     * @param {Array} selects selected cols
+     * @param {Object} groupbys aggregate with groupby
+     * @returns {Array} aggregated data
      */
     aggregate(data, selects, groupbys) {
         if (selects.length === 0 && groupbys.length === 0) {
@@ -148,10 +162,11 @@ class DataProcess extends Action {
     }
 
     /**
-     * aggregate a column with different agg function
-     * @param {*} colData column data to be aggregated
-     * @param {*} aggFunc aggregate function eg min/max/sum/avg/mean/count/...
-     * @returns 
+     * @description Aggregate a column with different agg function.
+     * 
+     * @param {Array} colData column data to be aggregated
+     * @param {string} aggFunc aggregate function eg min/max/sum/avg/mean/count/...
+     * @returns {Array} aggregated data
      */
     aggFuncRouter(colData, aggFunc) {
         switch (aggFunc.toLowerCase()) {
