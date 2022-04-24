@@ -150,6 +150,7 @@ vis.generate();
 
 ```
 {
+  "add": "config",
 	"mode": light/dark, // (default: light)
 	"emotion": none/calm/exciting/positive/negative/serious/playful/trustworthy/disturbing, // (default: none)
   "background-image": image-url // (optional)

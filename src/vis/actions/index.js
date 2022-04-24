@@ -1,4 +1,8 @@
 export {
+    default as Configure
+} from "./config";
+
+export {
     default as DataProcess
 } from "./dataprocess";
 

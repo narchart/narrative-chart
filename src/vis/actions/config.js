@@ -1,3 +1,5 @@
+import Action from './action';
+
 class Configure extends Action {
 
     constructor(spec) {

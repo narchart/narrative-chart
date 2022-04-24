@@ -1,6 +1,6 @@
 import Pipeline from './pipeline';
 import Translator from './translator';
-import { AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddAggregation, AddTitle, AddCaption} from './actions';
+import { Configure, AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddAggregation, AddTitle, AddCaption} from './actions';
 
 /**
  * @description A parser for parsing visuaization specifications (https://github.com/sdq/narrative-charts#visualization-specification)
@@ -33,6 +33,10 @@ class Parser {
                 let actions_to_add = [];
                 if ('add' in actionspec) {
                     switch (actionspec['add']) {
+                        case 'config':
+                            actions_to_add.push(new Configure(actionspec));
+                            break;
+
                         case 'chart':
                         // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
                             actionspec.leave_space = title_caption_in_actions
