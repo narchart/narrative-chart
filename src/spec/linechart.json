@@ -52,12 +52,12 @@
         {
             "add": "encoding",
             "channel": "x",
-            "field": {"field":"Date","type":"temporal"}
+            "field":"Date"
         },
         {
             "add": "encoding",
             "channel": "y",
-            "field": {"field":"Recovered","type":"numerical"}
+            "field":"Recovered"
         }
     ]
 }

@@ -693,33 +693,24 @@ Narrative Charts supports animated transitions between actions by specifying "du
     {
       "add": "encoding",
       "channel": "x",
-      "field": {
-        "field": "Horsepower",
-        "type": "numerical"
-      }
+      "field": "Horsepower"
     },
     {
       "add": "encoding",
       "channel": "y",
-      "field": {
-        "field": "Miles per Gallon",
-        "type": "numerical"
+      "field": "Miles per Gallon"
       }
     },
     {
       "add": "encoding",
       "channel": "color",
-      "field": {
-        "field": "Origin",
-        "type": "categorical"
+      "field": "Origin"
       }
     },
     {
       "add": "encoding",
       "channel": "size",
-      "field": {
-        "field": "Acceleration",
-        "type": "numerical"
+      "field": "Acceleration"
       }
     },
     {
@@ -837,9 +828,7 @@ Narrative Charts supports animated transitions between actions by specifying "du
         {
             "add": "encoding",
             "channel": "x",
-            "field": {
-                "field": "Year",
-                "type": "categorical"
+            "field": "Year"
             },
             "animation": {
                 "duration": 1000,
@@ -861,9 +850,7 @@ Narrative Charts supports animated transitions between actions by specifying "du
         {
             "add": "encoding",
             "channel": "size",
-            "field": {
-                "field": "Horsepower",
-                "type": "numerical"
+            "field": "Horsepower"
             },
             "animation": {
                 "duration": 1000,

@@ -295,7 +295,7 @@ class LineChart extends Chart {
     }
     addEncoding(channel, field) {
         if(!this[channel]) {
-            this[channel] = field.field;
+            this[channel] = field;
             d3.selectAll("svg > g > *").remove();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();

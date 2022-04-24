@@ -46,12 +46,12 @@
         {
             "add": "encoding",
             "channel": "x",
-            "field": {"field":"Brand","type":"categorical"}
+            "field":"Brand"
         },
         {
             "add": "encoding",
             "channel": "y",
-            "field": {"field":"Sales","type":"numerical"}
+            "field":"Sales"
         },
         {
             "add": "annotation",

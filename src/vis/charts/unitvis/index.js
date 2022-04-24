@@ -156,7 +156,7 @@ class Unitvis extends Chart {
             let textSize = 14;
             let sizeField = this.units[0].unitgroup().size;
             let yField = this.units[0].unitgroup().y;
-            let xField = this.x.field
+            let xField = this.x
 
 
             let xValueFreq = d3.nest().key(function (d) { return d[xField] }).key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
@@ -404,7 +404,7 @@ class Unitvis extends Chart {
         // situation 2:
         else {   
 
-            let breakdownField = this.x.field;
+            let breakdownField = this.x;
 
             let databreakdown = d3.nest().key(function (d) { return d[breakdownField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
 
@@ -515,7 +515,7 @@ class Unitvis extends Chart {
 
             let textSize;
             let xField = this.units[0].unitgroup().x;
-            let yField = this.y.field;
+            let yField = this.y;
 
             let xValueFreq = d3.nest().key(function (d) { return d[xField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
 
@@ -696,7 +696,7 @@ class Unitvis extends Chart {
             }
             let textSize = 14;
 
-            let breakdownField = this.y.field;
+            let breakdownField = this.y;
 
             let databreakdown = d3.nest().key(function (d) { return d[breakdownField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
 
@@ -793,7 +793,7 @@ class Unitvis extends Chart {
             let textSize = 14;
             let sizeField = this.units[0].unitgroup().size;
             let xField = this.units[0].unitgroup().x;
-            let yField = this.y.field
+            let yField = this.y
 
 
             let xValueFreq = d3.nest().key(function (d) { return d[xField] }).key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
@@ -1046,7 +1046,7 @@ class Unitvis extends Chart {
     encodeColor() {
         // situation 1
         if (this.color) {
-            let colorField = this.color.field;
+            let colorField = this.color;
             let colorFreqValue = d3.nest().key(function (d) { return d[colorField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
             let colorValue = colorFreqValue.map(d => d['key']);
 
@@ -1083,7 +1083,7 @@ class Unitvis extends Chart {
 
             let xField = this.units[0].unitgroup().x;
             let yField = this.units[0].unitgroup().y;
-            let sizeField = this.size.field
+            let sizeField = this.size
 
 
             let xValueFreq = d3.nest().key(function (d) { return d[xField] }).key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
@@ -1330,7 +1330,7 @@ class Unitvis extends Chart {
         else if (this.x && this.size) {
             let xField = this.units[0].unitgroup().x;
 
-            let sizeField = this.size.field;
+            let sizeField = this.size;
 
             let xValueFreq = d3.nest().key(function (d) { return d[xField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
 
@@ -1484,7 +1484,7 @@ class Unitvis extends Chart {
         // situation 3
         else {
             let units = this.units.filter(d => d.visible() === "1");
-            let sizeField = this.size.field
+            let sizeField = this.size
 
             let allcenter = {
                 xcenter: width / 2,
@@ -1786,7 +1786,7 @@ class Unitvis extends Chart {
         this.delay = animation.delay
         this.duration = animation.duration
     
-        let sizeField = this.size.field
+        let sizeField = this.size
         let xField = this.units[0].unitgroup().x;
         let yField = this.units[0].unitgroup().y;
 

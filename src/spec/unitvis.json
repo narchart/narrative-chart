@@ -97,10 +97,7 @@
         {
             "add": "encoding",
             "channel": "x",
-            "field": {
-                "field": "Year",
-                "type": "categorical"
-            },
+            "field": "Year",
             "animation": {
                 "duration": 1000,
                 "delay": 1000
@@ -1685,10 +1682,7 @@
         {
             "add": "encoding",
             "channel": "size",
-            "field": {
-                "field": "Horsepower",
-                "type": "numerical"
-            },
+            "field": "Horsepower",
             "animation": {
                 "duration": 1000,
                 "delay": 4000

@@ -80,34 +80,25 @@
       {
         "add": "encoding",
         "channel": "x",
-        "field": {
-          "field": "Horsepower",
-          "type": "numerical"
-        }
+        "field": "Horsepower"
+        
       },
       {
         "add": "encoding",
         "channel": "y",
-        "field": {
-          "field": "Miles per Gallon",
-          "type": "numerical"
-        }
+        "field": "Miles per Gallon"
+        
       },
       {
         "add": "encoding",
         "channel": "color",
-        "field": {
-          "field": "Origin",
-          "type": "categorical"
-        }
+        "field": "Origin"
+        
       },
       {
         "add": "encoding",
         "channel": "size",
-        "field": {
-          "field": "Acceleration",
-          "type": "numerical"
-        }
+        "field": "Acceleration"
       },
       {
         "add": "annotation",
