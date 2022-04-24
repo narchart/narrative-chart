@@ -182,8 +182,8 @@ vis.generate();
     "style": {
         "background-image": image-url, // (optional)
         "nackground-color": color // (optional)
-    }
-    "animation": { "type": type }, // (optional)
+    },
+    "animation": { "type": type } // (optional)
 }
 ```
 
