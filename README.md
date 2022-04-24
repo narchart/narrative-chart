@@ -33,7 +33,9 @@
         - [Symbol](#symbol)
         - [Texture](#texture)
         - [Tooltip](#tooltip)
-      - [4. Title](#4-title)
+      - [4. Title & Caption](#4-title--caption)
+        - [Title](#title)
+        - [Caption](#caption)
     - [Animations](#animations)
     - [Examples](#examples)
       - [1. Without Animations](#1-without-animations)
@@ -176,7 +178,12 @@ vis.generate();
 ```
 {
     "add": "chart",
-    "mark": point/line/bar/unit
+    "mark": point/line/bar/unit,
+    "style": {
+        "background-image": image-url, // (optional)
+        "nackground-color": color // (optional)
+    }
+    "animation": { "type": type }, // (optional)
 }
 ```
 

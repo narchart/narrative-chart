@@ -7,6 +7,10 @@ class AddChart extends Action {
     constructor(spec) {
         super(spec);
         this._mark = spec.mark;
+        this._animation = {};
+        if ('animation' in spec) { this._animation = spec.animation; }
+        this._style = {};
+        if ('style' in spec) { this._style = spec.style; }
         this._leave_space = spec.leave_space
     }
 
@@ -18,6 +22,8 @@ class AddChart extends Action {
         let chart = vis.chart();
         chart.height(vis._height);
         chart.width(vis._width);
+        chart.animation(this._animation);
+        chart.style(this._style);
         chart.margin(this._leave_space ? 
             {
                 "top": 70,

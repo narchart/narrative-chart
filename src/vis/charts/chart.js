@@ -8,6 +8,8 @@ class Chart {
         this._height = 0;
         this._data = [];
         this._processedData = [];
+        this._animation = {};
+        this._style = {};
         this._margin = {};
     }
 
@@ -39,6 +41,19 @@ class Chart {
         this._margin = value;
     }
 
+    style(value) {
+        if (!value) {
+            return this._style;
+        }
+        this._style = value;
+    }
+
+    animation(value) {
+        if (!value) {
+            return this._animation;
+        }
+        this._animation = value;
+    }
 
     width(value) {
         if (!value) {
