@@ -193,7 +193,7 @@ vis.generate();
     "mark": point/line/bar/unit,
     "style": {
         "background-image": image-url, // (optional)
-        "nackground-color": color // (optional)
+        "background-color": color // (optional)
     },
     "animation": { "type": type } // (optional)
 }
