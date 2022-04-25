@@ -16,8 +16,9 @@ class Pipeline {
         let delayTime = 0;
         this.actions().forEach(action => {
             if ('delay' in action.animation()) {
-                delayTime += action.animation()['delay']
-            }
+                delayTime = action.animation()['delay']
+                
+            }else{delayTime = 0}
             this._timeouts.push(setTimeout(function(){
                 // Code to run after the pause
                 action.operate(vis);

@@ -351,7 +351,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
 
@@ -368,7 +368,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
             })
@@ -383,7 +383,7 @@ class Unitvis extends Chart {
                 .attr('text-anchor', 'middle')
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
 
@@ -397,7 +397,7 @@ class Unitvis extends Chart {
                 .attr("transform", `rotate(-90, ${centernodex[0] - 2 * maxR - 3 * textSize}, ${height / 2})`)
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
     }
@@ -445,7 +445,7 @@ class Unitvis extends Chart {
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
                 .transition()
-                .delay(this.delay)
+                // .delay(this.delay)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 0)
 
@@ -463,7 +463,7 @@ class Unitvis extends Chart {
                     // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
                     
@@ -486,8 +486,8 @@ class Unitvis extends Chart {
                     .attr('text-anchor', 'middle')
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay)
-                    .duration(this.delay + this.duration/2)
+                    // .delay(this.delay)
+                    .duration(this.duration/2)
                     .attr("fill-opacity", 1)
                 });
             }   
@@ -598,7 +598,7 @@ class Unitvis extends Chart {
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
             .transition()
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration/2)
             .attr("fill-opacity", 0)
 
@@ -616,7 +616,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + baseX[i] - radius + length * radius + "," + baseY[baseY.length - 1] + radius + textSize + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
     
@@ -634,7 +634,7 @@ class Unitvis extends Chart {
                         // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
                         .attr("fill-opacity", 0)
                         .transition()
-                        .delay(this.delay + this.duration/2)
+                        // .delay(this.delay + this.duration/2)
                         .duration(this.duration/2)
                         .attr("fill-opacity", 1)
     
@@ -666,7 +666,7 @@ class Unitvis extends Chart {
                     .attr('text-anchor', 'middle')
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration)
                     .attr("fill-opacity", 1)
 
@@ -682,8 +682,8 @@ class Unitvis extends Chart {
                     .attr('text-anchor', 'middle')
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    // .delay(this.delay + this.duration/2)
+                    .duration(this.duration)
                     .attr("fill-opacity", 1)
             }
         }
@@ -741,7 +741,7 @@ class Unitvis extends Chart {
 
             svg.select(".content").selectAll("text")
             .transition()
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration/2)
             .attr("fill-opacity", 0)
 
@@ -758,7 +758,7 @@ class Unitvis extends Chart {
                     .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay)
+                    // .delay(this.delay)
                     .duration(this.delay + this.duration/2)
                     .attr("fill-opacity", 1)
 
@@ -781,7 +781,7 @@ class Unitvis extends Chart {
                     .attr('text-anchor', 'middle')
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
 
@@ -971,7 +971,7 @@ class Unitvis extends Chart {
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
             .transition()
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration/2)
             .attr("fill-opacity", 0)
 
@@ -986,7 +986,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
 
@@ -1003,7 +1003,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
             })
@@ -1017,7 +1017,7 @@ class Unitvis extends Chart {
                 .attr('text-anchor', 'middle')
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
 
@@ -1030,7 +1030,7 @@ class Unitvis extends Chart {
                 .attr("transform", `rotate(-90, ${centernodex[0] - 2 * maxR - 3 * textSize}, ${height / 2})`)
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
     }
@@ -1261,7 +1261,7 @@ class Unitvis extends Chart {
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
             .transition()
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration/2)
             .attr("fill-opacity", 0)
 
@@ -1276,7 +1276,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
 
@@ -1293,7 +1293,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
             })
@@ -1308,7 +1308,7 @@ class Unitvis extends Chart {
                 .attr('text-anchor', 'middle')
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
 
@@ -1322,7 +1322,7 @@ class Unitvis extends Chart {
                 .attr("transform", `rotate(-90, ${centernodex[0] - 2 * maxR - 3 * textSize}, ${height / 2})`)
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
     }
@@ -1449,7 +1449,7 @@ class Unitvis extends Chart {
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
             .transition()
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration/2)
             .attr("fill-opacity", 0)
 
@@ -1464,7 +1464,7 @@ class Unitvis extends Chart {
                     // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
             })
@@ -1477,7 +1477,7 @@ class Unitvis extends Chart {
                 .attr('text-anchor', 'middle')
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
         }
@@ -1603,7 +1603,7 @@ class Unitvis extends Chart {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change color")
-                    .delay(this.delay)
+                    // .delay(this.delay)
                     .duration(this.duration)
                     .attr("fill", d => d.color());
             }
@@ -1612,7 +1612,7 @@ class Unitvis extends Chart {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change size")
-                    .delay(this.delay)
+                    // .delay(this.delay)
                     .duration(this.duration)
                     .attr("r", d => d.radius());
             }
@@ -1621,7 +1621,7 @@ class Unitvis extends Chart {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change layout")
-                    .delay(this.delay)
+                    // .delay(this.delay)
                     .duration(this.duration)
                     .attr("cx", d => d.x())
                     .attr("cy", d => d.y())
@@ -1681,7 +1681,7 @@ class Unitvis extends Chart {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change color")
-                    .delay(this.delay)
+                    // .delay(this.delay)
                     .duration(this.duration)
                     .attr("fill", d => d.color());
             }
@@ -1690,7 +1690,7 @@ class Unitvis extends Chart {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change size")
-                    .delay(this.delay)
+                    // .delay(this.delay)
                     .duration(this.duration)
                     .attr("r", d => d.radius());
             }
@@ -1699,7 +1699,7 @@ class Unitvis extends Chart {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change layout")
-                    .delay(this.delay)
+                    // .delay(this.delay)
                     .duration(this.duration)
                     .attr("cx", d => d.x())
                     .attr("cy", d => d.y())
@@ -1741,7 +1741,7 @@ class Unitvis extends Chart {
             this.svg().select(".content")
                 .selectAll("circle")
                 .transition("change color")
-                .delay(this.delay)
+                // .delay(this.delay)
                 .duration(this.duration)
                 .attr("fill", d => d.color());
         }
@@ -1750,7 +1750,7 @@ class Unitvis extends Chart {
             this.svg().select(".content")
                 .selectAll("circle")
                 .transition("change size")
-                .delay(this.delay)
+                // .delay(this.delay)
                 .duration(this.duration)
                 .attr("r", d => d.radius());
         }
@@ -1759,7 +1759,7 @@ class Unitvis extends Chart {
             this.svg().select(".content")
                 .selectAll("circle")
                 .transition("change layout")
-                .delay(this.delay)
+                // .delay(this.delay)
                 .duration(this.duration)
                 .attr("cx", d => d.x())
                 .attr("cy", d => d.y())
@@ -2059,7 +2059,7 @@ class Unitvis extends Chart {
 
             svg.select(".content").selectAll("text")
             .transition()
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration/2)
             .attr("fill-opacity", 0)
 
@@ -2068,7 +2068,7 @@ class Unitvis extends Chart {
             .attr("class", "axis_y")
             .attr("transform", `translate(${centernodex[0] - maxR}, ${0})`)
             .transition()
-            .delay(this.delay + this.duration/2)
+            // .delay(this.delay + this.duration/2)
             .call(axisY)
             // .attr("fill-opacity", 0)
             // .transition()
@@ -2088,7 +2088,7 @@ class Unitvis extends Chart {
                     .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
 
@@ -2132,7 +2132,7 @@ class Unitvis extends Chart {
                 .attr('text-anchor', 'middle')
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
 
@@ -2174,7 +2174,7 @@ class Unitvis extends Chart {
                 })                    
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
 
@@ -2338,7 +2338,7 @@ class Unitvis extends Chart {
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
             .transition()
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration/2)
             .attr("fill-opacity", 0)
 
@@ -2362,7 +2362,7 @@ class Unitvis extends Chart {
                     // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
                     .attr("fill-opacity", 0)
                     .transition()
-                    .delay(this.delay + this.duration/2)
+                    // .delay(this.delay + this.duration/2)
                     .duration(this.duration/2)
                     .attr("fill-opacity", 1)
             })
@@ -2375,7 +2375,7 @@ class Unitvis extends Chart {
                 .attr('text-anchor', 'middle')
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
 
@@ -2417,7 +2417,7 @@ class Unitvis extends Chart {
                 })                    
                 .attr("fill-opacity", 0)
                 .transition()
-                .delay(this.delay + this.duration/2)
+                // .delay(this.delay + this.duration/2)
                 .duration(this.duration/2)
                 .attr("fill-opacity", 1)
 
@@ -2429,7 +2429,7 @@ class Unitvis extends Chart {
         this.svg().select(".content")
             .selectAll("circle")
             .transition("change layout")
-            .delay(this.delay)
+            // .delay(this.delay)
             .duration(this.duration)
             .attr("cx", d => d.x())
             .attr("cy", d => d.y())
