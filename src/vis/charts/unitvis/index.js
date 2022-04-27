@@ -19,27 +19,63 @@ class Unitvis extends Chart {
      * @return {void}
     */
 
-
     visualize() {
-        let margin = {
-            "top": 10,
-            "right": 10,
-            "bottom": 10,
-            "left": 10
-        }
-
+        let margin = this.margin()
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
         this.units = []
-        this._svg = d3.select(this.container())
+        let chartbackgroundsize = {
+            width: 600,
+            height: 600
+        }
+        
+
+        d3.select(this.container())
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
-            .attr("height", this.height() + margin.top + margin.bottom+80)
-            .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("height", this.height() + margin.top + margin.bottom)
 
+        d3.select("svg")
+            .append("g")
+            .attr("id","chartBackGrnd")
+            .append("rect")
+            .attr("width", chartbackgroundsize.width)
+            .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
+            .attr("transform", "translate(" + 20 + "," + margin.top + ")");
+            
+
+        this._svg = d3.select("svg")
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // d3.select("svg").style("background", "url(" + this.style()['background-image'] + ") center ").style("background-size", "cover")
+        
+        if(this.style()['background-color']){
+            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
+        } 
+        else if (this.style()['background-image']){
+            let defs = this._svg.append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "chart-backgroundimage")
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.style()["background-image"])
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("x", 0)
+                .attr("y", 0);
+                d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+        }
+        else {
+            d3.select("#chartBackGrnd").attr("fill-opacity", 0)
+        }   
+
+        
         this.data()
         this.initvis()
+
 
         return this.svg();
     }
@@ -72,6 +108,7 @@ class Unitvis extends Chart {
         let svg = this.svg();
         let width = this.width(),
             height = this.height();
+        
 
         const processedData = this.processedData()
 
@@ -92,8 +129,9 @@ class Unitvis extends Chart {
         let row = Math.floor(Math.sqrt(processedData.length));
         let column = Math.ceil(processedData.length / row); // row 3 col 4
 
-        let initX = vwidth / 2.2 - column * radius;
+        let initX = vwidth / 1.9 - column * radius;
         let initY = vwidth / 2 - row * radius;
+
         let units = this.units.filter(d => d.visible() === "1");
         let id = 0
         for (let i = 0; i < row; i++) {

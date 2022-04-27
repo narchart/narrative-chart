@@ -590,13 +590,18 @@ Remove Encoding
 {
     "add": "title",
     "style": {
-        "text": text,
-        "font-size": font-size
+        "text": string,
+        "font-size": int, // (optional)
+        "position": string, // (optional)
+        "text-background-color": string, // (optional)
+        "background-color": string, // (optional)
+        "background-image": image-url, // (optional)
+        "border-width": int, // (optional)
+        "border-color": string, // (optional)
+        "divide-line-width": int, // (optional)
+        "divide-line-color": string, // (optional)
       },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": {"delay": int, "duration": int} // (optional)
 
 }
 ```
@@ -608,7 +613,8 @@ Remove Encoding
     "add": "caption",
     "style": {
         "text": text,
-        "font-size": font-size
+        "font-size": size, // (optional)
+        "position": string, // (optional)
       },
     "animation": {
       "delay": number,

@@ -26,12 +26,12 @@ class AddChart extends Action {
         chart.style(this._style);
         chart.margin(this._leave_space ? 
             {
-                "top": 70,
+                "top": 130,
                 "right": 20,
-                "bottom": 90,
+                "bottom": 50,
                 "left": 60
             }:{
-            "top": 10,
+            "top": 20,
             "right": 10,
             "bottom": 50,
             "left": 50

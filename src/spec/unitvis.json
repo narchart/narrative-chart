@@ -92,7 +92,11 @@
         },
         {
             "add": "chart",
-            "mark": "unit"
+            "mark": "unit",
+            "style":{
+                "background-color": "pink"
+            }
+
         },
         {
             "add": "encoding",
@@ -1687,6 +1691,25 @@
                 "duration": 1000,
                 "delay": 4000
             }
-        }
-    ]
+        },
+        {
+            "add": "title",
+            "style": {
+                "position": "top-center",
+                "text": "This is title This is title This is title This is title This is title This is title",
+                "font-size": 22,
+                "background-color": "lightblue",
+                "border-color": "black",
+                "border-width": 3
+              }
+          },
+          {
+            "add": "caption",
+            "style": {
+                "position": "top-left",
+                "text": " This is caption This is caption This is caption This is caption This is caption This is caption",
+                "font-size": 18
+            }
+          }  
+        ]
 }

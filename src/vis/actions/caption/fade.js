@@ -21,16 +21,12 @@ class Fade extends Captioner {
 
     makecaption(vis, style, animation) {
 
-        let margin = {
-            top : 20,
-            left: 30
-        }
 
         let svg = d3.select(vis.container()).select("svg")
 
         let words = style.text.split(" ").filter(d => d !== "");
 
-        let textsize = style['font-size']? style['font-size']: 14
+        let textsize = style['font-size']? style['font-size']: 16
 
     
         let virtualE = svg.append("text")
@@ -40,12 +36,32 @@ class Fade extends Captioner {
 
         let textE = svg.append("text")
             .attr("dominant-baseline", "central")
-            .attr("transform", "translate(" + margin.left + "," + 580  + ")")
+            .attr("transform", "translate(" + 0 + "," + 60 + ")")
             .attr("font-family", 'Arial-Regular')
             .attr("font-size", textsize)
-            .attr("text-anchor", "start");
         
-        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), 600);
+            let position
+            switch(style.position){
+                case 'top-left':
+                    position = 30
+                    textE.attr("text-anchor", "start")
+                    break; 
+                case 'top-center':
+                    position = "50%"
+                    textE.attr("text-anchor", "middle")
+                    break; 
+                case 'top-right':
+                    position = 610
+                    textE.attr("text-anchor", "end")
+                    break; 
+                default:
+                    position = 40
+                    textE.attr("text-anchor", "start") 
+                }
+    
+
+
+        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), 590);
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         let line = '';
         let rowCount = 0;
@@ -69,7 +85,7 @@ class Fade extends Captioner {
                         break;
                     }else{//new row
                         textE.append("tspan")
-                            .attr("x", 0)
+                            .attr("x", position)
                             .attr("dy", lineHeight)
                             .text(line)
                             .transition()
@@ -84,7 +100,7 @@ class Fade extends Captioner {
             }
             
             textE.append("tspan")
-                .attr("x", 0)
+                .attr("x", position)
                 .attr("dy", lineHeight)
                 .text(line)
                 .transition()
@@ -110,7 +126,7 @@ class Fade extends Captioner {
                         break;
                     }else{//new row
                         textE.append("tspan")
-                            .attr("x", 0)
+                            .attr("x", position)
                             .attr("dy", lineHeight)
                             .text(line)
                             .transition()
@@ -130,7 +146,7 @@ class Fade extends Captioner {
             }
             
             textE.append("tspan")
-                .attr("x", 0)
+                .attr("x", position)
                 .attr("dy", lineHeight)
                 .text(line)
                 .transition()
