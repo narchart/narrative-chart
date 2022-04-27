@@ -1,6 +1,23 @@
 import Annotator from './annotator';
 
+/**
+ * @description An annotator for drawing symbols.
+ * 
+ * @class
+ * @extends Annotator
+ */
 class Symbol extends Annotator {
+
+    /**
+     * @description Draw symbols for target marks.
+     * 
+     * @param {Chart} chart src/vis/charts/chart.js
+     * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
+     * @param {{color: string}} style Style parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+     */
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
         let focus_elements = svg.selectAll(".mark")

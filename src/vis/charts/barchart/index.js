@@ -2,8 +2,19 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 
+/**
+ * @description A bar chart is a chart type.
+ * 
+ * @class
+ * @extends Chart
+ */
 class BarChart extends Chart {
 
+    /**
+     * @description Main function of drawing bar chart.
+     *
+     * @return {function} It represents the canvas that has been created, on which subsequent charts, titles, and other content expand.
+     */
     visualize() {
         let margin = this.margin()
 
@@ -24,6 +35,11 @@ class BarChart extends Chart {
         return this.svg();       
     }
 
+    /**
+     * @description Draw Axis for bar chart.
+     *
+     * @return {void}
+     */
     drawAxis() {
         if(this.x && this.y) {
             let x = this.x,
@@ -77,6 +93,11 @@ class BarChart extends Chart {
         
     }
 
+    /**
+     * @description Draw bars with xy encoding.
+     *
+     * @return {void}
+     */
     encodeXY() {
         if(this.x && this.y) {
             let svg = this.svg();
@@ -180,13 +201,17 @@ class BarChart extends Chart {
         }
     }
 
+    /**
+     * @description Coloring bars with color encoding.
+     *
+     * @return {void}
+     */
     encodeColor() {
         // if colorEncoding, clear and redraw 
         if(this.color) {
             let width = this.width(),
                 height = this.height();
             const data = this.data();
-            // const measure = this.measure();
             const xEncoding = this.x,
                 yEncoding = this.y;
             const colorEncoding = this.color;
@@ -257,6 +282,11 @@ class BarChart extends Chart {
         }
     }
 
+    /**
+     * @description Add encoding and redraw bars.
+     *
+     * @return {void}
+     */
     addEncoding(channel, field) {
         if(!this[channel]) {
             this[channel] = field;
@@ -267,6 +297,11 @@ class BarChart extends Chart {
         }
     }
 
+    /**
+     * @description Modify encoding and redraw bars.
+     *
+     * @return {void}
+     */
     modifyEncoding(channel, field) {
         if (this[channel]) {
             this[channel] = field;
@@ -277,6 +312,11 @@ class BarChart extends Chart {
         }
     }
 
+    /**
+     * @description Remove encoding and redraw bars.
+     *
+     * @return {void}
+     */
     removeEncoding(channel) {
         this[channel] = null;
         d3.selectAll("svg > g > *").remove();

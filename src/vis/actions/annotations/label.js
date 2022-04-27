@@ -2,7 +2,24 @@ import Annotator from './annotator';
 import { Scatterplot } from '../../charts';
 import Color from '../../visualization/color';
 
+/**
+ * @description An annotator for drawing labels.
+ * 
+ * @class
+ * @extends Annotator
+ */
 class Label extends Annotator {
+
+    /**
+     * @description Draw labels for target marks.
+     * 
+     * @param {Chart} chart src/vis/charts/chart.js
+     * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
+     * @param {{color: string}} style Style parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+     */
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
 
@@ -91,8 +108,6 @@ class Label extends Annotator {
                 .transition()
                 .duration('duration' in animation ? animation['duration']: 0)
                 .attr("fill-opacity", 1);
-            
-        
     }
             
     }
