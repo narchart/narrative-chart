@@ -2,8 +2,17 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 
+/**
+ * @description A scatterplot chart is a chart type.
+ * 
+ * @class
+ * @extends Chart
+ */
 class Scatterplot extends Chart {
-
+    /** 
+     * @description Main function of visualizing scatterplot.
+     * @returns {function} It represents the canvas that has been created, on which subsequent charts, titles, and other content expand.
+     */
     visualize() {
         let margin = this.margin()
         this.width(this.width() - margin.left - margin.right);
@@ -23,6 +32,11 @@ class Scatterplot extends Chart {
         return this.svg();
     }
 
+    /**
+     * @description Draw Axis for bar chart.
+     *
+     * @return {void}
+     */
     drawAxis() {
         if (this.x && this.y) {
             let x = this.x,
@@ -75,6 +89,11 @@ class Scatterplot extends Chart {
         }
     }
 
+    /**
+     * @description Draw scatterplot with x and y encoding channels.
+     *
+     * @return {void}
+     */
     encodeXY(animation = {}) {
         if (this.x && this.y) {
             let svg = this.svg();
@@ -209,6 +228,11 @@ class Scatterplot extends Chart {
 
     }
 
+    /**
+     * @description Draw scatterplot with color encoding channel.
+     *
+     * @return {void}
+     */
     encodeColor(animation = {}) {
         if (this.color) {
             let color = this.color;
@@ -222,6 +246,11 @@ class Scatterplot extends Chart {
         }
     }
 
+    /**
+     * @description Draw scatterplot with size encoding channel.
+     *
+     * @return {void}
+     */
     encodeSize(animation = {}) {
         if (this.size) {
             let size = this.size;
@@ -240,10 +269,20 @@ class Scatterplot extends Chart {
         }
     }
 
+    /**
+     * @description Draw scatterplot with shape encoding channel.
+     *
+     * @return {void}
+     */
     encodeShape(animation = {}) {
 
     }
 
+    /**
+     * @description Add encoding.
+     *
+     * @return {void}
+     */
     addEncoding(channel, field, animation = {}) {
         if (!this[channel]) {
             this[channel] = field;
@@ -255,6 +294,11 @@ class Scatterplot extends Chart {
         }
     }
 
+    /**
+     * @description Modify encoding.
+     *
+     * @return {void}
+     */
     modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field;
@@ -266,6 +310,11 @@ class Scatterplot extends Chart {
         }
     }
 
+    /**
+     * @description Remove encoding.
+     *
+     * @return {void}
+     */
     removeEncoding(channel, animation = {}) {
         this[channel] = null;
         d3.selectAll("svg > g > *").remove();

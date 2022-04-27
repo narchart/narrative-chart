@@ -1,7 +1,24 @@
 import Annotator from './annotator'
 import Color from '../../visualization/color';
 
+/**
+ * @description An annotator for adding circle.
+ * 
+ * @class
+ * @extends Annotator
+ */
 class Circle extends Annotator {
+
+    /**
+     * @description Add circles in target marks.
+     * 
+     * @param {Chart} chart src/vis/charts/chart.js
+     * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
+     * @param {{color: string}} style Style parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * 
+     * @return {void}
+     */
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
         let selected = svg.selectAll(".mark")
@@ -18,7 +35,7 @@ class Circle extends Annotator {
             })
 
         const padding = 5;
-        
+
         selected.nodes().forEach(item => {
             if (item.nodeName === "circle") {
                 let circleR = Number(item.getAttribute("r")) + padding,
@@ -27,7 +44,7 @@ class Circle extends Annotator {
 
                 svg.append("circle")
                     .attr("fill", "none")
-                    .attr("stroke", function(d) {
+                    .attr("stroke", function (d) {
                         if ('color' in style) {
                             return style['color']
                         } else {
@@ -40,7 +57,7 @@ class Circle extends Annotator {
                     .attr("transform", "translate(" + circleX + "," + circleY + ")")
                     .transition()
                     .attr("r", circleR)
-                    .duration('duration' in animation ? animation['duration']: 0)    
+                    .duration('duration' in animation ? animation['duration'] : 0)
                     .attr("fill-opacity", 1)
 
             } else if (item.nodeName === "rect") {
@@ -50,7 +67,7 @@ class Circle extends Annotator {
                     circleR = width / 2 + padding;
                 svg.append("circle")
                     .attr("fill", "none")
-                    .attr("stroke", function(d) {
+                    .attr("stroke", function (d) {
                         if ('color' in style) {
                             return style['color']
                         } else {
@@ -65,7 +82,7 @@ class Circle extends Annotator {
             }
 
         });
-        
+
     }
 }
 
