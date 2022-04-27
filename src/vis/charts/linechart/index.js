@@ -2,8 +2,19 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 
+/**
+ * @description A line chart is a chart type.
+ * 
+ * @class
+ * @extends Chart
+ */
 class LineChart extends Chart {
 
+    /**
+     * @description Description Main function of drawing line chart.
+     * 
+     * @return {function} It represents the canvas that has been created, on which subsequent charts, titles, and other content expand.
+     */
     visualize() {
         let margin = this.margin()
         this.width(this.width() - margin.left - margin.right);
@@ -23,6 +34,11 @@ class LineChart extends Chart {
         return this.svg();       
     }
 
+    /**
+     * @description Add axis to the line chart.
+     * 
+     * @return {void}
+     */
     drawAxis() {
         if(this.x && this.y) {
             let x = this.x,
@@ -76,6 +92,11 @@ class LineChart extends Chart {
         
     }
 
+    /**
+     * @description Draw lines with xy encoding.
+     *
+     * @return {void}
+     */
     encodeXY() {
         if(this.x && this.y) {
             let svg = this.svg();
@@ -205,6 +226,11 @@ class LineChart extends Chart {
         
     }
 
+    /**
+     * @description Coloring lines with color encoding.
+     *
+     * @return {void}
+     */
     encodeColor() {
         
         // const factData = this.factdata();
@@ -293,6 +319,12 @@ class LineChart extends Chart {
 
         } 
     }
+
+    /**
+     * @description Add encoding and redraw lines.
+     *
+     * @return {void}
+     */
     addEncoding(channel, field) {
         if(!this[channel]) {
             this[channel] = field;
@@ -303,6 +335,11 @@ class LineChart extends Chart {
         }
     }
 
+    /**
+     * @description Modify encoding and redraw lines.
+     *
+     * @return {void}
+     */
     modifyEncoding(channel, field) {
         if (this[channel]) {
             this[channel] = field;
@@ -313,6 +350,11 @@ class LineChart extends Chart {
         }
     }
 
+    /**
+     * @description Remove encoding and redraw lines.
+     *
+     * @return {void}
+     */
     removeEncoding(channel) {
         this[channel] = null;
         d3.selectAll("svg > g > *").remove();
