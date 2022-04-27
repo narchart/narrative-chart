@@ -5,14 +5,14 @@ class ModifyEncoding extends Action {
         super(spec);
         this.channel = spec.channel;
         this.field = spec.field;
-        if ('animation' in spec) { this.animation = spec.animation }
+        if ('animation' in spec) { this._animation = spec.animation }
         else {
-            this.animation = { "delay": 0, "duration": 0 }
+            this._animation = { "delay": 0, "duration": 0 }
         }
     }
 
     operate(vis) {
-        vis.chart().modifyEncoding(this.channel, this.field, this.animation);
+        vis.chart().modifyEncoding(this.channel, this.field, this._animation);
     }
 }
 

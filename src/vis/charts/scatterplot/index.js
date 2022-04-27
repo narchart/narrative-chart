@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
+import Point from './point';
 
 /**
  * @description A scatterplot chart is a chart type.
@@ -18,108 +19,88 @@ class Scatterplot extends Chart {
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
+        this.points = [];
         this._svg = d3.select(this.container())
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
             .attr("height", this.height() + margin.top + margin.bottom)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        
+        this.data()
+        this.initvis()
 
-        this.drawAxis();
-        this.encodeXY();
-        this.encodeColor();
-        this.encodeSize();
         return this.svg();
     }
 
     /**
-     * @description Draw Axis for bar chart.
-     *
+     * @description assigning identity and data information for each point mark
+     *      * 
      * @return {void}
-     */
-    drawAxis() {
-        if (this.x && this.y) {
-            let x = this.x,
-                y = this.y;
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height();
-            let fontsize = 16, strokeWidth = 2;
-            const padding = fontsize * 0.6,
-                triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
-
-            let axis = svg.select('.axis');
-            svg.select(".axis_x").remove();
-            svg.select(".axis_y").remove();
-
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + padding - 1)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .text(x || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", Color().AXIS);
-            axis.append("line")
-                .attr("x1", -strokeWidth / 2)
-                .attr("x2", width)
-                .attr("y1", height)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", Color().AXIS);
-            axis.append("text")
-                .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .text(y || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", Color().AXIS);
-            axis.append("line")
-                .attr("y1", 0)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", Color().AXIS);
-        }
+    */
+    data() {
+        let processedData = this.processedData();
+        processedData.forEach((d,i) => {
+            let point = new Point();
+            point.id(i);
+            point.data(d)
+            this.points.push(point);
+        })
+        return this;
     }
 
     /**
-     * @description Draw scatterplot with x and y encoding channels.
+     * @description The initial status of scatterplot vis
+     *      * 
+     * @return {void}
+    */
+    initvis(){
+        let svg = this.svg();
+        svg.append("g")
+           .attr("class", "axis");
+        let width = this.width();
+        let height = this.height();
+        let initX = width/2;
+        let initY = height/2;
+        let content = svg.append("g")
+                .attr("class", "content")
+                .attr("chartWidth", this.width())
+                .attr("chartHeight", this.height());
+                content.append("g")
+                .attr("class", "circleGroup")
+                .selectAll("circle")
+                .data(this.points)
+                .enter().append("circle")
+                .attr("class", "mark")
+                .attr("stroke", "#FFF")
+                .attr("stroke-width", 0)
+                .attr("cx", initX)
+                .attr("cy", initY)
+                .attr("fill", Color().DEFAULT)
+                .attr("opacity", 0)
+    }
+
+    /**
+     * @description Using X-axis to encode a data field.
      *
      * @return {void}
      */
-    encodeXY(animation = {}) {
-        if (this.x && this.y) {
+    encodeX(animation = {}){
+        if(this.x){
             let svg = this.svg();
             let width = this.width(),
                 height = this.height();
-            const processedData = this.processedData();
-            const xEncoding = this.x,
-                yEncoding = this.y;
-
-            let axis = svg.append("g")
-                .attr("class", "axis"),
-                content = svg.append("g")
-                    .attr("class", "content")
-                    .attr("chartWidth", width)
-                    .attr("chartHeight", height);
-
+            const xEncoding = this.x;
+            let axis = svg.select(".axis")
+            
             // set the ranges
             let xScale = d3.scaleLinear()
                 .range([0, width])
-                .domain([0, d3.max(processedData, d => d[xEncoding])])
+                .domain([0, d3.max(this.points, d => d[xEncoding])])
                 .nice();
 
-            let yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(processedData, d => d[yEncoding])])
-                .nice();
+            let axis_X = axis.append("g")
+                .attr("class", "axis_X");
 
             let axisX = d3.axisBottom(xScale)
                 .ticks(5)
@@ -132,6 +113,95 @@ class Scatterplot extends Chart {
                     }
                     return d;
                 });
+            
+            axis_X.append("g")
+                .attr("class", "axis_x")
+                .attr('transform', `translate(0, ${height})`)
+                .call(axisX)
+
+            axis_X.selectAll(".axis_x .tick")
+                .append("line")
+                .attr("stroke", d => {
+                    if((d!==0)||(!this.y)) {return Color().DIVIDER;}
+                })
+                .attr("class", "gridline")
+                .attr("x1", 0)
+                .attr("y1", -height)
+                .attr("x2", 0)
+                .attr("y2", 0);
+
+            axis_X.append("line")
+                .attr("stroke", Color().DIVIDER)
+                .attr("class", "gridline")
+                .attr("x1", width)
+                .attr("y1", height)
+                .attr("x2", width)
+                .attr("y2", 0);
+
+            /* draw labels */
+            const labelPadding = 20, fontsize = 12;
+
+            axis_X.append("text")
+                .attr("x", width / 2)
+                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "hanging")
+                .attr("font-size", fontsize)
+                .text(xEncoding);
+
+            /* points */
+            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
+            this.points.forEach((d) => {
+                d.x(xScale(d[xEncoding]));
+                d.size(circleSize);
+                d.color(Color().DEFAULT)
+            })
+            if (!this.y) {
+                let defaultY= height/2;
+                this.points.forEach((d) => {
+                    d.y(defaultY);
+                })
+            } 
+        }
+        else{
+             let defaultX= this.width()/2;
+             this.points.forEach((d) => {
+                 d.x(defaultX);
+             })
+             if(this.y){
+                this.svg().select(".axis_Y")
+                    .append("line")
+                    .attr("stroke", Color().DIVIDER)
+                    .attr("class", "gridline")
+                    .attr("x1", 0)
+                    .attr("y1", this.height())
+                    .attr("x2", this.width())
+                    .attr("y2", this.height());
+             }          
+        }
+    }
+
+    /**
+     * @description Using Y-axis to encode a data field.
+     *
+     * @return {void}
+     */
+    encodeY(animation = {}){
+        if(this.y){
+            let svg = this.svg();
+            let width = this.width(),
+                height = this.height();
+            const yEncoding = this.y;;
+            let axis = svg.select(".axis")
+
+            // set the ranges
+            let yScale = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, d3.max(this.points, d => d[yEncoding])])
+                .nice();
+
+            let axis_Y = axis.append("g")
+                .attr("class", "axis_Y");
 
             let axisY = d3.axisLeft(yScale)
                 .ticks(5)
@@ -144,22 +214,16 @@ class Scatterplot extends Chart {
                     }
                     return d;
                 });
-
-            axis.append("g")
-                .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
-                .call(axisX)
-
-            axis.append("g")
+            
+            axis_Y.append("g")
                 .attr("class", "axis_y")
                 .call(axisY);
 
             // for grid line
-            axis.selectAll(".axis_y .tick")
+            axis_Y.selectAll(".axis_y .tick")
                 .append("line")
                 .attr("stroke", d => {
-                    if (d === 0) return Color().AXIS;
-                    else return Color().DIVIDER;
+                    if((d!==0)||(!this.x)) {return Color().DIVIDER;}
                 })
                 .attr("class", "gridline")
                 .attr("x1", 0)
@@ -167,24 +231,7 @@ class Scatterplot extends Chart {
                 .attr("x2", width)
                 .attr("y2", 0);
 
-            axis.selectAll(".axis_x .tick")
-                .append("line")
-                .attr("stroke", Color().DIVIDER)
-                .attr("class", "gridline")
-                .attr("x1", 0)
-                .attr("y1", -height)
-                .attr("x2", 0)
-                .attr("y2", 0);
-
-            axis.append("line")
-                .attr("stroke", Color().DIVIDER)
-                .attr("class", "gridline")
-                .attr("x1", width)
-                .attr("y1", height)
-                .attr("x2", width)
-                .attr("y2", 0);
-
-            axis.append("line")
+            axis_Y.append("line")
                 .attr("stroke", Color().DIVIDER)
                 .attr("class", "gridline")
                 .attr("x1", 0)
@@ -195,62 +242,71 @@ class Scatterplot extends Chart {
             /* draw labels */
             const labelPadding = 20, fontsize = 12;
 
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("font-size", fontsize)
-                .text(xEncoding);
-
-            axis.append("text")
+            axis_Y.append("text")
                 .attr("transform", `translate(${-labelPadding - svg.selectAll(".axis_y").select("path").node().getBBox().width}, ${height / 2}) rotate(-90)`)
                 .attr("text-anchor", "middle")
                 .attr("font-size", fontsize)
                 .text(yEncoding);
 
-            /* draw points */
+            /* points */
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
-            content.append("g")
-                .attr("class", "circleGroup")
-                .selectAll("circle")
-                .data(processedData)
-                .enter().append("circle")
-                .attr("class", "mark")
-                .attr("r", circleSize)
-                .attr("stroke", "#FFF")
-                .attr("stroke-width", 0)
-                .attr("fill", Color().DEFAULT)
-                .attr("opacity", 1)
-                .attr("cx", d => xScale(d[xEncoding]))
-                .attr("cy", d => yScale(d[yEncoding]));
+            this.points.forEach((d) => {
+                d.y(yScale(d[yEncoding]));
+                d.size(circleSize);
+                d.color(Color().DEFAULT)
+            })
+            if (!this.x) {
+                let defaultX = width/2;
+                this.points.forEach((d) => {
+                    d.x(defaultX);
+                })
+            }
         }
-
+        else{
+            let defaultY= this.height()/2;
+            this.points.forEach((d) => {
+                d.y(defaultY);
+            })
+            if(this.x){
+                this.svg().select(".axis_X")
+                    .append("line")
+                    .attr("stroke", Color().DIVIDER)
+                    .attr("class", "gridline")
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", 0)
+                    .attr("y2", this.height());
+             }        
+        }
     }
 
     /**
-     * @description Draw scatterplot with color encoding channel.
-     *
+     * @description Using mark color to encode a data field
+     *      * 
      * @return {void}
-     */
+    */
     encodeColor(animation = {}) {
         if (this.color) {
-            let color = this.color;
-            let categories = Array.from(new Set(this.processedData().map(d => d[color])))
-            let svg = this.svg();
-            svg.selectAll("circle")
-                .attr("fill", (d) => {
-                    let i = categories.indexOf(d[color]);
-                    return Color().CATEGORICAL[i % 8]
-                })
+            let color = this.color
+            let categories = Array.from(new Set(this.points.map(d => d[color])))
+            this.points.forEach((d) => {
+                let i = categories.indexOf(d[color]);
+                let pointcolor = Color().CATEGORICAL[i % 8];
+                d.color(pointcolor)
+            })
+        }
+        else{
+            this.points.forEach((d) => {
+                d.color(Color().DEFAULT)
+            })
         }
     }
 
     /**
-     * @description Draw scatterplot with size encoding channel.
-     *
+     * @description Using mark size to encode a data field
+     *  
      * @return {void}
-     */
+    */
     encodeSize(animation = {}) {
         if (this.size) {
             let size = this.size;
@@ -260,67 +316,242 @@ class Scatterplot extends Chart {
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 40), 15);
             const maxR = circleSize;
             const minR = circleSize / 10;
-            let minValue = d3.min(this.processedData(), d => d[sizeEncoding]),
-                maxValue = d3.max(this.processedData(), d => d[sizeEncoding]);
+            let minValue = d3.min(this.points, d => d[sizeEncoding]),
+                maxValue = d3.max(this.points, d => d[sizeEncoding]);
             let scale = d3.scaleSqrt([minValue, maxValue], [minR, maxR]);
-            let svg = this.svg();
-            svg.selectAll("circle")
-                .attr("r", d => scale(d[sizeEncoding]))
+            this.points.forEach((d) => {
+                d.size(scale(d[sizeEncoding]));
+            })
+        }
+        else{
+            let width = this.width();
+            let height = this.height();
+            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
+            this.points.forEach((d) => {
+                d.size(circleSize);
+            })
         }
     }
 
     /**
-     * @description Draw scatterplot with shape encoding channel.
-     *
+     * @description Using the shape of mark to encode a data field
+     * 
      * @return {void}
-     */
+    */
     encodeShape(animation = {}) {
 
     }
 
     /**
-     * @description Add encoding.
-     *
+     * @description allocating the encoding actions based on spec and then update the chart.
+     * 
+     * @param {string} channel A encoding channel
+     * @param {string} field A data field
+     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
+     * 
      * @return {void}
-     */
+    */
     addEncoding(channel, field, animation = {}) {
         if (!this[channel]) {
-            this[channel] = field;
-            d3.selectAll("svg > g > *").remove();
-            this.drawAxis();
-            if (this.x && this.y) this.encodeXY(animation);
-            if (this.color) this.encodeColor(animation);
-            if (this.size) this.encodeSize(animation);
+            this[channel] = field.field;
+
+            let changeX = false;
+            let changeY = false;
+            let changesize = false;
+            let changecolor = false;
+        
+            switch(channel) {
+                case 'x':
+                    changeX = true
+                    this.encodeX(animation)
+                    break;
+                case 'y':
+                    changeY = true
+                    this.encodeY(animation)
+                    break;
+                case 'size':
+                    changesize = true
+                    this.encodeSize(animation)
+                    break;
+                case 'color':
+                    changecolor = true
+                    this.encodeColor(animation)
+                    break;
+                default:
+                    console.log("no channel select")
+            }
+            if(changeX || changeY) {
+                this.svg().select(".content")
+                        .selectAll("circle")
+                        .transition("change layout")
+                        .duration('duration' in animation ? animation['duration'] : 0)
+                        .attr("cx", d => d.x())
+                        .attr("cy", d => d.y())
+                        .attr("r", d => d.size())
+                if('duration' in animation) {
+                    this.animationFade(animation)
+                }
+            }
+            if(changecolor) {
+                this.svg().select(".content")
+                    .selectAll("circle")
+                    .transition("change color")
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("fill", d => d.color());
+            }
+            if(changesize) {
+                this.svg().select(".content")
+                    .selectAll("circle")
+                    .transition("change size")
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("r", d => d.size());
+            }
         }
     }
 
     /**
-     * @description Modify encoding.
-     *
+     * @description Modifying a current encoding channel and then update the chart.
+     * 
+     * @param {string} channel A encoding channel
+     * @param {string} field A data field
+     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
+     * 
      * @return {void}
-     */
+    */
     modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
-            this[channel] = field;
-            d3.selectAll("svg > g > *").remove();
-            this.drawAxis();
-            if (this.x && this.y) this.encodeXY(animation);
-            if (this.color) this.encodeColor(animation);
-            if (this.size) this.encodeSize(animation);
+            this[channel] = field.field;
+            
+            let changeX = false;
+            let changeY = false;
+            let changecolor = false;
+            let changesize = false;
+        
+            switch(channel) {
+                case 'x':
+                    changeX = true
+                    this.svg().selectAll(".axis_X").remove();
+                    this.encodeX(animation);
+                    break;
+                case 'y':
+                    changeY = true
+                    this.svg().selectAll(".axis_Y").remove();
+                    this.encodeY(animation);
+                    break;                  
+                case 'size':
+                    changesize = true
+                    this.encodeSize(animation)
+                    break;
+                case 'color':
+                    changecolor = true
+                    this.encodeColor(animation)
+                    break;
+                default:
+                    console.log("no channel select")
+            }
+            if(changeX || changeY) {
+                this.svg().select(".content")
+                    .selectAll("circle")
+                    .transition("change layout")
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("cx", d => d.x())
+                    .attr("cy", d => d.y())
+            }
+            if(changecolor) {
+                this.svg().select(".content")
+                    .selectAll("circle")
+                    .transition("change color")
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("fill", d => d.color());
+            }
+            if(changesize) {
+                this.svg().select(".content")
+                    .selectAll("circle")
+                    .transition("change size")
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("r", d => d.size());
+            }
         }
     }
 
     /**
-     * @description Remove encoding.
-     *
+     * @description Removing an existing encoding action and update the chart
+     * 
+     * @param {string} channel A encoding channel
+     * @param {string} field A data field
+     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
+     * 
      * @return {void}
-     */
+    */
     removeEncoding(channel, animation = {}) {
         this[channel] = null;
-        d3.selectAll("svg > g > *").remove();
-        if (this.x && this.y) this.encodeXY(animation);
-        if (this.color) this.encodeColor(animation);
-        if (this.size) this.encodeSize(animation);
+        let svg = this.svg();
+
+        let changeX = false;
+        let changeY = false;
+        let changesize = false;
+        let changecolor = false;
+        
+        switch(channel) {
+            case 'x':
+                changeX = true
+                svg.selectAll(".axis_X").remove();
+                this.encodeX(animation)
+                break;
+            case 'y':
+                changeY = true
+                svg.selectAll(".axis_Y").remove();
+                this.encodeY(animation)
+                break;
+            case 'size':
+                changesize = true
+                this.encodeSize(animation)
+                break;
+            case 'color':
+                changecolor = true
+                this.encodeColor(animation)
+                break;
+            default:
+                console.log("no channel select")
+        }
+        if(changeX || changeY) {
+            this.svg().select(".content")
+                .selectAll("circle")
+                .transition("change layout")
+                .duration('duration' in animation ? animation['duration'] : 0)
+                .attr("cx", d => d.x())
+                .attr("cy", d => d.y())
+        }
+        if(changecolor) {
+            this.svg().select(".content")
+                .selectAll("circle")
+                .transition("change color")
+                .duration('duration' in animation ? animation['duration'] : 0)
+                .attr("fill", d => d.color());
+        }
+        if(changesize) {
+            this.svg().select(".content")
+                .selectAll("circle")
+                .transition("change size")
+                .duration('duration' in animation ? animation['duration'] : 0)
+                .attr("r", d => d.size());
+        }
+    }
+
+    /**
+     * @description Adding fade animation to the chart
+     * 
+     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
+     * 
+     * @return {void}
+    */
+    animationFade(animation){
+        let svg = this.svg();
+        svg.select(".content")
+           .selectAll("circle")
+           .transition("Fade In")
+           .duration('duration' in animation ? animation['duration'] : 0)
+           .attr("opacity", 1)
     }
 }
 

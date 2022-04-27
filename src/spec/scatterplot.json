@@ -80,25 +80,50 @@
       {
         "add": "encoding",
         "channel": "x",
-        "field": "Horsepower"
-        
+        "field": {
+          "field": "Horsepower",
+          "type": "numerical"
+        },
+        "animation": {
+          "delay": 0,
+          "duration": 1000
+        }
       },
       {
         "add": "encoding",
         "channel": "y",
-        "field": "Miles per Gallon"
-        
+        "field": {
+          "field": "Miles per Gallon",
+          "type": "numerical"
+        },
+        "animation": {
+          "delay": 0,
+          "duration": 1000
+        }
       },
       {
         "add": "encoding",
         "channel": "color",
-        "field": "Origin"
-        
+        "field": {
+          "field": "Origin",
+          "type": "categorical"
+        },
+        "animation": {
+          "delay": 1000,
+          "duration": 1000
+        }
       },
       {
         "add": "encoding",
         "channel": "size",
-        "field": "Acceleration"
+        "field": {
+          "field": "Acceleration",
+          "type": "numerical"
+        },
+        "animation": {
+          "delay": 2000,
+          "duration": 1000
+        }
       },
       {
         "add": "annotation",
@@ -110,7 +135,55 @@
           }
         ],
         "animation": {
-          "delay": 1000,
+          "delay": 3000,
+          "duration": 1000
+        }
+      },
+      {
+        "modify": "encoding",
+        "channel": "y",
+        "field": {
+          "field": "Weight",
+          "type": "categorical"
+        },
+        "animation": {
+          "delay": 4000,
+          "duration": 1000
+        }
+      },
+      {
+        "remove": "encoding",
+        "channel": "color",
+        "animation": {
+          "delay": 5000,
+          "duration": 1000
+        }
+      },
+      {
+        "remove": "encoding",
+        "channel": "size",
+        "animation": {
+          "delay": 6000,
+          "duration": 1000
+        }
+      },
+      {
+        "remove": "encoding",
+        "channel": "x",
+        "animation": {
+          "delay": 7000,
+          "duration": 1000
+        }
+      },
+      {
+        "add": "encoding",
+        "channel": "x",
+        "field": {
+          "field": "Acceleration",
+          "type": "numerical"
+        },
+        "animation": {
+          "delay": 8000,
           "duration": 1000
         }
       }
