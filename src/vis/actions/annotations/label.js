@@ -2,6 +2,8 @@ import Annotator from './annotator';
 import { Scatterplot } from '../../charts';
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for drawing labels.
  * 
@@ -99,7 +101,7 @@ class Label extends Annotator {
                     if ("color" in style) {
                         return style["color"];
                     } else {
-                        return Color().TEXT;
+                        return COLOR.TEXT;
                     }
                 })
                 .attr("text-anchor", "middle")

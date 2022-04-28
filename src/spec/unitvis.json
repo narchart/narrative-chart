@@ -46,6 +46,11 @@
     },
     "actions": [
         {
+            "add": "config",
+            "mode": "light",
+            "emotion": "exciting"
+        },
+        {
             "select": [
                 {
                     "field": "Name"

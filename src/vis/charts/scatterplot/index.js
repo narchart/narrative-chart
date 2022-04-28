@@ -3,6 +3,8 @@ import Chart from '../chart';
 import Color from '../../visualization/color';
 import Point from './point';
 
+const COLOR = new Color();
+
 /**
  * @description A scatterplot chart is a chart type.
  * 
@@ -24,6 +26,7 @@ class Scatterplot extends Chart {
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
             .attr("height", this.height() + margin.top + margin.bottom)
+            .style("background-color", COLOR.BACKGROUND)
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
@@ -76,7 +79,7 @@ class Scatterplot extends Chart {
                 .attr("stroke-width", 0)
                 .attr("cx", initX)
                 .attr("cy", initY)
-                .attr("fill", Color().DEFAULT)
+                .attr("fill", COLOR.DEFAULT)
                 .attr("opacity", 0)
     }
 
@@ -122,7 +125,7 @@ class Scatterplot extends Chart {
             axis_X.selectAll(".axis_x .tick")
                 .append("line")
                 .attr("stroke", d => {
-                    if((d!==0)||(!this.y)) {return Color().DIVIDER;}
+                    if((d!==0)||(!this.y)) {return COLOR.DIVIDER;}
                 })
                 .attr("class", "gridline")
                 .attr("x1", 0)
@@ -131,12 +134,25 @@ class Scatterplot extends Chart {
                 .attr("y2", 0);
 
             axis_X.append("line")
-                .attr("stroke", Color().DIVIDER)
+                .attr("stroke", COLOR.DIVIDER)
                 .attr("class", "gridline")
                 .attr("x1", width)
                 .attr("y1", height)
                 .attr("x2", width)
                 .attr("y2", 0);
+            
+            // specify color for axis elements
+            // tick 
+            axis_X.selectAll(".tick")
+                .select("line")
+                .attr("stroke", COLOR.AXIS);
+            // domain path
+            axis_X.selectAll(".domain")
+                .attr("stroke", COLOR.AXIS);
+            // tick label
+            axis_X.selectAll(".tick")
+                .selectAll("text")
+                .attr("fill", COLOR.AXIS);
 
             /* draw labels */
             const labelPadding = 20, fontsize = 12;
@@ -147,6 +163,7 @@ class Scatterplot extends Chart {
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
                 .text(xEncoding);
 
             /* points */
@@ -154,7 +171,7 @@ class Scatterplot extends Chart {
             this.points.forEach((d) => {
                 d.x(xScale(d[xEncoding]));
                 d.size(circleSize);
-                d.color(Color().DEFAULT)
+                d.color(COLOR.DEFAULT)
             })
             if (!this.y) {
                 let defaultY= height/2;
@@ -171,7 +188,7 @@ class Scatterplot extends Chart {
              if(this.y){
                 this.svg().select(".axis_Y")
                     .append("line")
-                    .attr("stroke", Color().DIVIDER)
+                    .attr("stroke", COLOR.DIVIDER)
                     .attr("class", "gridline")
                     .attr("x1", 0)
                     .attr("y1", this.height())
@@ -218,12 +235,25 @@ class Scatterplot extends Chart {
             axis_Y.append("g")
                 .attr("class", "axis_y")
                 .call(axisY);
+            
+            // specify color for axis elements
+            // tick 
+            axis_Y.selectAll(".tick")
+                .select("line")
+                .attr("stroke", COLOR.AXIS);
+            // domain path
+            axis_Y.selectAll(".domain")
+                .attr("stroke", COLOR.AXIS);
+            // tick label
+            axis_Y.selectAll(".tick")
+                .selectAll("text")
+                .attr("fill", COLOR.AXIS);
 
             // for grid line
             axis_Y.selectAll(".axis_y .tick")
                 .append("line")
                 .attr("stroke", d => {
-                    if((d!==0)||(!this.x)) {return Color().DIVIDER;}
+                    if((d!==0)||(!this.x)) {return COLOR.DIVIDER;}
                 })
                 .attr("class", "gridline")
                 .attr("x1", 0)
@@ -232,7 +262,7 @@ class Scatterplot extends Chart {
                 .attr("y2", 0);
 
             axis_Y.append("line")
-                .attr("stroke", Color().DIVIDER)
+                .attr("stroke", COLOR.DIVIDER)
                 .attr("class", "gridline")
                 .attr("x1", 0)
                 .attr("y1", 0)
@@ -246,6 +276,7 @@ class Scatterplot extends Chart {
                 .attr("transform", `translate(${-labelPadding - svg.selectAll(".axis_y").select("path").node().getBBox().width}, ${height / 2}) rotate(-90)`)
                 .attr("text-anchor", "middle")
                 .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
                 .text(yEncoding);
 
             /* points */
@@ -253,7 +284,7 @@ class Scatterplot extends Chart {
             this.points.forEach((d) => {
                 d.y(yScale(d[yEncoding]));
                 d.size(circleSize);
-                d.color(Color().DEFAULT)
+                d.color(COLOR.DEFAULT)
             })
             if (!this.x) {
                 let defaultX = width/2;
@@ -270,7 +301,7 @@ class Scatterplot extends Chart {
             if(this.x){
                 this.svg().select(".axis_X")
                     .append("line")
-                    .attr("stroke", Color().DIVIDER)
+                    .attr("stroke", COLOR.DIVIDER)
                     .attr("class", "gridline")
                     .attr("x1", 0)
                     .attr("y1", 0)
@@ -291,13 +322,13 @@ class Scatterplot extends Chart {
             let categories = Array.from(new Set(this.points.map(d => d[color])))
             this.points.forEach((d) => {
                 let i = categories.indexOf(d[color]);
-                let pointcolor = Color().CATEGORICAL[i % 8];
+                let pointcolor = COLOR.CATEGORICAL[i % 8];
                 d.color(pointcolor)
             })
         }
         else{
             this.points.forEach((d) => {
-                d.color(Color().DEFAULT)
+                d.color(COLOR.DEFAULT)
             })
         }
     }

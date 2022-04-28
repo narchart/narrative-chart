@@ -29,6 +29,11 @@
     },
     "actions": [
         {
+            "add": "config",
+            "mode": "light",
+            "emotion": "calm"
+        },
+        {
             "select": [
                 {
                     "field": "Recovered",

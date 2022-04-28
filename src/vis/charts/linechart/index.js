@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 /**
  * @description A line chart is a chart type.
  * 
@@ -24,6 +26,7 @@ class LineChart extends Chart {
                 .append("svg")
                 .attr("width", this.width() + margin.left + margin.right)
                 .attr("height", this.height() + margin.top + margin.bottom)
+                .style("background-color", COLOR.BACKGROUND)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
@@ -60,34 +63,36 @@ class LineChart extends Chart {
                 .attr("font-size", fontsize)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
+                .attr("fill", COLOR.TEXT)
                 .text(x || "Count");
             axis.append("path")
                 .attr("class", "triangle")
                 .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", Color.AXIS);
+                .attr("fill", COLOR.AXIS);
             axis.append("line")
                 .attr("x1", -strokeWidth / 2)
                 .attr("x2", width)
                 .attr("y1", height)
                 .attr("y2", height)
                 .attr("stroke-width", strokeWidth)
-                .attr("stroke", Color.AXIS);
+                .attr("stroke", COLOR.AXIS);
             axis.append("text")
                 .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
                 .attr("font-size", fontsize)
                 .attr("text-anchor", "middle")
+                .attr("fill", COLOR.TEXT)
                 .text(y || "Count");
             axis.append("path")
                 .attr("class", "triangle")
                 .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", Color.AXIS);
+                .attr("fill", COLOR.AXIS);
             axis.append("line")
                 .attr("y1", 0)
                 .attr("y2", height)
                 .attr("stroke-width", strokeWidth)
-                .attr("stroke", Color.AXIS);
+                .attr("stroke", COLOR.AXIS);
         }
         
     }
@@ -127,7 +132,7 @@ class LineChart extends Chart {
         
             let axisY = d3.axisLeft(yScale)
                 .ticks(5)
-                .tickSize(-height, 0, 0)
+                .tickSize(0, 0, 0)
                 .tickPadding(5)
                 .tickFormat(function (d) {
                     if ((d / 1000000) >= 1) {
@@ -147,33 +152,32 @@ class LineChart extends Chart {
             axis.append("g")
                 .attr("class", "axis_y")
                 .call(axisY);
-
-            axis.selectAll(".axis_y")
-                .selectAll(".domain")
-                .attr("opacity", 0);
+            
+            // specify color for axis elements
+            // tick
+            axis.selectAll(".tick line")
+                .attr("stroke", COLOR.AXIS);
+            // domain path
+            axis.selectAll(".domain")
+                .attr("stroke", COLOR.AXIS);
+            // tick label
+            axis.selectAll(".tick")
+                .selectAll("text")
+                .attr("fill", COLOR.AXIS);
 
             /** draw grid */
-            axis.selectAll(".axis_y")
-                .selectAll("line")
+            axis.selectAll(".axis_y")
+                .selectAll("line")
                 .attr("stroke", d => {
-                    if (d === 0) return Color().AXIS;
-                    else return Color().DIVIDER;
+                    if (d === 0) return COLOR.AXIS;
+                    else return COLOR.DIVIDER;
                 })
                 .attr("class", "gridline")
                 .attr("x1", 0)
                 .attr("y1", 0)
                 .attr("x2", width)
                 .attr("y2", 0)
-                .attr("opacity", 1);
-
-            axis.selectAll(".axis_x")
-                .append("line")
-                .attr("stroke", Color().AXIS)
-                .attr("class", "gridline")
-                .attr("x1", 0)
-                .attr("y1", -height)
-                .attr("x2", 0)
-                .attr("y2", 0);
+                .attr("opacity", 1);
 
             /* draw labels */
             const labelPadding = 20, fontsize = 12;
@@ -184,12 +188,14 @@ class LineChart extends Chart {
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
                 .text(xEncoding);
 
             axis.append("text")
                 .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`) 
                 .attr("text-anchor", "middle")
                 .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
                 .text(yEncoding);
 
             /* draw lines */
@@ -200,7 +206,7 @@ class LineChart extends Chart {
             content.append("g")
                 .attr("class", "lineGroup")
                 .attr("fill", "none")
-                .attr("stroke", Color().DEFAULT)
+                .attr("stroke", COLOR.DEFAULT)
                 .attr("stroke-width", 2)
                 .attr("opacity", 1)
                 .selectAll("path")
@@ -214,7 +220,7 @@ class LineChart extends Chart {
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
             content.append("g")
                 .attr("class", "circleGroup")
-                .attr("fill", Color().DEFAULT)
+                .attr("fill", COLOR.DEFAULT)
                 .selectAll("circle")
                 .data(processedData)
                 .enter().append("circle")
@@ -280,7 +286,7 @@ class LineChart extends Chart {
                     .append("g")
                     .attr("class", "lineGroup")
                     .attr("fill", "none")
-                    .attr("stroke", Color().DEFAULT)
+                    .attr("stroke", COLOR.DEFAULT)
                     .attr("stroke-width", 3)
                     .attr("opacity", 1)
                     .selectAll("path")
@@ -297,7 +303,7 @@ class LineChart extends Chart {
                 d3.select(".content")
                     .append("g")
                     .attr("class", "circleGroup")
-                    .attr("fill", Color().DEFAULT)
+                    .attr("fill", COLOR.DEFAULT)
                     .selectAll("circle")
                     .data(processedData[factKey])
                     .enter().append("circle")
@@ -309,12 +315,12 @@ class LineChart extends Chart {
             
             d3.selectAll(".circleGroup")
                 .attr("fill", (d,i) => {
-                    return Color().CATEGORICAL[i]
+                    return COLOR.CATEGORICAL[i]
                 })
 
             d3.selectAll(".lineGroup")
                 .attr("stroke", (d,i) => {
-                    return Color().CATEGORICAL[i]
+                    return COLOR.CATEGORICAL[i]
                 })
 
         } 

@@ -2,6 +2,8 @@ import Annotator from './annotator';
 import * as d3 from 'd3';
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for drawing distribution curve.
  * 
@@ -68,7 +70,7 @@ class Distribution extends Annotator {
                 if ("color" in style) {
                     return style["color"];
                 } else {
-                    return Color().ANNOTATION;
+                    return COLOR.ANNOTATION;
                 }
             })
             .attr("stroke-width", 3)

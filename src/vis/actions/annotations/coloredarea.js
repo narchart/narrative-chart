@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import Annotator from './annotator'
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for adding colored area.
  * 
@@ -48,7 +50,7 @@ import Color from '../../visualization/color';
                     circleY = item.getAttribute("cy");
 
                 svg.select(".content").select(".circleGroup").append("circle")
-                    .attr("fill", Color().ANNOTATION)
+                    .attr("fill", COLOR.ANNOTATION)
                     .attr("stroke-width", 0)
                     .attr("x", circleX)
                     .attr("y", circleY)
@@ -70,7 +72,7 @@ import Color from '../../visualization/color';
                 svg.select(".content").select("g").append("rect")
                     .transition()
                     .duration('duration' in animation ? animation['duration']: 0)
-                    .attr("fill", Color().ANNOTATION)
+                    .attr("fill", COLOR.ANNOTATION)
                     .attr("fill-opacity", 0.3)
                     .attr("stroke-width", 0)
                     .attr("x", rectX)

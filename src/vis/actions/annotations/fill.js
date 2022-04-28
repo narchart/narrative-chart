@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import Color from '../../visualization/color';
 import Annotator from './annotator'
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for filling color.
  * 
@@ -46,7 +48,7 @@ class Fill extends Annotator {
                 if ('color' in style) {
                     return style['color']
                 } else {
-                    return Color().ANNOTATION
+                    return COLOR.ANNOTATION
                 }
             })
             .attr("opacity", 1);

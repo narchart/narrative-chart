@@ -1,5 +1,8 @@
 import Titler from './titler'
 import * as d3 from 'd3';
+import Color from '../../visualization/color';
+
+const COLOR = new Color();
 
 /**
  * @description An titler for adding title with fade animation
@@ -7,8 +10,6 @@ import * as d3 from 'd3';
  * @class
  * @extends Titler
  */
-
-
 class Fade extends Titler {
     /**
      * @description Add the caption at the bottom of chart
@@ -132,6 +133,8 @@ class Fade extends Titler {
             .attr("font-weight","bold")
             .attr("font-size", textsize)
             .attr("filter", backgroundcolor)
+            .attr("fill", COLOR.TITLE)
+            
             
 
         let textE1 = svg.append("g") 
@@ -142,6 +145,7 @@ class Fade extends Titler {
             .attr("font-family", 'Arial-Regular')
             .attr("font-weight","bold")
             .attr("font-size", textsize)
+            .attr("fill", COLOR.TITLE)
         
 
         

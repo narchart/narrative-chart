@@ -2,6 +2,8 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 /**
  * @description A bar chart is a chart type.
  * 
@@ -25,6 +27,7 @@ class BarChart extends Chart {
                 .append("svg")
                 .attr("width", this.width() + margin.left + margin.right)
                 .attr("height", this.height() + margin.top + margin.bottom)
+                .style("background-color", COLOR.BACKGROUND)
                 .append("g")
                 .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
@@ -61,34 +64,36 @@ class BarChart extends Chart {
                 .attr("font-size", fontsize)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
+                .attr("fill", COLOR.TEXT)
                 .text(x || "Count");
             axis.append("path")
                 .attr("class", "triangle")
                 .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", Color.AXIS);
+                .attr("fill", COLOR.AXIS);
             axis.append("line")
                 .attr("x1", -strokeWidth / 2)
                 .attr("x2", width)
                 .attr("y1", height)
                 .attr("y2", height)
                 .attr("stroke-width", strokeWidth)
-                .attr("stroke", Color.AXIS);
+                .attr("stroke", COLOR.AXIS);
             axis.append("text")
                 .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
                 .attr("font-size", fontsize)
                 .attr("text-anchor", "middle")
+                .attr("fill", COLOR.TEXT)
                 .text(y || "Count");
             axis.append("path")
                 .attr("class", "triangle")
                 .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", Color.AXIS);
+                .attr("fill", COLOR.AXIS);
             axis.append("line")
                 .attr("y1", 0)
                 .attr("y2", height)
                 .attr("stroke-width", strokeWidth)
-                .attr("stroke", Color.AXIS);
+                .attr("stroke", COLOR.AXIS);
         }
         
     }
@@ -130,7 +135,7 @@ class BarChart extends Chart {
             let axisX = d3.axisBottom(xScale);
             let axisY = d3.axisLeft(yScale)
                 .ticks(5)
-                .tickSize(-(height), 0, 0)
+                .tickSize(0, 0, 0)
                 .tickPadding(5)
                 .tickFormat(function (d) {
                     if ((d / 1000000) >= 1) {
@@ -149,17 +154,18 @@ class BarChart extends Chart {
             axis.append("g")
                 .attr("class", "axis_y")
                 .call(axisY);
-            
-            // draw y axis path
-            axis.selectAll(".axis_y .domain")
-                .attr("opacity", 0);
-            axis.selectAll(".axis_y")
-                .append("line")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", 0)
-                .attr("y2", height)
-                .attr("stroke", Color().AXIS);
+
+            // specify color for axis elements
+            // tick
+            axis.selectAll(".tick line")
+                .attr("stroke", COLOR.AXIS);
+            // domain path
+            axis.selectAll(".domain")
+                .attr("stroke", COLOR.AXIS);
+            // tick label
+            axis.selectAll(".tick")
+                .selectAll("text")
+                .attr("fill", COLOR.AXIS);
             
             // axix-label
             const labelPadding = 25, fontsize = 12;
@@ -170,12 +176,14 @@ class BarChart extends Chart {
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
                 .text(xEncoding);
 
             axis.append("text")
                 .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
                 .attr("text-anchor", "middle")
                 .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
                 .text(yEncoding);
             
             /** draw grid */
@@ -183,7 +191,7 @@ class BarChart extends Chart {
                 .attr("class", "gridline")
                 .attr("stroke", d => {
                     if(d ===0) return 0;
-                    else return Color().DIVIDER;
+                    else return COLOR.DIVIDER;
                 });
             
             /* draw rects */
@@ -197,7 +205,7 @@ class BarChart extends Chart {
                 .attr("y", d => yScale(d[yEncoding]))
                 .attr("width", xScale.bandwidth())
                 .attr("height", d => height - yScale(d[yEncoding]))
-                .attr("fill", Color().DEFAULT);
+                .attr("fill", COLOR.DEFAULT);
         }
     }
 
@@ -270,7 +278,7 @@ class BarChart extends Chart {
                 .data(stackData)
                 .join("g")
                 .attr("class", "rectLayer")
-                .attr("fill", (d, i) => Color().CATEGORICAL[i]);
+                .attr("fill", (d, i) => COLOR.CATEGORICAL[i]);
             rectLayers.selectAll("rect")
                 .data(d => d)
                 .enter().append("rect")

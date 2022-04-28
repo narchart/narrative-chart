@@ -1,6 +1,8 @@
 import Annotator from './annotator'
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for adding circle.
  * 
@@ -48,7 +50,7 @@ class Circle extends Annotator {
                         if ('color' in style) {
                             return style['color']
                         } else {
-                            return Color().ANNOTATION
+                            return COLOR.ANNOTATION
                         }
                     })
                     .attr("stroke-width", 2)
@@ -71,7 +73,7 @@ class Circle extends Annotator {
                         if ('color' in style) {
                             return style['color']
                         } else {
-                            return Color().ANNOTATION
+                            return COLOR.ANNOTATION
                         }
                     })
                     .attr("stroke-width", 2)

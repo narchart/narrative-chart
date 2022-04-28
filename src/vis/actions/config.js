@@ -1,3 +1,4 @@
+import Color from '../visualization/color';
 import Action from './action';
 
 class Configure extends Action {
@@ -13,7 +14,8 @@ class Configure extends Action {
     }
 
     operate(vis) {
-
+        const color = new Color();
+        color.setColor(this._mode, this._emotion);
     }
 
 }

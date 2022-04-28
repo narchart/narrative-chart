@@ -1,6 +1,8 @@
 import Color from '../../visualization/color';
 import Annotator from './annotator'
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for filling color.
  * 
@@ -66,7 +68,7 @@ class Glow extends Annotator {
                 if ('color' in style) {
                     return style['color']
                 } else {
-                    return Color().ANNOTATION
+                    return COLOR.ANNOTATION
                 }
             })
             .style("stroke-width", 2)

@@ -1,191 +1,196 @@
 {
-    "data": {
-      "url": "http://localhost:3000/spreadsheets/cars.csv",
-      "schema": [
-        {
-          "field": "Name",
-          "type": "categorical"
-        },
-        {
-          "field": "Miles per Gallon",
-          "type": "numerical"
-        },
-        {
-          "field": "Cylinders",
-          "type": "numerical"
-        },
-        {
-          "field": "Displacement",
-          "type": "numerical"
-        },
-        {
-          "field": "Horsepower",
-          "type": "numerical"
-        },
-        {
-          "field": "Weight",
-          "type": "numerical"
-        },
-        {
-          "field": "Acceleration",
-          "type": "numerical"
-        },
-        {
-          "field": "Year",
-          "type": "temporal"
-        },
-        {
-          "field": "Origin",
-          "type": "categorical"
-        }
-      ]
-    },
-    "actions": [
+  "data": {
+    "url": "http://localhost:3000/spreadsheets/cars.csv",
+    "schema": [
       {
-        "select": [
-          {
-            "field": "Horsepower",
-            "aggregate": "sum"
-          },
-          {
-            "field": "Miles per Gallon",
-            "aggregate": "sum"
-          },
-          {
-            "field": "Acceleration",
-            "aggregate": "sum"
-          },
-          {
-            "field": "Weight",
-            "aggregate": "sum"
-          },
-          {
-            "field": "Name"
-          },
-          {
-            "field": "Origin"
-          }
-        ],
-        "groupby": [
-          {
-            "field": "Name"
-          }
-        ],
-        "filter": []
+        "field": "Name",
+        "type": "categorical"
       },
       {
-        "add": "chart",
-        "mark": "point"
+        "field": "Miles per Gallon",
+        "type": "numerical"
       },
       {
-        "add": "encoding",
-        "channel": "x",
-        "field": {
-          "field": "Horsepower",
-          "type": "numerical"
-        },
-        "animation": {
-          "delay": 0,
-          "duration": 1000
-        }
+        "field": "Cylinders",
+        "type": "numerical"
       },
       {
-        "add": "encoding",
-        "channel": "y",
-        "field": {
-          "field": "Miles per Gallon",
-          "type": "numerical"
-        },
-        "animation": {
-          "delay": 0,
-          "duration": 1000
-        }
+        "field": "Displacement",
+        "type": "numerical"
       },
       {
-        "add": "encoding",
-        "channel": "color",
-        "field": {
-          "field": "Origin",
-          "type": "categorical"
-        },
-        "animation": {
-          "delay": 1000,
-          "duration": 1000
-        }
+        "field": "Horsepower",
+        "type": "numerical"
       },
       {
-        "add": "encoding",
-        "channel": "size",
-        "field": {
-          "field": "Acceleration",
-          "type": "numerical"
-        },
-        "animation": {
-          "delay": 2000,
-          "duration": 1000
-        }
+        "field": "Weight",
+        "type": "numerical"
       },
       {
-        "add": "annotation",
-        "method": "fill",
-        "target": [
-          {
-            "field": "Origin",
-            "value": "Japan"
-          }
-        ],
-        "animation": {
-          "delay": 3000,
-          "duration": 1000
-        }
+        "field": "Acceleration",
+        "type": "numerical"
       },
       {
-        "modify": "encoding",
-        "channel": "y",
-        "field": {
-          "field": "Weight",
-          "type": "categorical"
-        },
-        "animation": {
-          "delay": 4000,
-          "duration": 1000
-        }
+        "field": "Year",
+        "type": "temporal"
       },
       {
-        "remove": "encoding",
-        "channel": "color",
-        "animation": {
-          "delay": 5000,
-          "duration": 1000
-        }
-      },
-      {
-        "remove": "encoding",
-        "channel": "size",
-        "animation": {
-          "delay": 6000,
-          "duration": 1000
-        }
-      },
-      {
-        "remove": "encoding",
-        "channel": "x",
-        "animation": {
-          "delay": 7000,
-          "duration": 1000
-        }
-      },
-      {
-        "add": "encoding",
-        "channel": "x",
-        "field": {
-          "field": "Acceleration",
-          "type": "numerical"
-        },
-        "animation": {
-          "delay": 8000,
-          "duration": 1000
-        }
+        "field": "Origin",
+        "type": "categorical"
       }
     ]
-  }
+  },
+  "actions": [
+    {
+      "add": "config",
+      "mode": "dark",
+      "emotion": "exciting"
+    },
+    {
+      "select": [
+        {
+          "field": "Horsepower",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Miles per Gallon",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Acceleration",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Weight",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Name"
+        },
+        {
+          "field": "Origin"
+        }
+      ],
+      "groupby": [
+        {
+          "field": "Name"
+        }
+      ],
+      "filter": []
+    },
+    {
+      "add": "chart",
+      "mark": "point"
+    },
+    {
+      "add": "encoding",
+      "channel": "x",
+      "field": {
+        "field": "Horsepower",
+        "type": "numerical"
+      },
+      "animation": {
+        "delay": 0,
+        "duration": 1000
+      }
+    },
+    {
+      "add": "encoding",
+      "channel": "y",
+      "field": {
+        "field": "Miles per Gallon",
+        "type": "numerical"
+      },
+      "animation": {
+        "delay": 0,
+        "duration": 1000
+      }
+    },
+    {
+      "add": "encoding",
+      "channel": "color",
+      "field": {
+        "field": "Origin",
+        "type": "categorical"
+      },
+      "animation": {
+        "delay": 1000,
+        "duration": 1000
+      }
+    },
+    {
+      "add": "encoding",
+      "channel": "size",
+      "field": {
+        "field": "Acceleration",
+        "type": "numerical"
+      },
+      "animation": {
+        "delay": 2000,
+        "duration": 1000
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "fill",
+      "target": [
+        {
+          "field": "Origin",
+          "value": "Japan"
+        }
+      ],
+      "animation": {
+        "delay": 3000,
+        "duration": 1000
+      }
+    },
+    {
+      "modify": "encoding",
+      "channel": "y",
+      "field": {
+        "field": "Weight",
+        "type": "categorical"
+      },
+      "animation": {
+        "delay": 4000,
+        "duration": 1000
+      }
+    },
+    {
+      "remove": "encoding",
+      "channel": "color",
+      "animation": {
+        "delay": 5000,
+        "duration": 1000
+      }
+    },
+    {
+      "remove": "encoding",
+      "channel": "size",
+      "animation": {
+        "delay": 6000,
+        "duration": 1000
+      }
+    },
+    {
+      "remove": "encoding",
+      "channel": "x",
+      "animation": {
+        "delay": 7000,
+        "duration": 1000
+      }
+    },
+    {
+      "add": "encoding",
+      "channel": "x",
+      "field": {
+        "field": "Acceleration",
+        "type": "numerical"
+      },
+      "animation": {
+        "delay": 8000,
+        "duration": 1000
+      }
+    }
+  ]
+}

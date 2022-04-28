@@ -1,6 +1,8 @@
 import Annotator from './annotator';
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for drawing reference line.
  * 
@@ -92,7 +94,7 @@ class Reference extends Annotator {
                 if ('color' in style) {
                     return style['color']
                 } else {
-                    return Color().ANNOTATION
+                    return COLOR.ANNOTATION
                 }
             })
             .attr("stroke-width", 2)

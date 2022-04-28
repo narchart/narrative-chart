@@ -3,14 +3,14 @@ import Chart from '../chart';
 import Color from '../../visualization/color';
 import Unit from './unit';
 
+const COLOR = new Color();
+
 /**
  * @description unit visualization
  * 
  * @class
  * @extends Chart
  */
-
-
 class Unitvis extends Chart {
 
     /**
@@ -34,6 +34,7 @@ class Unitvis extends Chart {
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
             .attr("height", this.height() + margin.top + margin.bottom)
+            .style("background-color", COLOR.BACKGROUND);
 
         d3.select("svg")
             .append("g")
@@ -381,6 +382,7 @@ class Unitvis extends Chart {
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(xValue[iBar])
                     .attr("x", centernodex[iBar])
                     .attr("y", centernodey[centernodey.length - 1] + 2 * maxR)
@@ -398,6 +400,7 @@ class Unitvis extends Chart {
             yValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(yValue[iBar])
                     .attr("x", centernodex[0] - 2 * maxR)
                     .attr("y", centernodey[iBar])
@@ -413,6 +416,7 @@ class Unitvis extends Chart {
 
 
             svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(xField)
                 .attr("x", width / 2)
                 .attr("y", Math.min(centernodey[centernodey.length - 1] + 2 * maxR + 3 * textSize, height))
@@ -427,6 +431,7 @@ class Unitvis extends Chart {
 
 
             svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(yField)
                 .attr("x", centernodex[0] - 2 * maxR - 3 * textSize)
                 .attr("y", height / 2)
@@ -491,6 +496,7 @@ class Unitvis extends Chart {
             units.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(breakdownValue[iBar])
                     .attr("x", baseX[iBar] + (length - 1) * radius)
                     // .attr("x", baseX[iBar] + radius*6)
@@ -517,6 +523,7 @@ class Unitvis extends Chart {
                 })
 
                 svg.select(".content").append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(breakdownField)
                     .attr("x", width / 2)
                     .attr("y", Math.min(baseY + 50, height))
@@ -645,6 +652,7 @@ class Unitvis extends Chart {
             for (let i = 0; i < xbar; i++) {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(xValue[i])
                     .attr("x", baseX[i] + (length - 1) * radius)
                     // .attr("x", baseX[iBar] + radius*6)
@@ -662,6 +670,7 @@ class Unitvis extends Chart {
                 for (let j = 0; j < ybar; j++) {
                     svg.select(".content")
                         .append("text")
+                        .attr("fill", COLOR.TEXT)
                         .text(yValue[j])
                         .attr("x", baseX[0] - radius - 2 * textpadding)
                         // .attr("x", baseX[iBar] + radius*6)
@@ -697,6 +706,7 @@ class Unitvis extends Chart {
 
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(xField)
                     .attr("x", width / 2)
                     .attr("y", Math.min(baseY[baseY.length - 1] + 3 * textSize, height))
@@ -711,6 +721,7 @@ class Unitvis extends Chart {
 
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(yField)
                     .attr("x", baseX[0] - radius - 2 * textpadding - 3.5 * textSize)
                     .attr("y", height / 2)
@@ -786,6 +797,7 @@ class Unitvis extends Chart {
             units.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(breakdownValue[iBar])
                     .attr("x", baseX - radius - 2 * textSize)
                     // .attr("x", baseX[iBar] + radius*6)
@@ -811,6 +823,7 @@ class Unitvis extends Chart {
                 })
 
                 svg.select(".content").append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(breakdownField)
                     .attr("x", Math.min(baseX - radius - 4 * textSize, width))
                     .attr("y", height / 2)
@@ -1016,6 +1029,7 @@ class Unitvis extends Chart {
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(xValue[iBar])
                     .attr("x", centernodex[iBar])
                     .attr("y", centernodey[centernodey.length - 1] + 2 * maxR)
@@ -1033,6 +1047,7 @@ class Unitvis extends Chart {
             yValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(yValue[iBar])
                     .attr("x", centernodex[0] - 2 * maxR)
                     .attr("y", centernodey[iBar])
@@ -1048,6 +1063,7 @@ class Unitvis extends Chart {
 
 
             svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(xField)
                 .attr("x", width / 2)
                 .attr("y", Math.min(centernodey[centernodey.length - 1] + 2 * maxR + 3 * textSize, height))
@@ -1060,6 +1076,7 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 1)
 
             svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(yField)
                 .attr("x", centernodex[0] - 2 * maxR - 3 * textSize)
                 .attr("y", height / 2)
@@ -1097,7 +1114,7 @@ class Unitvis extends Chart {
             units.forEach((color, iColor) => {
 
                 color.forEach((d) => {
-                    d.color(Color().CATEGORICAL[iColor % 8]);
+                    d.color(COLOR.CATEGORICAL[iColor % 8]);
                     d.unitgroup('color', colorField);
                 })
             })
@@ -1306,6 +1323,7 @@ class Unitvis extends Chart {
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(xValue[iBar])
                     .attr("x", centernodex[iBar])
                     .attr("y", centernodey[centernodey.length - 1] + 2 * maxR)
@@ -1323,6 +1341,7 @@ class Unitvis extends Chart {
             yValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(yValue[iBar])
                     .attr("x", centernodex[0] - 2 * maxR)
                     .attr("y", centernodey[iBar])
@@ -1337,7 +1356,7 @@ class Unitvis extends Chart {
             })
 
 
-            svg.select(".content").append("text")
+            svg.select(".content").append("text").attr("fill", COLOR.TEXT)
                 .text(xField)
                 .attr("x", width / 2)
                 .attr("y", Math.min(centernodey[centernodey.length - 1] + 2 * maxR + 3 * textSize, height))
@@ -1493,6 +1512,7 @@ class Unitvis extends Chart {
 
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content").append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(xValue[iBar])
                     .attr("x", centernodex[iBar])
                     .attr("y", centernodey[0] + 2 * radiusa + 1 * maxR)
@@ -1508,6 +1528,7 @@ class Unitvis extends Chart {
             })
 
             svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(xField)
                 .attr("x", width / 2)
                 .attr("y", Math.min(centernodey[0] + 2 * radiusa + 2 * maxR, height))
@@ -2019,7 +2040,7 @@ class Unitvis extends Chart {
                     category: [xValue.indexOf(d[xField]), yValue.indexOf(d[yField])],
                     radius: 0,
                     value: xy_aggregared[d[xField]][d[yField]],
-                    color: Color().CATEGORICAL[yValue.indexOf(d[yField]) % 8]
+                    color: COLOR.CATEGORICAL[yValue.indexOf(d[yField]) % 8]
                 }
             })
 
@@ -2118,6 +2139,7 @@ class Unitvis extends Chart {
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(xValue[iBar])
                     .attr("x", centernodex[iBar])
                     .attr("y", centernodey[centernodey.length - 1] + 2 * maxR)
@@ -2136,6 +2158,7 @@ class Unitvis extends Chart {
             yValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
                     .append("text")
+                    .attr("fill", COLOR.TEXT)
                     .text(yValue[iBar])
                     .attr("x", centernodex[centernodex.length-1] + 1.5 * maxR)
                     .attr("y", d3.min(this.units, d => d.y()) - rectsize*(iBar+1) )
@@ -2152,7 +2175,7 @@ class Unitvis extends Chart {
                     .attr("y", d3.min(this.units, d => d.y()) - rectsize*(iBar+1) - 12)
                     .attr("height", rectsize)
                     .attr("width", rectsize)
-                    // .style("fill", Color().CATEGORICAL[iBar % 8])
+                    // .style("fill", COLOR.CATEGORICAL[iBar % 8])
                     // .attr("fill-opacity", 0)
                     // .transition()
                     // .delay(this.delay + this.duration/2)
@@ -2162,6 +2185,7 @@ class Unitvis extends Chart {
 
 
             svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(xField)
                 .attr("x", width / 2)
                 .attr("y", Math.min(centernodey[centernodey.length - 1] + 2 * maxR + 3 * textSize, height))
@@ -2176,6 +2200,7 @@ class Unitvis extends Chart {
 
 
                 svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(sizeField + ` (${operator}) `)
                 .attr("x", function() {
                     if (height<200) {
@@ -2391,6 +2416,8 @@ class Unitvis extends Chart {
 
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content").append("text")
+                    .attr("fill", COLOR.TEXT)
+                    .attr("fill", COLOR.TEXT)
                     .text(xValue[iBar])
                     .attr("x", centernodex[iBar])
                     .attr("y", centernodey[0] + 2 * radiusa + 1.5 * maxR)
@@ -2406,6 +2433,7 @@ class Unitvis extends Chart {
             })
             let textSize = 14
             svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(xField)
                 .attr("x", width / 2)
                 .attr("y", Math.min(centernodey[0] + 2 * radiusa + 3 * maxR, height))
@@ -2419,6 +2447,7 @@ class Unitvis extends Chart {
 
 
                 svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
                 .text(sizeField + `(${operator})`)
                 .attr("x", function() {
                     if (height<200) {

@@ -3,6 +3,8 @@ import { Scatterplot } from '../../charts';
 import Color from '../../visualization/color';
 import * as d3 from 'd3';
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for adding tooltip
  * 
@@ -208,7 +210,7 @@ class Tooltip extends Annotator {
                     .attr("ry", 0.1 * textHeight)
                     .attr("width", rectWidth)
                     .attr("height", rectHeight)
-                    .attr("fill", Color().TOOLTIP)
+                    .attr("fill", COLOR.TOOLTIP)
                     .attr("opacity", 1.0);
 
             // let yyy = data_y - 10
@@ -216,7 +218,7 @@ class Tooltip extends Annotator {
                 .attr("class", "triangle")
                 .attr("transform", "translate(" + data_x + "," + (data_y + offset_y) + ")rotate(180)")
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(tranglesize))
-                .attr("fill", Color().TOOLTIP)
+                .attr("fill", COLOR.TOOLTIP)
 
 
                 

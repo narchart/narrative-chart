@@ -1,12 +1,14 @@
 import Captioner from './captioner';
 import * as d3 from 'd3';
+import Color from '../../visualization/color';
+
+const COLOR = new Color();
 /**
  * @description An captioner for adding caption with fade animation
  * 
  * @class
  * @extends Captioner
  */
-
 class Fade extends Captioner {
     /**
      * @description Add the caption at the bottom of chart
@@ -39,6 +41,7 @@ class Fade extends Captioner {
             .attr("transform", "translate(" + 0 + "," + 60 + ")")
             .attr("font-family", 'Arial-Regular')
             .attr("font-size", textsize)
+            .attr("fill", COLOR.TEXT)
         
             let position
             switch(style.position){

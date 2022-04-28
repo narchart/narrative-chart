@@ -2,6 +2,8 @@ import Annotator from './annotator'
 import Color from '../../visualization/color';
 import * as d3 from 'd3';
 
+const COLOR = new Color();
+
 /**
  * @description An annotator for drawing arrow.
  * 
@@ -83,7 +85,7 @@ class Arrow extends Annotator {
                     if ("color" in style) {
                         return style["color"];
                     } else {
-                        return Color().ANNOTATION;
+                        return COLOR.ANNOTATION;
                     }
                 })
                 .attr("fill-opacity", 1);

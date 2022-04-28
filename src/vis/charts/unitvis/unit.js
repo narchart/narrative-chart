@@ -1,12 +1,14 @@
 import Color from '../../visualization/color';
 
+const COLOR = new Color();
+
 class Unit {
     constructor() {
         this._id = 0;
         this._x = 0;
         this._y = 0;
         this._radius = 0;
-        this._color = Color().DEFAULT;
+        this._color = COLOR.DEFAULT;
         this._visible = "1";
         this._opacity = 1;
         this._unitgroup = {};
