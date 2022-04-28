@@ -23,19 +23,77 @@ class BarChart extends Chart {
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
-        this._svg = d3.select(this.container())
-                .append("svg")
-                .attr("width", this.width() + margin.left + margin.right)
-                .attr("height", this.height() + margin.top + margin.bottom)
-                .style("background-color", COLOR.BACKGROUND)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        
-        this.drawAxis();
+        // this._svg = d3.select(this.container())
+        //         .append("svg")
+        //         .attr("width", this.width() + margin.left + margin.right)
+        //         .attr("height", this.height() + margin.top + margin.bottom)
+        //         .append("g")
+                // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        this.drawBackground();
+        // this.drawAxis();
         this.encodeXY();
         this.encodeColor();
-
         return this.svg();       
+    }
+
+    /**
+     * @description Draw Background for bar chart.
+     *
+     * @return {void}
+     */
+    drawBackground() {
+        let margin = this.margin()
+
+           
+        let chartbackgroundsize = {
+            width: 600,
+            height: 600
+        }
+        
+
+        d3.select(this.container())
+            .append("svg")
+            .attr("width", this.width() + margin.left + margin.right)
+            .attr("height", this.height() + margin.top + margin.bottom)
+            .style("background-color", COLOR.BACKGROUND)
+
+        d3.select("svg")
+            .append("g")
+            .attr("id","chartBackGrnd")
+            .append("rect")
+            .attr("width", chartbackgroundsize.width)
+            .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
+            .attr("transform", "translate(" + 20 + "," + margin.top + ")");
+            
+
+        this._svg = d3.select("svg")
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // d3.select("svg").style("background", "url(" + this.style()['background-image'] + ") center ").style("background-size", "cover")
+        
+        if(this.style()['background-color']){
+            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
+        } 
+        else if (this.style()['background-image']){
+            let defs = this._svg.append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "chart-backgroundimage")
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.style()["background-image"])
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("x", 0)
+                .attr("y", 0);
+                d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+        }
+        else {
+            d3.select("#chartBackGrnd").attr("fill-opacity", 0)
+        }   
     }
 
     /**
@@ -43,7 +101,7 @@ class BarChart extends Chart {
      *
      * @return {void}
      */
-    drawAxis() {
+     drawAxis() {
         if(this.x && this.y) {
             let x = this.x,
                 y = this.y;
@@ -115,7 +173,7 @@ class BarChart extends Chart {
         
             /** set the ranges */
             let xScale = d3.scaleBand()
-                .range([0, width])
+                .range([0, width - 12])
                 .domain(processedData.map(d => d[xEncoding]))
                 .padding(0.5);
         
@@ -127,10 +185,10 @@ class BarChart extends Chart {
             /** draw axis */
             let axis = svg.append("g")
                 .attr("class", "axis"),
-                content = svg.append("g")
-                    .attr("class", "content")
-                    .attr("chartWidth", width)
-                    .attr("chartHeight", height);
+            content = svg.append("g")
+                .attr("class", "content")
+                .attr("chartWidth", width)
+                .attr("chartHeight", height);
 
             let axisX = d3.axisBottom(xScale);
             let axisY = d3.axisLeft(yScale)
@@ -167,12 +225,23 @@ class BarChart extends Chart {
                 .selectAll("text")
                 .attr("fill", COLOR.AXIS);
             
+            // draw y axis path
+            axis.selectAll(".axis_y")
+                .append("line")
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("x2", 0)
+                .attr("y2", height);
+
+            axis.selectAll(".axis_y .tick text")
+                .attr("transform",  "translate(3, 0)");
+            
             // axix-label
-            const labelPadding = 25, fontsize = 12;
+            const labelPadding = 20, fontsize = 12;
 
             axis.append("text")
                 .attr("x", width / 2)
-                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
+                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + 10)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
@@ -299,6 +368,7 @@ class BarChart extends Chart {
         if(!this[channel]) {
             this[channel] = field;
             d3.selectAll("svg > g > *").remove();
+            this.drawBackground();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();
             if (this.color) this.encodeColor();
@@ -314,6 +384,7 @@ class BarChart extends Chart {
         if (this[channel]) {
             this[channel] = field;
             d3.selectAll("svg > g > *").remove();
+            this.drawBackground();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();
             if (this.color) this.encodeColor();
@@ -328,6 +399,7 @@ class BarChart extends Chart {
     removeEncoding(channel) {
         this[channel] = null;
         d3.selectAll("svg > g > *").remove();
+        this.drawBackground();
         if (this.x && this.y) this.encodeXY();
         if (this.color) this.encodeColor();
     }

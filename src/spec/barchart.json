@@ -46,7 +46,10 @@
         },
         {
             "add": "chart",
-            "mark": "bar"
+            "mark": "bar",
+            "style": {
+                "background-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
+            }
         },
         {
             "add": "encoding",
