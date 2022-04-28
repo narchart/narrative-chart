@@ -22,13 +22,53 @@ class LineChart extends Chart {
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
-        this._svg = d3.select(this.container())
-                .append("svg")
-                .attr("width", this.width() + margin.left + margin.right)
-                .attr("height", this.height() + margin.top + margin.bottom)
-                .style("background-color", COLOR.BACKGROUND)
-                .append("g")
-                .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+        let chartbackgroundsize = {
+            width: 600,
+            height: 600
+        }
+        
+        d3.select(this.container())
+            .append("svg")
+            .attr("width", this.width() + margin.left + margin.right)
+            .attr("height", this.height() + margin.top + margin.bottom)
+
+        d3.select("svg")
+            .append("g")
+            .attr("id","chartBackGrnd")
+            .append("rect")
+            .attr("width", chartbackgroundsize.width)
+            .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
+            .attr("transform", "translate(" + 20 + "," + margin.top + ")");
+            
+
+        this._svg = d3.select("svg")
+                    .append("g")
+                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        // d3.select("svg").style("background", "url(" + this.style()['background-image'] + ") center ").style("background-size", "cover")
+        
+        if(this.style()['background-color']){
+            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
+        } 
+        else if (this.style()['background-image']){
+            let defs = this._svg.append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "chart-backgroundimage")
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.style()["background-image"])
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("x", 0)
+                .attr("y", 0);
+                d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+        }
+        else {
+            d3.select("#chartBackGrnd").attr("fill-opacity", 0)
+        }   
+
         
         this.drawAxis();
         this.encodeXY();
@@ -37,65 +77,6 @@ class LineChart extends Chart {
         return this.svg();       
     }
 
-    /**
-     * @description Add axis to the line chart.
-     * 
-     * @return {void}
-     */
-    drawAxis() {
-        if(this.x && this.y) {
-            let x = this.x,
-                y = this.y;
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height();
-            let fontsize = 16, strokeWidth = 2;
-            const padding = fontsize * 0.6,
-                triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
-            
-            let axis = svg.select('.axis');
-            svg.select(".axis_x").remove();
-            svg.select(".axis_y").remove();
-
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + padding - 1)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("fill", COLOR.TEXT)
-                .text(x || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", COLOR.AXIS);
-            axis.append("line")
-                .attr("x1", -strokeWidth / 2)
-                .attr("x2", width)
-                .attr("y1", height)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", COLOR.AXIS);
-            axis.append("text")
-                .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .attr("fill", COLOR.TEXT)
-                .text(y || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", COLOR.AXIS);
-            axis.append("line")
-                .attr("y1", 0)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", COLOR.AXIS);
-        }
-        
-    }
 
     /**
      * @description Draw lines with xy encoding.
@@ -105,8 +86,8 @@ class LineChart extends Chart {
     encodeXY() {
         if(this.x && this.y) {
             let svg = this.svg();
-            let width = this.width(),
-                height = this.height();
+            let width = this.width() - 12,
+                height = this.height() - 7;
             const processedData = this.processedData();
             const xEncoding = this.x,
                 yEncoding = this.y;
@@ -334,7 +315,7 @@ class LineChart extends Chart {
     addEncoding(channel, field) {
         if(!this[channel]) {
             this[channel] = field;
-            d3.selectAll("svg > g > *").remove();
+            // d3.selectAll("svg > g > *").remove();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();
             if (this.color) this.encodeColor();
@@ -349,7 +330,7 @@ class LineChart extends Chart {
     modifyEncoding(channel, field) {
         if (this[channel]) {
             this[channel] = field;
-            d3.selectAll("svg > g > *").remove();
+            // d3.selectAll("svg > g > *").remove();
             this.drawAxis();
             if (this.x && this.y) this.encodeXY();
             if (this.color) this.encodeColor();
@@ -363,7 +344,7 @@ class LineChart extends Chart {
      */
     removeEncoding(channel) {
         this[channel] = null;
-        d3.selectAll("svg > g > *").remove();
+        // d3.selectAll("svg > g > *").remove();
         if (this.x && this.y) this.encodeXY();
         if (this.color) this.encodeColor();
     }
