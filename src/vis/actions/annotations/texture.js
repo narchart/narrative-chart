@@ -30,7 +30,6 @@ class Texture extends Annotator {
             "texture_size" : 300
         }
         var defs = svg.append('svg:defs');
-        console.log(animation)
         defs.append("svg:pattern")
             .attr("id", "texture_background")
             .attr("width", config.texture_size)
@@ -47,10 +46,12 @@ class Texture extends Annotator {
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
-                        return true
+                        continue
+                    } else {
+                        return false
                     }
                 }
-                return false
+                return true
             })
             .transition()
             .duration('duration' in animation ? animation['duration']: 0)

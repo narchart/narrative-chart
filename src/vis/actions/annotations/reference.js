@@ -30,10 +30,12 @@ class Reference extends Annotator {
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
-                        return true
+                        continue
+                    } else {
+                        return false
                     }
                 }
-                return false
+                return true
             });
 
         if (focus_elements.empty()) return;

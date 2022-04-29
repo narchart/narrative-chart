@@ -36,10 +36,12 @@ const COLOR = new Color();
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
-                        return true
+                        continue
+                    } else {
+                        return false
                     }
                 }
-                return false
+                return true
             });
 
         const padding = 10;

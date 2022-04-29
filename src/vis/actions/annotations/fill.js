@@ -36,10 +36,12 @@ class Fill extends Annotator {
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
-                        return true
+                        continue
+                    } else {
+                        return false
                     }
                 }
-                return false
+                return true
             })
             // .moveToFront()
             .transition()

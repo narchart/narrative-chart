@@ -67,9 +67,5 @@ export {
 } from "./texture";
 
 export {
-    default as Tip
-} from "./tip";
-
-export {
     default as Tooltip
 } from "./tooltip";

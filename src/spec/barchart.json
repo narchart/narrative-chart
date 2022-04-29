@@ -101,49 +101,6 @@
             "style": {
               "icon-url": "http://localhost:3000/icon/rank-2.png"
             }
-        },
-        {
-            "add": "annotation",
-            "method": ["regression", "contour", "label"],
-            "target": [
-                {
-                    "field": "Brand",
-                    "value": "BMW"
-                },
-                {
-                    "field": "Brand",
-                    "value": "GMC"
-                },
-                {
-                    "field": "Brand",
-                    "value": "Honda"
-                },
-                {
-                    "field": "Brand",
-                    "value": "Hyundai"
-                }
-            ]
-        },
-        {
-            "add": "annotation",
-            "method": ["desaturate", "reference"],
-            "target": [
-                {
-                    "field": "Brand",
-                    "value": "Mazda"
-                },
-                {
-                    "field": "Brand",
-                    "value": "Toyota"
-                },
-                {
-                    "field": "Brand",
-                    "value": "Volkswagen"
-                }
-            ],
-            "style": {
-                "color": "lightgray"
-            }
         }
     ]
 }

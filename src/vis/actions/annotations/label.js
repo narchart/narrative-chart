@@ -34,10 +34,12 @@ class Label extends Annotator {
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
-                        return true
+                        continue
+                    } else {
+                        return false
                     }
                 }
-                return false
+                return true
             });
         
         // if the focus defined in the spec does not exist
