@@ -83,38 +83,35 @@
       "mark": "point"
     },
     {
-      "add": "encoding",
-      "channel": "x",
-      "field": {
-        "field": "Horsepower",
-        "type": "numerical"
-      },
+      "add": "group",
+      "actions": [
+        {
+          "add": "encoding",
+          "channel": "x",
+          "field": {
+            "field": "Horsepower",
+            "type": "numerical"
+          }
+        },
+        {
+          "add": "encoding",
+          "channel": "y",
+          "field": {
+            "field": "Miles per Gallon",
+            "type": "numerical"
+          }
+        },
+        {
+          "add": "encoding",
+          "channel": "color",
+          "field": {
+            "field": "Origin",
+            "type": "categorical"
+          }
+        }
+      ],
       "animation": {
-        "delay": 0,
-        "duration": 1000
-      }
-    },
-    {
-      "add": "encoding",
-      "channel": "y",
-      "field": {
-        "field": "Miles per Gallon",
-        "type": "numerical"
-      },
-      "animation": {
-        "delay": 0,
-        "duration": 1000
-      }
-    },
-    {
-      "add": "encoding",
-      "channel": "color",
-      "field": {
-        "field": "Origin",
-        "type": "categorical"
-      },
-      "animation": {
-        "delay": 1000,
+        "sync": false,
         "duration": 1000
       }
     },
@@ -126,7 +123,6 @@
         "type": "numerical"
       },
       "animation": {
-        "delay": 2000,
         "duration": 1000
       }
     },
@@ -140,7 +136,6 @@
         }
       ],
       "animation": {
-        "delay": 3000,
         "duration": 1000
       }
     },
@@ -152,7 +147,6 @@
         "type": "categorical"
       },
       "animation": {
-        "delay": 4000,
         "duration": 1000
       }
     },
@@ -160,7 +154,6 @@
       "remove": "encoding",
       "channel": "color",
       "animation": {
-        "delay": 5000,
         "duration": 1000
       }
     },
@@ -168,7 +161,6 @@
       "remove": "encoding",
       "channel": "size",
       "animation": {
-        "delay": 6000,
         "duration": 1000
       }
     },
@@ -176,7 +168,6 @@
       "remove": "encoding",
       "channel": "x",
       "animation": {
-        "delay": 7000,
         "duration": 1000
       }
     },
@@ -188,7 +179,6 @@
         "type": "numerical"
       },
       "animation": {
-        "delay": 8000,
         "duration": 1000
       }
     }

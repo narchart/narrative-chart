@@ -36,6 +36,7 @@
         - [Tooltip](#tooltip)
       - [4. Title & Caption](#4-title--caption)
         - [Title](#title)
+      - [5. Group](#5-group)
         - [Caption](#caption)
     - [Animations](#animations)
     - [Examples](#examples)
@@ -148,6 +149,8 @@ vis.generate();
 
 #### 0. Configuation
 
+Initializing the basic configuration of the chart.
+
 ```
 {
   "add": "config",
@@ -158,6 +161,8 @@ vis.generate();
 ```
 
 #### 1. Data Preprocessing
+
+Operating a SQL-like action to query data from the spreadsheet.
 
 ```
 {
@@ -187,6 +192,8 @@ vis.generate();
 
 ##### Add Marks
 
+Adding marks to initialization a visualization chart.
+
 ```
 {
     "add": "chart",
@@ -194,12 +201,13 @@ vis.generate();
     "style": {
         "background-image": image-url, // (optional)
         "background-color": color // (optional)
-    },
-    "animation": { "type": type } // (optional)
+    }
 }
 ```
 
 ##### Encode Visual Channels
+
+Encoding channels to design the chart.
 
 | Chart | Channel | Field Type |
 |:--|:--|:--|
@@ -225,10 +233,7 @@ Add Encoding
     "add": "encoding",
     "channel": x/y/color/size,
     "field": field,
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -239,10 +244,7 @@ Modify Encoding
     "modify": "encoding",
     "channel": x/y/color/size,
     "field": field,
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -252,14 +254,13 @@ Remove Encoding
 {
     "remove": "encoding",
     "channel": x/y/color/size,
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
 #### 3. Annotation
+
+Adding graphical and textural annotations.
 
 ```
 {
@@ -274,10 +275,7 @@ Remove Encoding
     "style": {
         ...
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -296,10 +294,7 @@ Remove Encoding
     "style": {
         "color": color
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -318,10 +313,7 @@ Remove Encoding
     "style": {
         "color": color
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -340,10 +332,7 @@ Remove Encoding
     "style": {
         "color": color
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -359,10 +348,7 @@ Remove Encoding
             "value": value
         }
     ],
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -378,10 +364,7 @@ Remove Encoding
             "value": value
         }
     ],
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -397,10 +380,7 @@ Remove Encoding
             "value": value
         }
     ],
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -419,10 +399,7 @@ Remove Encoding
     "style": {
         "color": color
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -441,10 +418,7 @@ Remove Encoding
     "style": {
         "color": color
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -465,10 +439,7 @@ Remove Encoding
         "font-size": font-size,
         "color": color
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -484,10 +455,7 @@ Remove Encoding
             "value": value
         }
     ],
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -506,10 +474,7 @@ Remove Encoding
     "style": {
         "color": color
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -528,10 +493,7 @@ Remove Encoding
     "style": {
         "icon-url": icon-url
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -550,10 +512,7 @@ Remove Encoding
     "style": {
         "background-image": background-image-url
     },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 }
 ```
 
@@ -573,16 +532,15 @@ Remove Encoding
         "text": text,
         "font-size": font-size
       },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 
     
 }
 ```
 
 #### 4. Title & Caption
+
+Adding title or caption.
 
 ##### Title
 
@@ -601,10 +559,29 @@ Remove Encoding
         "divide-line-width": int, // (optional)
         "divide-line-color": string, // (optional)
       },
-    "animation": {"delay": int, "duration": int} // (optional)
+    "animation": {"duration": int} // (optional)
 
 }
 ```
+
+#### 5. Group
+
+Adding a group of actions. 
+
+```
+{
+    "add": "group",
+    "actions": [
+        ...
+    ],
+    "animation": { 
+      "sync": bool (default: false)
+      "duration": int (default: 0)
+    }
+}
+```
+
+( Note: the actions in a group will be executed simultaneously. )
 
 ##### Caption
 
@@ -616,18 +593,14 @@ Remove Encoding
         "font-size": size, // (optional)
         "position": string, // (optional)
       },
-    "animation": {
-      "delay": number,
-      "duration": number
-    }
+    "animation": { "duration": number }
 
 }
 ```
 
 ### Animations
 
-
-Narrative Charts supports animated transitions between actions by specifying "duration" and "delay". "Duration" represents per-action duration in milliseconds. "Delay" represents per-action delay in milliseconds.
+Narrative Charts supports animated transitions between actions by specifying "duration", which represents per-action duration in milliseconds.
 
 
 
@@ -856,8 +829,7 @@ Narrative Charts supports animated transitions between actions by specifying "du
             "field": "Year"
             },
             "animation": {
-                "duration": 1000,
-                "delay": 0
+                "duration": 1000
             }
         },
         {
@@ -868,8 +840,7 @@ Narrative Charts supports animated transitions between actions by specifying "du
                 "value": "Japan"
               }],
             "animation": {
-                "duration": 1000,
-                "delay": 1000
+                "duration": 1000
             }
         },
         {
@@ -878,8 +849,7 @@ Narrative Charts supports animated transitions between actions by specifying "du
             "field": "Horsepower"
             },
             "animation": {
-                "duration": 1000,
-                "delay": 2000
+                "duration": 1000
             }
         }
     ]

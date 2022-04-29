@@ -26,66 +26,111 @@ class Parser {
             actionspecs = this.T.translate(factspec);
         }
         let pipeline = new Pipeline()
+        let delay = 0;
         if (actionspecs.length > 0) {
 
             let title_caption_in_actions = actionspecs.some(v => v.add === 'title' || v.add === 'caption')
             for (const actionspec of actionspecs) {
                 let actions_to_add = [];
-                if ('add' in actionspec) {
-                    switch (actionspec['add']) {
-                        case 'config':
-                            actions_to_add.push(new Configure(actionspec));
-                            break;
-
-                        case 'chart':
-                        // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
-                            actionspec.leave_space = title_caption_in_actions
-                            actions_to_add.push(new AddChart(actionspec));
-                            break;
-                        case 'annotation':
-                            if (('method' in actionspec) && Array.isArray(actionspec['method'])) {
-                                for (const submethod of actionspec['method']) {
-                                    let subactionspec = { ...actionspec }; // copy a dict
-                                    subactionspec['method'] = submethod
-                                    let action = new AddAnnotation(subactionspec);
-                                    actions_to_add.push(action);
-                                }
-                            } else {
-                                let action = new AddAnnotation(actionspec);
-                                actions_to_add.push(action);
-                            }
-                            break;
-                        case 'encoding':
-                            actions_to_add.push(new AddEncoding(actionspec));
-                            break;
-                        case 'aggregation':
-                            actions_to_add.push(new AddAggregation(actionspec));
-                            break;     
-                        case 'title':
-                            actions_to_add.push(new AddTitle(actionspec)); 
-                            break;   
-                        case 'caption':
-                            actions_to_add.push(new AddCaption(actionspec)); 
-                            break;              
-                        default:
-                            break;
+                actionspec.leave_space = title_caption_in_actions; // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
+                if (actionspec['add'] === 'group') {
+                    let duration = 0;
+                    let sync = false;
+                    if ('animation' in actionspec) {
+                        if ('duration' in actionspec['animation']) {
+                            duration = actionspec['animation']['duration']
+                        }
+                        if ('sync' in actionspec['animation']) {
+                            sync = actionspec['animation']['sync'];
+                        }
                     }
-                } else if ('modify' in actionspec) {
-                    actions_to_add.push(new ModifyEncoding(actionspec));
-                } else if ('remove' in actionspec) {
-                    actions_to_add.push(new RemoveEncoding(actionspec));
-                }
-                else if ('select' in actionspec || 'groupby' in actionspec || 'filter' in actionspec) {
-                    // data processing
-                    actions_to_add.push(new DataProcess(actionspec));
+                    let actions = this.parse_group(actionspec)
+                    if (sync) {
+                        for (let index = 0; index < actions.length; index++) {
+                            let action = actions[index];
+                            action.delay(delay);
+                            action.duration(duration/actions.length);
+                            actions_to_add.push(action);
+                            delay += duration/actions.length;
+                        }
+                    } else {
+                        for (const action of actions) {
+                            action.delay(delay);
+                            action.duration(duration);
+                            actions_to_add.push(action);
+                        }
+                        delay += duration;
+                    }
+                    
+                } else {
+                    let action = this.parse_action(actionspec);
+                    action.delay(delay);
+                    actions_to_add.push(action);
+                    delay += action.duration();
                 }
                 for (const action of actions_to_add) {
                     pipeline.add(action)
-                
                 }
             }
         }
         return { dataspec, pipeline };
+    }
+
+    parse_action(actionspec) {
+        let action;
+        if ('add' in actionspec) {
+            switch (actionspec['add']) {
+                case 'config':
+                    action = new Configure(actionspec);
+                    break;
+                case 'chart':
+                    action = new AddChart(actionspec);
+                    break;
+                case 'annotation':
+                    action = new AddAnnotation(actionspec);
+                    break;
+                case 'encoding':
+                    action = new AddEncoding(actionspec);
+                    break;
+                case 'aggregation':
+                    action = new AddAggregation(actionspec);
+                    break;
+                case 'title':
+                    action = new AddTitle(actionspec);
+                    break;   
+                case 'caption':
+                    action = new AddCaption(actionspec);
+                    break;
+                default:
+                    break;
+            }
+        } else if ('modify' in actionspec) {
+            action = new ModifyEncoding(actionspec);
+        } else if ('remove' in actionspec) {
+            action = new RemoveEncoding(actionspec);
+        }
+        else if ('select' in actionspec || 'groupby' in actionspec || 'filter' in actionspec) {
+            // data processing
+            action = new DataProcess(actionspec);
+        }
+        return action;
+    }
+
+    parse_group(spec) {
+        let actions = [];
+        let actionspecs = spec['actions'];
+        for (const actionspec of actionspecs) {
+            if (actionspec['add'] === 'group') {
+                let group_actions = this.parse_group(actionspec);
+                for (const action of group_actions) {
+                    actions.push(action);
+                }
+            } else {
+                let action = this.parse_action(actionspec);
+                actions.push(action)
+            }
+        }
+        return actions
     }
 }
 
