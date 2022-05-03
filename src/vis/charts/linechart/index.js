@@ -109,7 +109,14 @@ class LineChart extends Chart {
                 .attr("class", "content")
                 .attr("chartWidth", width)
                 .attr("chartHeight", height);
-            let axisX = d3.axisBottom(xScale);
+            let axisX = d3.axisBottom(xScale)
+                .ticks(5)
+                .tickSize(5)
+                .tickPadding(5)
+                .tickFormat(function (d) {
+                    var date = d.split('/')
+                    return date[1]+'/'+date[2];
+                });
         
             let axisY = d3.axisLeft(yScale)
                 .ticks(5)
@@ -181,7 +188,7 @@ class LineChart extends Chart {
 
             /* draw lines */
             const line = d3.line()
-            .x(d => xScale(d[xEncoding]))
+            .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
             .y(d => yScale(d[yEncoding]))
 
             content.append("g")
@@ -207,7 +214,9 @@ class LineChart extends Chart {
                 .enter().append("circle")
                 .attr("class", "mark")
                 .attr("r", circleSize)
-                .attr("cx", d => xScale(d[xEncoding]))
+                .attr("cx", d => {
+                    return xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2;
+                })
                 .attr("cy", d => yScale(d[yEncoding]));
         }
         
@@ -218,83 +227,9 @@ class LineChart extends Chart {
      *
      * @return {void}
      */
-    encodeColor() {
-        
-        // const factData = this.factdata();
-        // const measure = this.measure();
-        // const breakdown = this.breakdown();
-        // const xEncoding = breakdown[0].field,
-        //     yEncoding = (measure[0].aggregate === "count" ? "COUNT" : measure[0].field),
-        //     colorEncoding = breakdown.length < 2  ? null : breakdown[1].field;
-        
+    encodeColor() {           
         if(this.color) {
-            let width = this.width(),
-                height = this.height();
-            const data = this.data();
-            const xEncoding = this.x,
-                yEncoding = this.y;
-            const colorEncoding = this.color;
-
-            let processedData = [];
-            /** get series */
-            let seriesData = {};
-            data.forEach(d => {
-                if(seriesData[d[colorEncoding]]) {
-                    seriesData[d[colorEncoding]].push(d);
-                } else {
-                    seriesData[d[colorEncoding]] = [d];
-                }
-            });
-            processedData = seriesData;
-
-            /** set the ranges */
-            let xScale = d3.scaleBand()
-                .range([0, width])
-                .domain(data.map(d => d[xEncoding]));
-
-            let yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(data, d => d[yEncoding])])
-                .nice();
-
-            /* draw lines */
-            for(let factKey in processedData) {
-                const line = d3.line()
-                .x(d => xScale(d[xEncoding]))
-                .y(d => yScale(d[yEncoding]))
-
-                d3.select(".content")
-                    .append("g")
-                    .attr("class", "lineGroup")
-                    .attr("fill", "none")
-                    .attr("stroke", COLOR.DEFAULT)
-                    .attr("stroke-width", 3)
-                    .attr("opacity", 1)
-                    .selectAll("path")
-                    .data(processedData[factKey])
-                    .enter()
-                    .append("path")
-                    .attr("class", "path")
-                    .attr("d" , line(processedData[factKey]));
-            }
-
-            /* draw points */
-            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
-            for(let factKey in processedData) {
-                d3.select(".content")
-                    .append("g")
-                    .attr("class", "circleGroup")
-                    .attr("fill", COLOR.DEFAULT)
-                    .selectAll("circle")
-                    .data(processedData[factKey])
-                    .enter().append("circle")
-                    .attr("class", "mark")
-                    .attr("r", circleSize)
-                    .attr("cx", d => xScale(d[xEncoding]))
-                    .attr("cy", d => yScale(d[yEncoding]));
-            }
-            
-            d3.selectAll(".circleGroup")
+                d3.selectAll(".circleGroup")
                 .attr("fill", (d,i) => {
                     return COLOR.CATEGORICAL[i]
                 })
