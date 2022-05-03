@@ -23,7 +23,8 @@ class Parser {
         let actionspecs = spec.actions ? spec.actions : [];
         if ('fact' in spec) {
             let factspec = spec.fact;
-            actionspecs = this.T.translate(factspec);
+            let schemaspec = dataspec.schema;
+            actionspecs = this.T.translate(factspec, schemaspec);
         }
         let pipeline = new Pipeline()
         let delay = 0;

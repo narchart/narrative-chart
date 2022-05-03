@@ -428,7 +428,7 @@ class Scatterplot extends Chart {
     */
     addEncoding(channel, field, animation = {}) {
         if (!this[channel]) {
-            this[channel] = field.field;
+            this[channel] = field;
 
             let changeX = false;
             let changeY = false;
@@ -466,6 +466,11 @@ class Scatterplot extends Chart {
                 if ('duration' in animation) {
                     this.animationFade(animation)
                 }
+                else {
+                    this.svg().select(".content")
+                        .selectAll("circle")
+                        .attr("opacity", 1);
+                }
             }
             if (changecolor) {
                 this.svg().select(".content")
@@ -495,7 +500,8 @@ class Scatterplot extends Chart {
     */
     modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
-            this[channel] = field.field;
+            this[channel] = field;
+            
             let changeX = false;
             let changeY = false;
             let changecolor = false;

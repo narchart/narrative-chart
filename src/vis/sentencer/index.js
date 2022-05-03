@@ -283,3 +283,54 @@ export default function (fact) {
     template = template.slice(0, 1).toUpperCase() + template.slice(1)
     return template;
 }
+
+export const getTitle = function (fact) {
+    let title;
+    // if (!isValid(fact))
+    //     return ''
+
+    title = 'The ' + fact.type
+    switch (fact.type) {
+        case FactType.Association:
+            title += ' of ' + fact.measure[0].field + ' and ' + fact.measure[1].field
+            break;
+        case FactType.Categorization:
+            // title += ' of ' + fact.groupby[0]
+            title = fact.breakdown[0]
+            break;
+
+        case FactType.Difference:
+            title += ' between ' + fact.focus[0].value + ' and ' + fact.focus[1].value
+            break;
+        case FactType.Distribution:
+            title += ' of ' + fact.measure[0].field
+            break;
+        case FactType.Extreme:
+            title += ' of ' + fact.measure[0].field
+            break;
+        case FactType.Outlier:
+            title += ' of ' + fact.measure[0].field
+            break;
+        case FactType.Proportion:
+            title += ' of ' + fact.focus[0].value
+            break;
+        case FactType.Rank:
+            title += ' of ' + fact.measure[0].field
+            break;
+        case FactType.Trend:
+            title += ' of ' + fact.measure[0].field
+            break;
+        case FactType.Value:
+            title = 'The ' + convertAggregation(fact.measure[0].aggregate) + ' ' + fact.measure[0].field
+            break;
+        default:
+            break;
+    }
+    if (fact.subspace.length) {
+        let subspace = '';
+        fact.subspace.map((key, i) => { return subspace += ` in ${key.value}` })
+        title += subspace;
+    }
+
+    return title;
+}
