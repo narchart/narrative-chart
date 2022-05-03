@@ -22,14 +22,58 @@ class Scatterplot extends Chart {
         this.height(this.height() - margin.top - margin.bottom);
 
         this.points = [];
-        this._svg = d3.select(this.container())
+
+        let chartbackgroundsize = {
+            width: 600,
+            height: 600
+        }
+
+        d3.select(this.container())
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
             .attr("height", this.height() + margin.top + margin.bottom)
             .style("background-color", COLOR.BACKGROUND)
+
+        d3.select("svg")
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-        
+            .attr("id", "chartBackGrnd")
+            .append("rect")
+            .attr("width", chartbackgroundsize.width)
+            .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
+            .attr("transform", "translate(" + 20 + "," + margin.top + ")");
+
+        this._svg = d3.select("svg")
+            .append("g")
+            .attr("transform", "translate(" + (margin.left + 10) + "," + margin.top + ")");
+
+        if (this.style()['background-color']) {
+            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'])
+        }
+        else if (this.style()['background-image']) {
+            let defs = this._svg.append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "chart-backgroundimage")
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130 ? 480 : chartbackgroundsize.height)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.style()["background-image"])
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130 ? 480 : chartbackgroundsize.height)
+                .attr("x", 0)
+                .attr("y", 0);
+            d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+        }
+        else {
+            d3.select("#chartBackGrnd").attr("fill-opacity", 0)
+        }
+        // this._svg = d3.select(this.container())
+        //     .append("svg")
+        //     .attr("width", this.width() + margin.left + margin.right)
+        //     .attr("height", this.height() + margin.top + margin.bottom)
+        //     .append("g")
+        //     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
         this.data()
         this.initvis()
 
@@ -43,7 +87,7 @@ class Scatterplot extends Chart {
     */
     data() {
         let processedData = this.processedData();
-        processedData.forEach((d,i) => {
+        processedData.forEach((d, i) => {
             let point = new Point();
             point.id(i);
             point.data(d)
@@ -57,18 +101,18 @@ class Scatterplot extends Chart {
      *      * 
      * @return {void}
     */
-    initvis(){
+    initvis() {
         let svg = this.svg();
         svg.append("g")
-           .attr("class", "axis");
-        let width = this.width();
-        let height = this.height();
-        let initX = width/2;
-        let initY = height/2;
+            .attr("class", "axis");
+        let width = this.width() - 21,
+            height = this.height();
+        let initX = width / 2;
+        let initY = height / 2;
         let content = svg.append("g")
                 .attr("class", "content")
-                .attr("chartWidth", this.width())
-                .attr("chartHeight", this.height());
+                .attr("chartWidth", width)
+                .attr("chartHeight", height);
                 content.append("g")
                 .attr("class", "circleGroup")
                 .selectAll("circle")
@@ -88,14 +132,14 @@ class Scatterplot extends Chart {
      *
      * @return {void}
      */
-    encodeX(animation = {}){
-        if(this.x){
+    encodeX(animation = {}) {
+        if (this.x) {
             let svg = this.svg();
-            let width = this.width(),
-                height = this.height();
+            let width = this.width() - 21,
+                height = this.height() - 10;
             const xEncoding = this.x;
             let axis = svg.select(".axis")
-            
+
             // set the ranges
             let xScale = d3.scaleLinear()
                 .range([0, width])
@@ -116,7 +160,7 @@ class Scatterplot extends Chart {
                     }
                     return d;
                 });
-            
+
             axis_X.append("g")
                 .attr("class", "axis_x")
                 .attr('transform', `translate(0, ${height})`)
@@ -174,27 +218,27 @@ class Scatterplot extends Chart {
                 d.color(COLOR.DEFAULT)
             })
             if (!this.y) {
-                let defaultY= height/2;
+                let defaultY = height / 2;
                 this.points.forEach((d) => {
                     d.y(defaultY);
                 })
-            } 
+            }
         }
-        else{
-             let defaultX= this.width()/2;
-             this.points.forEach((d) => {
-                 d.x(defaultX);
-             })
-             if(this.y){
+        else {
+            let defaultX = this.width() / 2;
+            this.points.forEach((d) => {
+                d.x(defaultX);
+            })
+            if (this.y) {
                 this.svg().select(".axis_Y")
                     .append("line")
                     .attr("stroke", COLOR.DIVIDER)
                     .attr("class", "gridline")
                     .attr("x1", 0)
-                    .attr("y1", this.height())
+                    .attr("y1", this.height() - 9.5)
                     .attr("x2", this.width())
-                    .attr("y2", this.height());
-             }          
+                    .attr("y2", this.height() - 9.5);
+            }
         }
     }
 
@@ -203,11 +247,11 @@ class Scatterplot extends Chart {
      *
      * @return {void}
      */
-    encodeY(animation = {}){
-        if(this.y){
+    encodeY(animation = {}) {
+        if (this.y) {
             let svg = this.svg();
-            let width = this.width(),
-                height = this.height();
+            let width = this.width() - 21,
+                height = this.height() - 10;
             const yEncoding = this.y;;
             let axis = svg.select(".axis")
 
@@ -231,7 +275,7 @@ class Scatterplot extends Chart {
                     }
                     return d;
                 });
-            
+
             axis_Y.append("g")
                 .attr("class", "axis_y")
                 .call(axisY);
@@ -287,18 +331,18 @@ class Scatterplot extends Chart {
                 d.color(COLOR.DEFAULT)
             })
             if (!this.x) {
-                let defaultX = width/2;
+                let defaultX = width / 2;
                 this.points.forEach((d) => {
                     d.x(defaultX);
                 })
             }
         }
-        else{
-            let defaultY= this.height()/2;
+        else {
+            let defaultY = this.height() / 2;
             this.points.forEach((d) => {
                 d.y(defaultY);
             })
-            if(this.x){
+            if (this.x) {
                 this.svg().select(".axis_X")
                     .append("line")
                     .attr("stroke", COLOR.DIVIDER)
@@ -307,7 +351,7 @@ class Scatterplot extends Chart {
                     .attr("y1", 0)
                     .attr("x2", 0)
                     .attr("y2", this.height());
-             }        
+            }
         }
     }
 
@@ -326,7 +370,7 @@ class Scatterplot extends Chart {
                 d.color(pointcolor)
             })
         }
-        else{
+        else {
             this.points.forEach((d) => {
                 d.color(COLOR.DEFAULT)
             })
@@ -354,7 +398,7 @@ class Scatterplot extends Chart {
                 d.size(scale(d[sizeEncoding]));
             })
         }
-        else{
+        else {
             let width = this.width();
             let height = this.height();
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
@@ -390,8 +434,8 @@ class Scatterplot extends Chart {
             let changeY = false;
             let changesize = false;
             let changecolor = false;
-        
-            switch(channel) {
+
+            switch (channel) {
                 case 'x':
                     changeX = true
                     this.encodeX(animation)
@@ -411,26 +455,26 @@ class Scatterplot extends Chart {
                 default:
                     console.log("no channel select")
             }
-            if(changeX || changeY) {
+            if (changeX || changeY) {
                 this.svg().select(".content")
-                        .selectAll("circle")
-                        .transition("change layout")
-                        .duration('duration' in animation ? animation['duration'] : 0)
-                        .attr("cx", d => d.x())
-                        .attr("cy", d => d.y())
-                        .attr("r", d => d.size())
-                if('duration' in animation) {
+                    .selectAll("circle")
+                    .transition("change layout")
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("cx", d => d.x())
+                    .attr("cy", d => d.y())
+                    .attr("r", d => d.size())
+                if ('duration' in animation) {
                     this.animationFade(animation)
                 }
             }
-            if(changecolor) {
+            if (changecolor) {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change color")
                     .duration('duration' in animation ? animation['duration'] : 0)
                     .attr("fill", d => d.color());
             }
-            if(changesize) {
+            if (changesize) {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change size")
@@ -452,13 +496,12 @@ class Scatterplot extends Chart {
     modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field.field;
-            
             let changeX = false;
             let changeY = false;
             let changecolor = false;
             let changesize = false;
-        
-            switch(channel) {
+            
+            switch (channel) {
                 case 'x':
                     changeX = true
                     this.svg().selectAll(".axis_X").remove();
@@ -468,7 +511,7 @@ class Scatterplot extends Chart {
                     changeY = true
                     this.svg().selectAll(".axis_Y").remove();
                     this.encodeY(animation);
-                    break;                  
+                    break;
                 case 'size':
                     changesize = true
                     this.encodeSize(animation)
@@ -480,7 +523,7 @@ class Scatterplot extends Chart {
                 default:
                     console.log("no channel select")
             }
-            if(changeX || changeY) {
+            if (changeX || changeY) {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change layout")
@@ -488,14 +531,14 @@ class Scatterplot extends Chart {
                     .attr("cx", d => d.x())
                     .attr("cy", d => d.y())
             }
-            if(changecolor) {
+            if (changecolor) {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change color")
                     .duration('duration' in animation ? animation['duration'] : 0)
                     .attr("fill", d => d.color());
             }
-            if(changesize) {
+            if (changesize) {
                 this.svg().select(".content")
                     .selectAll("circle")
                     .transition("change size")
@@ -522,8 +565,8 @@ class Scatterplot extends Chart {
         let changeY = false;
         let changesize = false;
         let changecolor = false;
-        
-        switch(channel) {
+
+        switch (channel) {
             case 'x':
                 changeX = true
                 svg.selectAll(".axis_X").remove();
@@ -545,7 +588,7 @@ class Scatterplot extends Chart {
             default:
                 console.log("no channel select")
         }
-        if(changeX || changeY) {
+        if (changeX || changeY) {
             this.svg().select(".content")
                 .selectAll("circle")
                 .transition("change layout")
@@ -553,14 +596,14 @@ class Scatterplot extends Chart {
                 .attr("cx", d => d.x())
                 .attr("cy", d => d.y())
         }
-        if(changecolor) {
+        if (changecolor) {
             this.svg().select(".content")
                 .selectAll("circle")
                 .transition("change color")
                 .duration('duration' in animation ? animation['duration'] : 0)
                 .attr("fill", d => d.color());
         }
-        if(changesize) {
+        if (changesize) {
             this.svg().select(".content")
                 .selectAll("circle")
                 .transition("change size")
@@ -576,13 +619,13 @@ class Scatterplot extends Chart {
      * 
      * @return {void}
     */
-    animationFade(animation){
+    animationFade(animation) {
         let svg = this.svg();
         svg.select(".content")
-           .selectAll("circle")
-           .transition("Fade In")
-           .duration('duration' in animation ? animation['duration'] : 0)
-           .attr("opacity", 1)
+            .selectAll("circle")
+            .transition("Fade In")
+            .duration('duration' in animation ? animation['duration'] : 0)
+            .attr("opacity", 1)
     }
 }
 

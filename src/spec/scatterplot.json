@@ -80,7 +80,10 @@
     },
     {
       "add": "chart",
-      "mark": "point"
+      "mark": "point",
+      "style": {
+        "background-image": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F4b2ef458ba3c4386ff4ace3d7cd28f7d000ef8c3.png&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653650455&t=3c34b43b31a746d0718cc6bd4a4745e9"
+      }
     },
     {
       "add": "group",
