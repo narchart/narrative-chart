@@ -264,6 +264,26 @@ class BarChart extends Chart {
                 });
             
             /* draw rects */
+            if(this.style()["mask-image"]) {
+                let margin = this.margin()
+                let chartmaskgroundsize = {
+                    width: 600,
+                    height: 600
+                }
+                let defs = this._svg.append('svg:defs');
+                defs.append("svg:pattern")
+                    .attr("id", "chart-mask-image")
+                    .attr("width", chartmaskgroundsize.width)
+                    .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
+                    .attr("patternUnits", "userSpaceOnUse")
+                    .append("svg:image")
+                    .attr("xlink:href", this.style()["mask-image"])
+                    .attr("width", chartmaskgroundsize.width)
+                    .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
+                    .attr("x", 0)
+                    .attr("y", 0);
+            }
+
             content.append("g")
                 .attr("class", "rects")
                 .selectAll("rect")
@@ -274,7 +294,7 @@ class BarChart extends Chart {
                 .attr("y", d => yScale(d[yEncoding]))
                 .attr("width", xScale.bandwidth())
                 .attr("height", d => height - yScale(d[yEncoding]))
-                .attr("fill", COLOR.DEFAULT);
+                .attr("fill", this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
         }
     }
 
@@ -342,7 +362,7 @@ class BarChart extends Chart {
                 .nice();
 
             /** draw rect layers */
-            let rectLayers = content.append("g")
+                let rectLayers = content.append("g")
                 .selectAll("g")
                 .data(stackData)
                 .join("g")

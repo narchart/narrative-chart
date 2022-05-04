@@ -48,7 +48,7 @@
             "add": "chart",
             "mark": "bar",
             "style": {
-                "background-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
+                "mask-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
             }
         },
         {
@@ -63,7 +63,7 @@
         },
         {
             "add": "annotation",
-            "method": ["fill", "label"]
+            "method": ["label"]
         },
         {
             "add": "annotation",
@@ -101,6 +101,28 @@
             "style": {
               "icon-url": "http://localhost:3000/icon/rank-2.png"
             }
+        },
+        {
+            "add": "annotation",
+            "method": ["regression", "contour", "label"],
+            "target": [
+                {
+                    "field": "Brand",
+                    "value": "BMW"
+                },
+                {
+                    "field": "Brand",
+                    "value": "GMC"
+                },
+                {
+                    "field": "Brand",
+                    "value": "Honda"
+                },
+                {
+                    "field": "Brand",
+                    "value": "Hyundai"
+                }
+            ]
         }
     ]
 }
