@@ -36,8 +36,8 @@
         - [Tooltip](#tooltip)
       - [4. Title & Caption](#4-title--caption)
         - [Title](#title)
-      - [5. Group](#5-group)
         - [Caption](#caption)
+      - [5. Group](#5-group)
     - [Animations](#animations)
     - [Examples](#examples)
       - [1. Without Animations](#1-without-animations)
@@ -275,7 +275,10 @@ Adding graphical and textural annotations.
     "style": {
         ...
     },
-    "animation": { "duration": number }
+    "animation": { 
+        "type": fade/fly/wipe,
+        "duration": number 
+    }
 }
 ```
 
@@ -564,6 +567,21 @@ Adding title or caption.
 }
 ```
 
+##### Caption
+
+```
+{
+    "add": "caption",
+    "style": {
+        "text": text,
+        "font-size": size, // (optional)
+        "position": string, // (optional)
+      },
+    "animation": { "duration": number }
+
+}
+```
+
 #### 5. Group
 
 Adding a group of actions. 
@@ -581,22 +599,6 @@ Adding a group of actions.
 }
 ```
 
-( Note: the actions in a group will be executed simultaneously. )
-
-##### Caption
-
-```
-{
-    "add": "caption",
-    "style": {
-        "text": text,
-        "font-size": size, // (optional)
-        "position": string, // (optional)
-      },
-    "animation": { "duration": number }
-
-}
-```
 
 ### Animations
 
