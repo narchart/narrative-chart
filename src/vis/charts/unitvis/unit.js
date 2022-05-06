@@ -1,10 +1,11 @@
 import Color from '../../visualization/color';
+import Mark from '../mark';
 
 const COLOR = new Color();
 
-class Unit {
+class Unit extends Mark {
     constructor() {
-        this._id = 0;
+        super();
         this._x = 0;
         this._y = 0;
         this._radius = 0;
@@ -12,22 +13,6 @@ class Unit {
         this._visible = "1";
         this._opacity = 1;
         this._unitgroup = {};
-    }
-
-    id(value) {
-        if (!value) {
-            return this._id;
-        }
-        this._id = value;
-    }
-
-    data(value) {
-        if (!value) {
-            return this._dataItem;
-        }
-        Object.entries(value).forEach(
-            ([key, value]) => this[key] = value
-        )
     }
 
     unitgroup(key, value) {

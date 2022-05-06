@@ -1,33 +1,17 @@
 import Color from "../../visualization/color";
+import Mark from '../mark';
 
 const COLOR = new Color();
 
-class Point {
+class Point extends Mark {
     constructor() {
-        this._id = 0;
+        super();
         this._x = 0;
         this._y = 0;
         this._size = 0;
         this._color = COLOR.DEFAULT;
         this._opacity = 1;
     }
-
-    id(value) {
-        if (!value) {
-            return this._id;
-        }
-        this._id = value;
-    }
-
-    data(value) {
-        if (!value) {
-            return this._dataItem;
-        }
-        Object.entries(value).forEach(
-            ([key, value]) => this[key] = value
-        )
-    }
-
 
     x(value) {
         if (!value) {

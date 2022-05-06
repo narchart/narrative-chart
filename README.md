@@ -903,10 +903,12 @@ yarn start
 ### How to create a new chart? 
 
 1. Create a new folder named with the chart name (e.g., ``newchart``) in the directory ``src/vis/charts``.
-2. Create a class ``NewChart`` from a class called ``Chart`` in the folder.
-3. Implement 4 methods in the class, including ``visualize()``, ``addEncoding(channel, field, animation)``, ``modifyEncoding(channel, field, animation)``, and ``removeEncoding(channel, field, animation)``. They are the essential methods to build a chart.
-4. Export the class in ``src/vis/charts/index.js``.
-5. Import and setup the chart in ``src/vis/actions/addchart.js``.
+2. Create a class ``NewChart`` from a parent class called ``Chart`` in the folder.
+3. Create a class ``NewMark`` from a parent class called ``Mark`` in the folder.
+4. Record parameters of channels in the ``NewMark``, such as x, y, color, size.
+5. Implement 4 methods in the ``NewChart``, including ``visualize()``, ``addEncoding(channel, field, animation)``, ``modifyEncoding(channel, field, animation)``, and ``removeEncoding(channel, field, animation)``. They are the essential methods to build a chart.
+6. Export the class in ``src/vis/charts/index.js``.
+7. Import and setup the chart in ``src/vis/actions/addchart.js``.
 
 Please refer to ``src/vis/charts/scatterplot/index.js`` as an example. **Note**: To support annotations, you should make sure all marks in the chart SVG are set to "mark" class. For example in Scatterplot:
 
