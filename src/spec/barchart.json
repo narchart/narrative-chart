@@ -103,26 +103,17 @@
             }
         },
         {
-            "add": "annotation",
-            "method": ["regression", "contour", "label"],
-            "target": [
-                {
-                    "field": "Brand",
-                    "value": "BMW"
-                },
-                {
-                    "field": "Brand",
-                    "value": "GMC"
-                },
-                {
-                    "field": "Brand",
-                    "value": "Honda"
-                },
-                {
-                    "field": "Brand",
-                    "value": "Hyundai"
-                }
-            ]
+            "add": "image",
+            "style": {
+                "image": "http://localhost:3000/img/undraw_data.png",
+                "x": 400,
+                "y": 300,
+                "width": 240,
+                "height": 240
+            },
+            "animation": {
+              "duration": 2000
+            }
         }
     ]
 }

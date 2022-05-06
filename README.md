@@ -37,7 +37,8 @@
       - [4. Title & Caption](#4-title--caption)
         - [Title](#title)
         - [Caption](#caption)
-      - [5. Group](#5-group)
+      - [5. Image](#5-image)
+      - [6. Group](#6-group)
     - [Animations](#animations)
     - [Examples](#examples)
       - [1. Without Animations](#1-without-animations)
@@ -576,13 +577,30 @@ Adding title or caption.
         "text": text,
         "font-size": size, // (optional)
         "position": string, // (optional)
-      },
+    },
     "animation": { "duration": number }
-
 }
 ```
 
-#### 5. Group
+#### 5. Image
+
+Adding an image for embellishing the chart. (Note: you have to specify the image url and the position to place the image.)
+
+```
+{
+    "add": "image",
+    "style": {
+        "image": image-url,
+        "x": number,
+        "y": number,
+        "width": number,
+        "height": number
+    },
+    "animation": { "duration": number }
+}
+```
+
+#### 6. Group
 
 Adding a group of actions. 
 

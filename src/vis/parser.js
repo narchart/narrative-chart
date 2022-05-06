@@ -1,6 +1,6 @@
 import Pipeline from './pipeline';
 import Translator from './translator';
-import { Configure, AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddAggregation, AddTitle, AddCaption} from './actions';
+import { Configure, AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddTitle, AddCaption, AddImage} from './actions';
 
 /**
  * @description A parser for parsing visuaization specifications (https://github.com/sdq/narrative-charts#visualization-specification)
@@ -93,14 +93,14 @@ class Parser {
                 case 'encoding':
                     action = new AddEncoding(actionspec);
                     break;
-                case 'aggregation':
-                    action = new AddAggregation(actionspec);
-                    break;
                 case 'title':
                     action = new AddTitle(actionspec);
                     break;   
                 case 'caption':
                     action = new AddCaption(actionspec);
+                    break;
+                case 'image':
+                    action = new AddImage(actionspec);
                     break;
                 default:
                     break;
