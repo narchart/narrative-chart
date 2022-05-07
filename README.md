@@ -198,10 +198,14 @@ Adding marks to initialization a visualization chart.
 ```
 {
     "add": "chart",
-    "mark": point/line/bar/unit,
+    "mark": point/line/bar/unit/arc,
     "style": {
         "background-image": image-url, // (optional)
-        "background-color": color // (optional)
+        "background-color": color, // (optional)
+        "innerRadius": number, // (optional when the mark is arc)
+        "outerRadius": number, // (optional when the mark is arc)
+        "textRadius": number, // (optional when the mark is arc)
+        "cornerRadius":number // (optional when the mark is arc)
     }
 }
 ```
@@ -226,13 +230,15 @@ Encoding channels to design the chart.
 | Line Chart | x | temporal |
 | Line Chart | y | numerical |
 | Line Chart | color | categorical |
+| Pie Chart | theta | numerical |
+| Pie Chart | color | categorical |
 
 Add Encoding
 
 ```
 {
     "add": "encoding",
-    "channel": x/y/color/size,
+    "channel": x/y/color/size/theta,
     "field": field,
     "animation": { "duration": number }
 }
@@ -243,7 +249,7 @@ Modify Encoding
 ```
 {
     "modify": "encoding",
-    "channel": x/y/color/size,
+    "channel": x/y/color/size/theta,
     "field": field,
     "animation": { "duration": number }
 }
@@ -254,7 +260,7 @@ Remove Encoding
 ```
 {
     "remove": "encoding",
-    "channel": x/y/color/size,
+    "channel": x/y/color/size/theta,
     "animation": { "duration": number }
 }
 ```

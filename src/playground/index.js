@@ -73,6 +73,7 @@ export default class Playground extends React.Component {
       <option value="scatterplot">scatterplot</option>
       <option value="linechart">linechart</option>
       <option value="barchart">barchart</option>
+      <option value="piechart">piechart</option>
       <option value="test">test</option>
       <option value="unitvis">unitvis</option>
     </select>

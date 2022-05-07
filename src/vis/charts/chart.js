@@ -107,6 +107,8 @@ class Chart {
 
     encodeXY(animation = {}) { }
 
+    encodeTheta(animation = {}) { }
+
     encodeColor(animation = {}) { }
 
     encodeSize(animation = {}) { }

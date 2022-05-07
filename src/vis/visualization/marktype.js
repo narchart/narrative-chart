@@ -2,7 +2,8 @@ const MarkType = {
     BAR: 'bar',
     LINE: 'line',
     POINT: 'point',
-    UNIT: 'unit'
+    UNIT: 'unit',
+    ARC:'arc',
 }
 
 export default MarkType

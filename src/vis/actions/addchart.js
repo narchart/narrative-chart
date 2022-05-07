@@ -1,6 +1,6 @@
 import MarkType from '../visualization/marktype';
 import Action from './action';
-import { BarChart, LineChart, Scatterplot, Unitvis } from '../charts';
+import { BarChart, LineChart, Scatterplot, Unitvis, PieChart } from '../charts';
 
 class AddChart extends Action {
     // mark represents chart type, leave_space represents if needs to reserve space for titles or captions in charts
@@ -52,6 +52,8 @@ class AddChart extends Action {
                 return new LineChart();
             case MarkType.UNIT:
                 return new Unitvis();
+            case MarkType.ARC:
+                return new PieChart();
             default:
                 return new Scatterplot();
         }

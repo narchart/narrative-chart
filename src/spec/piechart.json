@@ -1,0 +1,69 @@
+{
+    "data": {
+        "url": "http://localhost:3000/spreadsheets/sales.csv",
+        "schema": [
+        {
+            "field": "Year",
+            "type": "temporal"
+        },
+        {
+            "field": "Brand",
+            "type": "categorical"
+        },
+        {
+            "field": "Category",
+            "type": "categorical"
+        },
+        {
+            "field": "Sales",
+            "type": "numerical"
+        }
+        ]
+    },
+   
+    "actions": [
+        {
+            "add": "config",
+            "mode": "dark",
+            "emotion": "calm"
+          },
+        {
+            "select": [
+                {
+                    "field": "Sales",
+                    "aggregate": "count"
+                },
+                {
+                    "field": "Brand"
+                }
+            ],
+            "groupby": [
+                {
+                    "field": "Brand"
+                }
+            ],
+            "filter": []
+        },
+        {
+            "add": "chart",
+            "mark": "arc",
+            "style": {
+                "innerRadius": 0, 
+                "outerRadius": 200,
+                "textRadius":245,
+                "cornerRadius":0
+            }
+        },
+        {
+            "add": "encoding",
+            "channel": "theta",
+            "field":"Sales"
+        },
+        {
+            "add": "encoding",
+            "channel": "color",
+            "field":"Brand"
+        }
+     
+    ]
+}

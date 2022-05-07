@@ -11,5 +11,9 @@ export {
 } from "./scatterplot";
 
 export {
+    default as PieChart
+} from "./piechart";
+
+export {
     default as Unitvis
 } from "./unitvis";
