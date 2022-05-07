@@ -1,3 +1,5 @@
+import { AddAnnotation } from './actions';
+
 class Pipeline {
     constructor() {
         this._actions = []
@@ -19,6 +21,9 @@ class Pipeline {
                 delayTime = action.animation()['delay']
             } else {
                 delayTime = 0
+            }
+            if (action instanceof AddAnnotation) { 
+                delayTime += 16 // TODO: add a small time period for waiting movement of marks (fix in the future)
             }
             this._timeouts.push(setTimeout(function(){
                 // Code to run after the pause
