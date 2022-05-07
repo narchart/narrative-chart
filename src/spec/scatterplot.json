@@ -43,8 +43,8 @@
   "actions": [
     {
       "add": "config",
-      "mode": "dark",
-      "emotion": "exciting"
+      "mode": "light",
+      "emotion": "positive"
     },
     {
       "select": [
@@ -82,7 +82,7 @@
       "add": "chart",
       "mark": "point",
       "style": {
-        "background-image": "https://gimg2.baidu.com/image_search/src=http%3A%2F%2Fi0.hdslb.com%2Fbfs%2Farticle%2F4b2ef458ba3c4386ff4ace3d7cd28f7d000ef8c3.png&refer=http%3A%2F%2Fi0.hdslb.com&app=2002&size=f9999,10000&q=a80&n=0&g=0n&fmt=auto?sec=1653650455&t=3c34b43b31a746d0718cc6bd4a4745e9"
+        "background-image": "http://localhost:3000/background/R-C-3.png"
       }
     },
     {
@@ -119,51 +119,15 @@
     },
     {
       "add": "annotation",
-      "method": "fill",
+      "method": "circle",
       "target": [
         {
-          "field": "Origin",
-          "value": "Japan"
+          "field": "Name",
+          "value": "datsun 280-zx"
         }
       ],
       "animation": {
-        "duration": 1000
-      }
-    },
-    {
-      "modify": "encoding",
-      "channel": "y",
-      "field": "Weight",
-      "animation": {
-        "duration": 1000
-      }
-    },
-    {
-      "remove": "encoding",
-      "channel": "color",
-      "animation": {
-        "duration": 1000
-      }
-    },
-    {
-      "remove": "encoding",
-      "channel": "size",
-      "animation": {
-        "duration": 1000
-      }
-    },
-    {
-      "remove": "encoding",
-      "channel": "x",
-      "animation": {
-        "duration": 1000
-      }
-    },
-    {
-      "add": "encoding",
-      "channel": "x",
-      "field": "Acceleration",
-      "animation": {
+        "type": "fly-in",
         "duration": 1000
       }
     }
