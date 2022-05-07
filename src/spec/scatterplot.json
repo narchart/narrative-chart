@@ -127,7 +127,7 @@
         }
       ],
       "animation": {
-        "type": "fly-in",
+        "type": "fly",
         "duration": 1000
       }
     }

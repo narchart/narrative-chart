@@ -115,7 +115,7 @@ class Circle extends Annotator {
 
                         break;
 
-                    case "fly-in":
+                    case "fly":
                         const chartWidth = chart.width() - chart.margin().top;
                         svg.append("circle")
                             .attr("fill", "none")
@@ -136,7 +136,22 @@ class Circle extends Annotator {
                             .duration('duration' in animation ? animation['duration'] : 0)
                             .attr("transform", "translate(" + circleX + "," + circleY + ")")
                         break;
+
                     default:
+                        svg.append("circle")
+                            .attr("fill", "none")
+                            .attr("stroke", function (d) {
+                                if ('color' in style) {
+                                    return style['color']
+                                } else {
+                                    return COLOR.ANNOTATION
+                                }
+                            })
+                            .attr("stroke-width", 2)
+                            .attr("x", circleX)
+                            .attr("y", circleY)
+                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("r", circleR)
                         break;
                 }
 
@@ -205,7 +220,7 @@ class Circle extends Annotator {
 
                         break;
 
-                    case "fly-in":
+                    case "fly":
                         const chartWidth = chart.width() - chart.margin().top;
                         svg.append("circle")
                             .attr("fill", "none")
@@ -226,7 +241,22 @@ class Circle extends Annotator {
                             .duration('duration' in animation ? animation['duration'] : 0)
                             .attr("transform", "translate(" + circleX + "," + circleY + ")")
                         break;
+                        
                     default:
+                        svg.append("circle")
+                            .attr("fill", "none")
+                            .attr("stroke", function (d) {
+                                if ('color' in style) {
+                                    return style['color']
+                                } else {
+                                    return COLOR.ANNOTATION
+                                }
+                            })
+                            .attr("stroke-width", 2)
+                            .attr("x", circleX)
+                            .attr("y", circleY)
+                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("r", circleR)
                         break;
                 }
             }

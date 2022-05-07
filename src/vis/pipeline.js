@@ -23,7 +23,7 @@ class Pipeline {
                 delayTime = 0
             }
             if (action instanceof AddAnnotation) { 
-                delayTime += 33 // TODO: add a small time period for waiting movement of marks (fix in the future)
+                delayTime += 100 // TODO: add a small time period for waiting movement of marks (fix in the future)
             }
             this._timeouts.push(setTimeout(function(){
                 // Code to run after the pause
