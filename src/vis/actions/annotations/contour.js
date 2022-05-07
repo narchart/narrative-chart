@@ -30,7 +30,7 @@ class Contour extends Annotator {
             });
         };
         
-        svg.selectAll(".mark")
+        const focus_elements = svg.selectAll(".mark")
             .filter(function(d) {
                 if (target.length === 0) {
                     return true
@@ -43,20 +43,86 @@ class Contour extends Annotator {
                     }
                 }
                 return true
-            })
-            .transition()
-            .duration('duration' in animation ? animation['duration']: 0)
-            .attr("stroke-width", 2)
-            .attr("stroke-alignment", "outer")
-            .attr("opacity", 1)
-            .attr("stroke", function() {
-                if ('color' in style) {
-                    return style['color']
+            });
+
+        focus_elements.nodes().forEach((one_element) => {
+            const nodeName = one_element.nodeName;
+            if (nodeName === 'rect') {
+                const _x = parseFloat(one_element.getAttribute("x")) - 1;
+                const _y = parseFloat(one_element.getAttribute("y")) - 1;
+                const _width = parseFloat(one_element.getAttribute("width")) + 2;
+                const _height = parseFloat(one_element.getAttribute("height")) + 2;
+
+                const d_contour_rect = `M${_x+_width},${_y}
+                                      V${_y+_height}
+                                      H${_x}
+                                      V${_y}
+                                      H${_x+_width+1}`;
+                const contour_rect = svg.append("path")
+                    .attr("d", d_contour_rect)
+                    .attr("fill", "none")
+                    .attr("stroke", function() {
+                        if ('color' in style) {
+                            return style['color']
+                        } else {
+                            return COLOR.ANNOTATION
+                        }
+                    })
+                    .attr("stroke-width", 2);
+                if ("type" in animation && animation["type"] === "wipe") {
+                    let pathLength;
+                    
+                    contour_rect.attr("stroke-dasharray", function() {
+                                    return pathLength = this.getTotalLength();
+                                })
+                                .attr("stroke-dashoffset", pathLength)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("stroke-dashoffset", 0);
                 } else {
-                    return COLOR.ANNOTATION
+                    contour_rect.attr("opacity", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("opacity", 1);
                 }
-            })
-            // .moveToFront();
+            } else if (nodeName === 'circle') {
+                let _r = Number(one_element.getAttribute("r")) + 1,
+                    _x = Number(one_element.getAttribute("cx")),
+                    _y = Number(one_element.getAttribute("cy"));
+
+                const d_contour_circle = d3.path();
+
+                d_contour_circle.arc(_x, _y , _r, 0, 360)
+
+                const contour_circle = svg.append("path")
+                    .attr("d", d_contour_circle)
+                    .attr("fill", "none")
+                    .attr("stroke", function() {
+                        if ('color' in style) {
+                            return style['color']
+                        } else {
+                            return COLOR.ANNOTATION
+                        }
+                    })
+                    .attr("stroke-width", 2);
+                
+                if ("type" in animation && animation["type"] === "wipe") {
+                    let pathLength;
+                    contour_circle.attr("stroke-dasharray", function() {
+                                    return pathLength = this.getTotalLength();
+                                })
+                                .attr("stroke-dashoffset", pathLength)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("stroke-dashoffset", 0);
+                } else {
+                    contour_circle.attr("opacity", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("opacity", 1);
+                }
+            }
+        }) 
 
     }
 }

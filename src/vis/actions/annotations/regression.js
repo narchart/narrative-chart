@@ -37,7 +37,7 @@ class Regression extends Annotator {
                 }
                 return true
             });
-            
+
         // return if the focus defined in the spec does not exist
         if (focus_elements.empty()) return;
 
@@ -106,21 +106,60 @@ class Regression extends Annotator {
         }
 
         // step 4: draw regression line
-        svg.append("line")
-            .attr("class", "regression")
-            .attr("x1", x1)
-            .attr("x2", x2)
-            .attr("y1", y1)
-            .attr("y2", y2)
-            .attr("stroke", () => {
-                if ("color" in style) {
-                    return style["color"];
-                } else {
-                    return COLOR.ANNOTATION;
-                }
-            })
-            .attr("stroke-width", 2)
-            .attr("stroke-dasharray", "8, 4");
+        if ("type" in animation && animation["type"] === "wipe") {
+            const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+
+            const regression = svg.append("line")
+                .attr("class", "regression")
+                .attr("clip-path", `url(#clip_regression_${uid})`)
+                .attr("x1", x1)
+                .attr("x2", x2)
+                .attr("y1", y1)
+                .attr("y2", y2)
+                .attr("stroke-width", 2)
+                .attr("stroke-dasharray", "8, 4")
+                .attr("stroke", () => {
+                    if ("color" in style) {
+                        return style["color"];
+                    } else {
+                        return COLOR.ANNOTATION;
+                    }
+                });
+            const regBox = regression.node().getBBox();
+
+            svg.append("defs")
+                .append("clipPath")
+                .attr("id", `clip_regression_${uid}`)
+                .append("rect")
+                .attr("x", regBox.x-2)
+                .attr("y", regBox.y-2)
+                .attr("height", regBox.height+2)
+                .attr("width", 0)
+                .transition()
+                .duration('duration' in animation ? animation['duration']: 0)
+                .attr("width", regBox.width+2);
+        } else {
+            svg.append("line")
+                .attr("class", "regression")
+                .attr("x1", x1)
+                .attr("x2", x2)
+                .attr("y1", y1)
+                .attr("y2", y2)
+                .attr("stroke-width", 2)
+                .attr("stroke-dasharray", "8, 4")
+                .attr("opacity", 0)
+                .transition()
+                .duration('duration' in animation ? animation['duration']: 0)
+                .attr("stroke", () => {
+                    if ("color" in style) {
+                        return style["color"];
+                    } else {
+                        return COLOR.ANNOTATION;
+                    }
+                })
+                .attr("opacity", 1);
+        }
+       
 
     }
 

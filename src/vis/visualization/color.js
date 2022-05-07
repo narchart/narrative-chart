@@ -329,9 +329,9 @@ const EMOTION_COLOR = {
             ANNOTATION: '#3c3c3c',
             DEFAULT: '#ff0000',
             TOOLTIP: '#3c3c3c', //TODO
-            CATEGORICAL: ['##ff0000', '##3c3c3c', '##722e19', '##00c400', '##2f3360', '##ff278c', '##ffcc00', '##473da2'],
-            SEQUENTIAL: ['##ff0000', '##fc4b4b', '##f46464', '##fc8585', '##ffa6a6', '##ffc8c8', '##ffdada', '##ffeaea'],
-            DIVERGING: ['##ff0000', '##f46464', '##ffa6a6', '##ffdada', '##dadada', '##b2b1b1', '##848484', '##3c3c3c']
+            CATEGORICAL: ['#ff0000', '#3c3c3c', '#722e19', '#00c400', '#2f3360', '#ff278c', '#ffcc00', '#473da2'],
+            SEQUENTIAL: ['#ff0000', '#fc4b4b', '#f46464', '#fc8585', '#ffa6a6', '#ffc8c8', '#ffdada', '#ffeaea'],
+            DIVERGING: ['#ff0000', '#f46464', '#ffa6a6', '#ffdada', '#dadada', '#b2b1b1', '#848484', '#3c3c3c']
         },
         "dark": {
             BACKGROUND: '#000000',

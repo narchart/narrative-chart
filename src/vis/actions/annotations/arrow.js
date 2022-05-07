@@ -56,8 +56,6 @@ class Arrow extends Annotator {
             [0, 0]
         ];
 
-        
-
         focus_elements.nodes().forEach((one_element) => {
             // identify the position to place the arrow
             let data_x, data_y, offset;
@@ -78,20 +76,73 @@ class Arrow extends Annotator {
             const new_arrow_points = arrow_points.map((point) => [data_x + offset + point[0], data_y + offset + point[1]]);
 
             // draw arrow
-            svg.append("path")
-                .attr("class", "arrow")
-                .attr("d", d3.line()(new_arrow_points))
-                .transition()
-                .duration('duration' in animation ? animation['duration']: 0)
-                .attr("fill", () => {
-                    if ("color" in style) {
-                        return style["color"];
-                    } else {
-                        return COLOR.ANNOTATION;
-                    }
-                })
-                .attr("fill-opacity", 1);
-    })
+            if ("type" in animation && animation["type"] === "fly") {
+                const bbox = svg.node().getBBox();
+                const parentWidth = Number(svg.node().parentNode.getAttribute("width"));
+
+                svg.append("path")
+                    .attr("class", "arrow")
+                    .attr("d", d3.line()(new_arrow_points))
+                    .attr("fill", () => {
+                        if ("color" in style) {
+                            return style["color"];
+                        } else {
+                            return COLOR.ANNOTATION;
+                        }
+                    })
+                    .attr("transform", `translate(${bbox.width-Math.abs(bbox.x)-(data_x+offset)+(parentWidth-bbox.width)/2}, 0)`) // (parentWidth-bbox.width)/2 for margin
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']: 0)
+                    .attr("transform", "translate(0, 0)")
+            } else if ("type" in animation && animation["type"] === "wipe") {
+                // ensure that clip-paths for different arrows won't affect one another. 
+                const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+
+                const arrow = svg.append("path")
+                    .attr("class", "arrow")
+                    .attr("clip-path", `url(#clip_arrow_${uid})`)
+                    .attr("d", d3.line()(new_arrow_points))
+                    .attr("fill", () => {
+                        if ("color" in style) {
+                            return style["color"];
+                        } else {
+                            return COLOR.ANNOTATION;
+                        }
+                    });
+                
+                const arrowBox = arrow.node().getBBox();
+
+                svg.append("defs")
+                    .append("clipPath")
+                    .attr("id", `clip_arrow_${uid}`)
+                    .append("rect")
+                    .attr("x", arrowBox.x+arrowBox.width)
+                    .attr("y", arrowBox.y+arrowBox.height)
+                    .attr("height", 0)
+                    .attr("width", 0)
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']: 0)
+                    .attr("x", arrowBox.x)
+                    .attr("y", arrowBox.y)
+                    .attr("height", arrowBox.height)
+                    .attr("width", arrowBox.width);
+            } else {
+                svg.append("path")
+                    .attr("class", "arrow")
+                    .attr("d", d3.line()(new_arrow_points))
+                    .attr("fill-opacity", 0)
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']: 0)
+                    .attr("fill", () => {
+                        if ("color" in style) {
+                            return style["color"];
+                        } else {
+                            return COLOR.ANNOTATION;
+                        }
+                    })
+                    .attr("fill-opacity", 1);
+            }
+        })
     }
 }
 
