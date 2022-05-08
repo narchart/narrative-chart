@@ -46,13 +46,16 @@
         },
         {
             "add": "chart",
-            "mark": "arc",
-            "style": {
-                "innerRadius": 0, 
-                "outerRadius": 200,
-                "textRadius":245,
-                "cornerRadius":0
-            }
+            "mark": {
+                "type": "arc",
+                "style": {
+                    "innerRadius": 0, 
+                    "outerRadius": 200,
+                    "textRadius":245,
+                    "cornerRadius":0
+                }
+            },
+            "style": {}
         },
         {
             "add": "encoding",

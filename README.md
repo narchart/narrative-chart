@@ -193,20 +193,20 @@ Operating a SQL-like action to query data from the spreadsheet.
 
 ##### Add Marks
 
-Adding marks to initialization a visualization chart.
-
 ```
 {
     "add": "chart",
-    "mark": point/line/bar/unit/arc,
+    "mark": {
+        "type": point/line/bar/unit/arc,
+        "style": { ... }, // (optional)
+        "animation": { "type": type }, // (optional)
+    } 
     "style": {
         "background-image": image-url, // (optional)
         "background-color": color, // (optional)
-        "innerRadius": number, // (optional when the mark is arc)
-        "outerRadius": number, // (optional when the mark is arc)
-        "textRadius": number, // (optional when the mark is arc)
-        "cornerRadius":number // (optional when the mark is arc)
-    }
+        "mask-image": image-url, // (optional)
+    },
+    "animation": { ... }
 }
 ```
 

@@ -80,7 +80,10 @@
     },
     {
       "add": "chart",
-      "mark": "point",
+      "mark": {
+        "type": "point",
+        "style": {}
+      },
       "style": {
         "background-image": "http://localhost:3000/background/R-C-3.png"
       }

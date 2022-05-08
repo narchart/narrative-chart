@@ -8,6 +8,8 @@ class Chart {
         this._height = 0;
         this._data = [];
         this._processedData = [];
+        this._mark_animation = {};
+        this._mark_style = {};
         this._animation = {};
         this._style = {};
         this._margin = {};
@@ -39,6 +41,20 @@ class Chart {
             }
         }
         this._margin = value;
+    }
+
+    markStyle(value) {
+        if (!value) {
+            return this._mark_style;
+        }
+        this._mark_style = value;
+    }
+
+    markAnimation(value) {
+        if (!value) {
+            return this._mark_animation;
+        }
+        this._mark_animation = value;
     }
 
     style(value) {

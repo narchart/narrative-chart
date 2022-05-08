@@ -6,7 +6,12 @@ class AddChart extends Action {
     // mark represents chart type, leave_space represents if needs to reserve space for titles or captions in charts
     constructor(spec) {
         super(spec);
-        this._mark = spec.mark;
+        let mark = spec.mark
+        this._mark = mark['type'];
+        this._mark_animation = {};
+        if ('animation' in mark) { this._mark_animation = spec.animation; }
+        this._mark_style = {};
+        if ('style' in mark) { this._mark_style = spec.style; }
         this._animation = {};
         if ('animation' in spec) { this._animation = spec.animation; }
         this._style = {};
@@ -22,6 +27,8 @@ class AddChart extends Action {
         let chart = vis.chart();
         chart.height(vis._height);
         chart.width(vis._width);
+        chart.markAnimation(this._mark_animation);
+        chart.markStyle(this._mark_style);
         chart.animation(this._animation);
         chart.style(this._style);
         chart.margin(this._leave_space ? 
@@ -31,10 +38,10 @@ class AddChart extends Action {
                 "bottom": 50,
                 "left": 60
             }:{
-            "top": 20,
-            "right": 10,
-            "bottom": 50,
-            "left": 50
+                "top": 20,
+                "right": 10,
+                "bottom": 50,
+                "left": 50
             })
         chart.data(vis._data);
         chart.processedData(vis._processedData)

@@ -97,7 +97,9 @@
         },
         {
             "add": "chart",
-            "mark": "unit",
+            "mark": {
+                "type": "unit"
+            },
             "style":{
                 "background-color": "pink"
             }

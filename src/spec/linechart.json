@@ -52,7 +52,10 @@
         },
         {
             "add": "chart",
-            "mark": "line",
+            "mark": {
+                "type": "line",
+                "style": {}
+            },
             "style": {
                 "background-image": "http://localhost:3000/background/R-C.jpg"
             }
