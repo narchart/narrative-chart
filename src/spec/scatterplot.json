@@ -122,7 +122,7 @@
     },
     {
       "add": "annotation",
-      "method": "circle",
+      "method": "reference",
       "target": [
         {
           "field": "Name",
@@ -130,7 +130,7 @@
         }
       ],
       "animation": {
-        "type": "fly",
+        "type": "wipe",
         "duration": 1000
       }
     }

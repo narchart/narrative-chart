@@ -1,5 +1,5 @@
 import * as d3 from 'd3';
-import Annotator from './annotator'
+import Annotator from './annotator';
 
 /**
  * @description An annotator for filling texture.
@@ -39,7 +39,63 @@ class Texture extends Annotator {
             .attr("xlink:href", style["background-image"])
             .attr("x", 0)
             .attr("y", 0);
-        svg.selectAll(".mark")
+
+        if ("type" in animation && animation["type"] === "wipe") {
+            const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+            let focus_elements = svg.selectAll(".mark")
+            .filter(function (d) {
+                if (target.length === 0) {
+                    return true
+                }
+                for (const item of target) {
+                    if (d[item.field] === item.value) {
+                        continue
+                    } else {
+                        return false
+                    }
+                }
+                return true
+            });
+
+            focus_elements.nodes().forEach(one_element => {
+                const nodeName = one_element.nodeName;
+                console.log('one_element',one_element)
+                if (nodeName === "rect") {
+                    let e_x = parseFloat(one_element.getAttribute("x"));
+                    let e_y = parseFloat(one_element.getAttribute("y"));
+                    let e_width = parseFloat(one_element.getAttribute("width"));
+                    let e_height = parseFloat(one_element.getAttribute("height"));
+                    let e_color = one_element.getAttribute("fill");
+
+                    const cover  = svg.append("rect")
+                        .attr("class", "cover")
+                        .attr("clip-path", `url(#clip_cover_${uid})`)
+                        .attr("x", e_x)
+                        .attr("y", e_y)
+                        .attr("width", e_width)
+                        .attr("height", e_height)
+                        .attr("fill", e_color)
+                    
+                    const regBox = cover.node().getBBox();
+
+                    svg.append("defs")
+                        .append("clipPath")
+                        .attr("id", `clip_cover_${uid}`)
+                        .append("rect")
+                        .attr("x", regBox.x)
+                        .attr("y", regBox.y)
+                        .attr("height", regBox.height)
+                        .attr("width", regBox.width)
+                        .transition()
+                        .duration('duration' in animation ? animation['duration']: 0)
+                        .attr("height", 0);
+                }
+            })
+
+            focus_elements.style("fill", "url(#texture_background)"); 
+
+        } else {
+            svg.selectAll(".mark")
             .filter(function(d) {
                 if (target.length === 0) {
                     return true
@@ -56,8 +112,9 @@ class Texture extends Annotator {
             .transition()
             .duration('duration' in animation ? animation['duration']: 0)
             .style("fill", "url(#texture_background)")
-            // .moveToFront();
-
+        }
+        
+    
     }
 }
 

@@ -72,14 +72,20 @@
             "add": "annotation",
             "method": "texture",
             "target": [
-            {
+              {
                 "field": "Brand",
                 "value": "GMC"
-            }
+              }
             ],
             "style": {
               "background-image": "http://localhost:3000/texture/stripe.png"
-            }
+            },
+            "animation": {
+              "type": "wipe",
+              "duration": 1000,
+              "delay": 2000
+            },
+            "leave_space": false
         },
         {
             "add": "annotation",
