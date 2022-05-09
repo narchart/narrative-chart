@@ -44,8 +44,6 @@ class LineChart extends Chart {
         this._svg = d3.select("svg")
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-        // d3.select("svg").style("background", "url(" + this.style()['background-image'] + ") center ").style("background-size", "cover")
         
         if(this.style()['background-color']){
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
@@ -69,46 +67,68 @@ class LineChart extends Chart {
             d3.select("#chartBackGrnd").attr("fill-opacity", 0)
         }   
 
-        
-        this.drawAxis();
-        this.encodeXY();
-        this.encodeColor();
+        this.initvis();
 
         return this.svg();       
     }
 
+    /**
+     * @description The initial status of linechart vis
+     *      * 
+     * @return {void}
+    */
+    initvis() {
+        let svg = this.svg();
+        let width = this.width() - 12,
+            height = this.height() - 7;
+        let processedData = this.processedData();
+    
+        svg.append("g")
+            .attr("class", "axis");
+        let content = svg.append("g")
+            .attr("class", "content")
+            .attr("chartWidth", width)
+            .attr("chartHeight", height);
+  
+        /* draw points */
+        let initX = width / 2;
+        let initY = height / 2;
+        const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
+        content.append("g")
+            .attr("class", "circleGroup")
+            .attr("fill", COLOR.DEFAULT)
+            .selectAll("circle")
+            .data(processedData)
+            .enter().append("circle")
+            .attr("class", "mark")
+            .attr("r", circleSize)
+            .attr("cx", d => initX)
+            .attr("cy", d => initY)
+            .attr("opacity", 0);
+    }
 
     /**
-     * @description Draw lines with xy encoding.
+     * @description Using X-axis to encode a data field.
      *
      * @return {void}
      */
-    encodeXY() {
-        if(this.x && this.y) {
+    encodeX() {
+        let processedData = this.processedData();
+        if(this.x){
             let svg = this.svg();
             let width = this.width() - 12,
                 height = this.height() - 7;
-            const processedData = this.processedData();
-            const xEncoding = this.x,
-                yEncoding = this.y;
+            const xEncoding = this.x;
+            let axis = svg.select(".axis");
 
             /** set the ranges */
             let xScale = d3.scaleBand()
                 .range([0, width])
                 .domain(processedData.map(d => d[xEncoding]));
-        
-            let yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(processedData, d => d[yEncoding])])
-                .nice();
-        
-            /** draw axis */
-            let axis = svg.append("g")
-                .attr("class", "axis"),
-            content = svg.append("g")
-                .attr("class", "content")
-                .attr("chartWidth", width)
-                .attr("chartHeight", height);
+
+            let axis_X = axis.append("g")
+                .attr("class", "axis_X");
+
             let axisX = d3.axisBottom(xScale)
                 .ticks(5)
                 .tickSize(5)
@@ -117,7 +137,66 @@ class LineChart extends Chart {
                     var date = d.split('/')
                     return date[1]+'/'+date[2];
                 });
-        
+            
+            axis_X.append("g")
+                .attr("class", "axis_x")
+                .attr('transform', `translate(0, ${height})`)
+                .call(axisX);
+            
+            // specify color for axis elements
+            // tick
+            axis_X.selectAll(".tick line")
+                .attr("stroke", COLOR.AXIS);
+            // domain path
+            axis_X.selectAll(".domain")
+                .attr("stroke", COLOR.AXIS);
+            // tick label
+            axis_X.selectAll(".tick")
+                .selectAll("text")
+                .attr("fill", COLOR.AXIS);
+
+            /* draw labels */
+            const labelPadding = 20, fontsize = 12;
+
+            axis_X.append("text")
+                .attr("x", width / 2)
+                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
+                .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "hanging")
+                .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
+                .text(xEncoding);
+
+        }
+        else {
+
+        }
+    }
+
+    /**
+     * @description Using Y-axis to encode a data field.
+     *
+     * @return {void}
+     */
+    encodeY() {
+        let processedData = this.processedData();
+        if (this.y) {
+            let svg = this.svg();
+            let width = this.width() - 12,
+                height = this.height() - 7;
+            const yEncoding = this.y;
+            let axis = svg.select(".axis");
+
+            /** set the ranges */
+            let yScale = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, d3.max(processedData, d => d[yEncoding])])
+                .nice();
+
+            let axis_Y = axis.append("g")
+                .attr("class", "axis_Y");
+
+            /** draw axis */
             let axisY = d3.axisLeft(yScale)
                 .ticks(5)
                 .tickSize(0, 0, 0)
@@ -130,31 +209,25 @@ class LineChart extends Chart {
                     }
                     return d;
                 });
-        
-            axis.append("g")
-                .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
-                .call(axisX);
-        
-        
-            axis.append("g")
+            
+            axis_Y.append("g")
                 .attr("class", "axis_y")
                 .call(axisY);
-            
+
             // specify color for axis elements
             // tick
-            axis.selectAll(".tick line")
+            axis_Y.selectAll(".tick line")
                 .attr("stroke", COLOR.AXIS);
             // domain path
-            axis.selectAll(".domain")
+            axis_Y.selectAll(".domain")
                 .attr("stroke", COLOR.AXIS);
             // tick label
-            axis.selectAll(".tick")
+            axis_Y.selectAll(".tick")
                 .selectAll("text")
                 .attr("fill", COLOR.AXIS);
 
             /** draw grid */
-            axis.selectAll(".axis_y")
+            axis_Y.selectAll(".axis_y")
                 .selectAll("line")
                 .attr("stroke", d => {
                     if (d === 0) return COLOR.AXIS;
@@ -169,57 +242,78 @@ class LineChart extends Chart {
 
             /* draw labels */
             const labelPadding = 20, fontsize = 12;
-
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(xEncoding);
-
-            axis.append("text")
+            axis_Y.append("text")
                 .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`) 
                 .attr("text-anchor", "middle")
                 .attr("font-size", fontsize)
                 .attr("fill", COLOR.AXIS)
                 .text(yEncoding);
+            
+        }
+        else {
+            
+        }
+    }
 
-            /* draw lines */
-            const line = d3.line()
+    /**
+     * @description Drawing line and dots of linechart vis
+     *
+     * @return {void}
+     */
+    encodeLine() {
+        let svg = this.svg();
+        let width = this.width() - 12,
+            height = this.height() - 7;
+        let processedData = this.processedData();
+        const line = d3.line()
             .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
             .y(d => yScale(d[yEncoding]))
-
-            content.append("g")
-                .attr("class", "lineGroup")
-                .attr("fill", "none")
-                .attr("stroke", COLOR.DEFAULT)
-                .attr("stroke-width", 2)
-                .attr("opacity", 1)
-                .selectAll("path")
-                .data(processedData)
-                .enter()
-                .append("path")
-                .attr("class", "path")
-                .attr("d" , line(processedData));
-
-            /* draw points */
-            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
-            content.append("g")
-                .attr("class", "circleGroup")
-                .attr("fill", COLOR.DEFAULT)
-                .selectAll("circle")
-                .data(processedData)
-                .enter().append("circle")
-                .attr("class", "mark")
-                .attr("r", circleSize)
-                .attr("cx", d => {
-                    return xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2;
-                })
-                .attr("cy", d => yScale(d[yEncoding]));
-        }
-        
+        const xEncoding = this.x,
+            yEncoding = this.y;
+        /** set the ranges */
+        let xScale = d3.scaleBand()
+            .range([0, width])
+            .domain(processedData.map(d => d[xEncoding]));
+    
+        let yScale = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(processedData, d => d[yEncoding])])
+            .nice();
+    
+        svg.append("g")
+            .attr("class", "axis");
+        let content = svg.append("g")
+            .attr("class", "content")
+            .attr("chartWidth", width)
+            .attr("chartHeight", height);
+        /* draw lines */
+        content.append("g")
+            .attr("class", "lineGroup")
+            .attr("fill", "none")
+            .attr("stroke", COLOR.DEFAULT)
+            .attr("stroke-width", 2)
+            .attr("opacity", 1)
+            .selectAll("path")
+            .data(processedData)
+            .enter()
+            .append("path")
+            .attr("class", "path")
+            .attr("d" , line(processedData));   
+            
+        /* draw points */
+        const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
+        content.append("g")
+            .attr("class", "circleGroup")
+            .attr("fill", COLOR.DEFAULT)
+            .selectAll("circle")
+            .data(processedData)
+            .enter().append("circle")
+            .attr("class", "mark")
+            .attr("r", circleSize)
+            .attr("cx", d => {
+                return xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2;
+            })
+            .attr("cy", d => yScale(d[yEncoding]));
     }
 
     /**
@@ -229,7 +323,7 @@ class LineChart extends Chart {
      */
     encodeColor() {           
         if(this.color) {
-                d3.selectAll(".circleGroup")
+            d3.selectAll(".circleGroup")
                 .attr("fill", (d,i) => {
                     return COLOR.CATEGORICAL[i]
                 })
@@ -250,9 +344,9 @@ class LineChart extends Chart {
     addEncoding(channel, field) {
         if(!this[channel]) {
             this[channel] = field;
-            // d3.selectAll("svg > g > *").remove();
-            this.drawAxis();
-            if (this.x && this.y) this.encodeXY();
+            if (this.x) this.encodeX();
+            if (this.y) this.encodeY();
+            if (this.x && this.y) this.encodeLine();
             if (this.color) this.encodeColor();
         }
     }
@@ -265,9 +359,9 @@ class LineChart extends Chart {
     modifyEncoding(channel, field) {
         if (this[channel]) {
             this[channel] = field;
-            // d3.selectAll("svg > g > *").remove();
-            this.drawAxis();
-            if (this.x && this.y) this.encodeXY();
+            if (this.x) this.encodeX();
+            if (this.y) this.encodeY();
+            if (this.x && this.y) this.encodeLine();
             if (this.color) this.encodeColor();
         }
     }
@@ -279,8 +373,9 @@ class LineChart extends Chart {
      */
     removeEncoding(channel) {
         this[channel] = null;
-        // d3.selectAll("svg > g > *").remove();
-        if (this.x && this.y) this.encodeXY();
+        if (this.x) this.encodeX();
+        if (this.y) this.encodeY();
+        if (this.x && this.y) this.encodeLine();
         if (this.color) this.encodeColor();
     }
 
