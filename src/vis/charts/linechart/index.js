@@ -91,30 +91,13 @@ class LineChart extends Chart {
         let svg = this.svg();
         let width = this.width() - 12,
             height = this.height() - 7;
-        let processedData = this.processedData();
     
         svg.append("g")
             .attr("class", "axis");
-        let content = svg.append("g")
+        svg.append("g")
             .attr("class", "content")
             .attr("chartWidth", width)
             .attr("chartHeight", height);
-  
-        /* draw points */
-        let initX = width / 2;
-        let initY = height / 2;
-        const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
-        content.append("g")
-            .attr("class", "circleGroup")
-            .attr("fill", COLOR.DEFAULT)
-            .selectAll("circle")
-            .data(processedData)
-            .enter().append("circle")
-            .attr("class", "mark")
-            .attr("r", circleSize)
-            .attr("cx", d => initX)
-            .attr("cy", d => initY)
-            .attr("opacity", 0);
     }
 
     /**

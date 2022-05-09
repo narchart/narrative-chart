@@ -112,13 +112,13 @@ class Reference extends Annotator {
                 .attr("id", `clip_reference_${uid}`)
                 .append("rect")
                 .attr("x", positions[0][0])
-                .attr("y", regBox.y-2)
+                .attr("y", regBox.y-1)
                 .attr("height", regBox.height+2)
                 .attr("width", 0)
                 .transition()
                 .duration('duration' in animation ? animation['duration']: 0)
                 .attr("x", 0)
-                .attr("width", regBox.width+2);
+                .attr("width", regBox.width);
 
         }else if("type" in animation && animation["type"] === "fly"){
             const uid = Date.now().toString() + Math.random().toString(36).substring(2);
@@ -145,14 +145,14 @@ class Reference extends Annotator {
                 .append("clipPath")
                 .attr("id", `clip_reference_${uid}`)
                 .append("rect")
-                .attr("x", regBox.width-2)
-                .attr("y", regBox.y-2)
+                .attr("x", regBox.width)
+                .attr("y", regBox.y-1)
                 .attr("height", regBox.height+2)
                 .attr("width", 0)
                 .transition()
                 .duration('duration' in animation ? animation['duration']: 0)
                 .attr("x", 0)
-                .attr("width", regBox.width+2);
+                .attr("width", regBox.width);
         }else {
             svg.append("line")
             .attr("class", "value")
