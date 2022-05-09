@@ -62,7 +62,6 @@ class Symbol extends Annotator {
 
             // append icon
             if ("type" in animation && animation["type"] === "fly") {
-                const bbox = svg.node().getBBox();
                 const parentWidth = Number(svg.node().parentNode.getAttribute("width"));
                 svg.append("image")
                     .attr("class", "icon-img")
