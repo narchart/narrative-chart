@@ -1,4 +1,5 @@
 import Color from '../visualization/color';
+import Background from '../visualization/background';
 import Action from './action';
 
 class Configure extends Action {
@@ -10,12 +11,25 @@ class Configure extends Action {
         this._background_image = "";
         if ('mode' in spec) { this._mode = spec.mode; }
         if ('emotion' in spec) { this._emotion = spec.emotion; }
-        if ('background_image' in spec) { this._background_image = spec.background_image; }
+        if ('background-image' in spec) { this._background_image = spec["background-image"]; }
+        if ('background-color' in spec) { this._background_color = spec["background-color"]; }
     }
 
     operate(vis) {
         const color = new Color();
         color.setColor(this._mode, this._emotion);
+
+        const background = new Background();
+        if (this._background_color){
+            background.setBackgroundColor(this._background_color)
+        }
+        
+        if (this._background_image){
+            background.setBackgroundImage(this._background_image)
+        }
+
+        console.log(background.Background_Image);
+
     }
 
 }

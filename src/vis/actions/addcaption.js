@@ -1,6 +1,5 @@
 import Action from './action'
-import {Fade} from './caption'
-import CaptionType from '../visualization/captiontype'
+import {Caption} from './caption'
 
 class AddCaption extends Action {
     constructor(spec) {
@@ -21,20 +20,12 @@ class AddCaption extends Action {
     }
 
     operate(vis) {
-        let Captioner = this._type2caption('fade')
+        let Captioner = new Caption()
         let style = this._style;
         let animation = this._animation;
         Captioner.makecaption(vis, style, animation);
     }
 
-    _type2caption(type) {
-        switch (type) {
-            case CaptionType.FADE:
-                return new Fade()
-            default:
-                return new Fade();
-        }
-    }
 }
 
 export default AddCaption;

@@ -2,8 +2,11 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 import Arc from './arc';
+import Background from '../../visualization/background';
 
 const COLOR = new Color();
+const background = new Background();
+
 
 /**
  * @description A pie chart is a chart type.
@@ -64,7 +67,15 @@ class PieChart extends Chart {
                     .attr("transform", "translate(" + margin.left + "," + top_temp + ")");
 
         // d3.select("svg").style("background", "url(" + this.style()['background-image'] + ") center ").style("background-size", "cover")
-        
+                
+        if(background.Background_Image){
+            d3.select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
+        }
+
+        if(background.Background_Color){
+            d3.select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
+        }
+
         if(this.style()['background-color']){
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
         } 

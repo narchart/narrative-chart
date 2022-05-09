@@ -1,3 +1,3 @@
 export {
-    default as Fade
-} from "./fade";
+    default as Caption
+} from "./caption";

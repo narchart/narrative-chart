@@ -1,9 +1,11 @@
 import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
+import Background from '../../visualization/background';
 import Unit from './unit';
 
 const COLOR = new Color();
+const background = new Background();
 
 /**
  * @description unit visualization
@@ -49,7 +51,13 @@ class Unitvis extends Chart {
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        // d3.select("svg").style("background", "url(" + this.style()['background-image'] + ") center ").style("background-size", "cover")
+        if(background.Background_Image){
+            d3.select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
+        }
+
+        if(background.Background_Color){
+            d3.select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
+        }
         
         if(this.style()['background-color']){
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
@@ -59,12 +67,12 @@ class Unitvis extends Chart {
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
                 d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
@@ -161,8 +169,8 @@ class Unitvis extends Chart {
             .enter().append("circle")
             .attr("class", "mark")
             .attr("r", d => d.radius())
-            .attr("stroke", "#FFF")
-            .attr("stroke-width", 0)
+            .attr("stroke", this.markStyle()["stroke-color"]?? "#FFF")
+            .attr("stroke-width", this.markStyle()["stroke-width"]?? 0)
             .attr("fill", d => d.color())
             .attr("opacity", 0)
             .attr("cx", d => d.x())
@@ -1622,7 +1630,7 @@ class Unitvis extends Chart {
      * 
      * @param {string} channel A encoding channel
      * @param {string} field A data field
-     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of the add encoding.
      * 
      * @return {void}
     */
@@ -1700,7 +1708,7 @@ class Unitvis extends Chart {
      * 
      * @param {string} channel A encoding channel
      * @param {string} field A data field
-     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of modifying encoding.
      * 
      * @return {void}
     */
@@ -1774,7 +1782,7 @@ class Unitvis extends Chart {
      * 
      * @param {string} channel A encoding channel
      * @param {string} field A data field
-     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * @param {{delay: number, duration: number}} animation Animation parameters of removing encoding.
      * 
      * @return {void}
     */
@@ -1826,684 +1834,6 @@ class Unitvis extends Chart {
                 // .style("opacity", d => d.opacity());
         }
 
-    }
-
-    /**
-     * @description Aggregating the marks.
-     * 
-     * @param {string} operator An aggregation type, such as min, max, average, sum
-     * @param {{aggregated_point: aggregated_point}} style Style parameters of the aggregation
-     * @param {{delay: number, duration: number}} animation Animation parameters of the aggregation.
-     * 
-     * @return {void}
-    */
-
-    addAggregation(operator, style, animation) {
-        let svg = this.svg();
-        let width = this.width(),
-            height = this.height();
-        this.delay = animation.delay
-        this.duration = animation.duration
-    
-        let sizeField = this.size
-        let xField = this.units[0].unitgroup().x;
-        let yField = this.units[0].unitgroup().y;
-
-        let aggregated
-        let aggregatedunit
-        let xy_aggregared
-        
-        switch (operator) {
-            case 'min':
-                aggregated = d3.nest().key(function (d) {return d[xField]}).rollup(function (v) { return d3.min(v, function(d){return d[sizeField]} ); }).entries(this.units.filter(d => d.opacity() === "1"))
-                if(style.aggregated_point)
-                    aggregatedunit = this.units.filter(d => d[style.aggregated_point["field"]] === style.aggregated_point["value"])
-                else
-                    aggregatedunit = this.units.filter(d => d.opacity() === "1" && d[sizeField] === Math.min.apply(Math, this.units.map(function(o) {return o[sizeField]})))     
-                break;
-            case 'max':
-                aggregated = d3.nest().key(function (d) {return d[xField]}).rollup(function (v) { return d3.max(v, function(d){return d[sizeField]} ); }).entries(this.units.filter(d => d.opacity() === "1"))
-                if(style.aggregated_point)
-                    aggregatedunit = this.units.filter(d => d[style.aggregated_point["field"]] === style.aggregated_point["value"])
-                else
-                    aggregatedunit = this.units.filter(d => d.opacity() === "1" && d[sizeField] === Math.max.apply(Math, this.units.map(function(o) {return o[sizeField]})))                     
-                break;
-            case 'average':
-                if (xField && yField){
-                    xy_aggregared = d3.nest()
-                                        .key(function(d) { return d[xField]})
-                                        .key(function(d) { return d[yField]})
-                                        .rollup(function(v) {return d3.mean(v, function(d) { return d[sizeField]; }); })
-                                        .object(this.units.filter(d => d.opacity() === "1"))
-                    
-                }
-                else{
-                    aggregated = d3.nest().key(function (d) {return d[xField]}).rollup(function (v) { return d3.mean(v, function(d){return d[sizeField]} ); }).entries(this.units.filter(d => d.opacity() === "1"))
-                }
-                break;
-            case 'sum':
-                if (xField && yField){
-                    xy_aggregared = d3.nest()
-                                        .key(function(d) { return d[xField]})
-                                        .key(function(d) { return d[yField]})
-                                        .rollup(function(v) {return d3.sum(v, function(d) { return d[sizeField]; }); })
-                                        .object(this.units.filter(d => d.opacity() === "1"))
-                    
-                }
-                else{
-                aggregated = d3.nest().key(function (d) {return d[xField]}).rollup(function (v) { return d3.sum(v, function(d){return d[sizeField]} ); }).entries(this.units.filter(d => d.opacity() === "1"))
-                }
-                break;
-            default:
-                console.log('no channel select')}
-                
-    
-        // situation 1
-        if (this.x && this.y && this.size) {
-            let textSize = 14;
-
-            let yField = this.units[0].unitgroup().y;
-
-            let xValueFreq = d3.nest().key(function (d) { return d[xField] }).key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.units.filter(d => d.opacity() === "1"))
-            let yValueFreq = d3.nest().key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.units.filter(d => d.opacity() === "1"))
-            
-    
-
-            xValueFreq.sort(function (x, y) {
-                return d3.ascending(x['key'], y['key']);
-            })
-
-            yValueFreq.sort(function (x, y) {
-                return d3.descending(x['key'], y['key']);
-            })
-
-
-            let num_of_x = xValueFreq.length;
-            let num_of_y = yValueFreq.length;
-
-            let column = num_of_x
-            let row = num_of_y
-
-
-            let maxR = d3.min([0.8 * height / (row + 1) / 2, 0.8 * width / (column + 1) / 2])
-
-
-            xValueFreq.sort(function (x, y) {
-                return d3.ascending(x['key'], y['key']);
-            })
-
-            xValueFreq.forEach(d => {
-                d.values.sort(function (x, y) {
-                    return d3.descending(x['key'], y['key'])
-                })
-            });
-
-            let nodesmaxcount = 0
-
-            for (let i = 0; i < num_of_x; i++) {
-                let MaxNodeinEach = d3.max(xValueFreq[i].values, function (j) { return j.value; })
-                nodesmaxcount = Math.max(nodesmaxcount, MaxNodeinEach)
-            }
-
-            let averageradius;
-            let ratio
-            if (column > 4) { averageradius = Math.sqrt(nodesmaxcount) / 3; ratio = 1.5; }
-            else { averageradius = Math.sqrt(nodesmaxcount) / 2; ratio = 1.8; }
-            let radiusa = maxR / Math.sqrt(averageradius) * ratio;
-            let rowTotalWidth;
-
-            rowTotalWidth=2.1*maxR*(column)
-
-            function textSizef(fontSize,fontFamily,text){
-                var span = document.createElement("span");
-                var result = {};
-                result.width = span.offsetWidth;
-                result.height = span.offsetHeight;
-                span.style.visibility = "hidden";
-                span.style.fontSize = fontSize;
-                span.style.fontFamily = fontFamily;
-                span.style.display = "inline-block";
-                document.body.appendChild(span);
-                if(typeof span.textContent != "undefined"){
-                    span.textContent = text;
-                }else{
-                    span.innerText = text;
-                }
-                result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
-                result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
-                return result;
-                }
-
-
-            let strlen = yValueFreq.map(d => textSizef(textSize,'Arial',d['key']).width)
-            let strmax = d3.max(strlen)
-            
-            let Minleftpadding =  2*maxR +2*textSize+textSizef(textSize,'Arial',yField).height+strmax
-            rowTotalWidth = d3.min([rowTotalWidth, width * 0.8])
-
-            let centernodex = xValueFreq.map(function (d, i) {
-                if (column === 1) {
-                    if (xValueFreq.length === 2) {//异常处理
-                        return i === 0 ? radiusa : 3.1 * maxR + radiusa
-                    }
-                    return (width - radiusa) / 2
-                }
-                else if (column <3){
-                    let paddingMaxR = 1;
-                    let leftPadding = (width - (rowTotalWidth - paddingMaxR * maxR)) / 2;                    
-                    return leftPadding + (rowTotalWidth - paddingMaxR * maxR) / (column - 1) * (Math.floor(i % column));
-                }
-                else {                    
-                    if (0.9 * width - rowTotalWidth - 2 * Minleftpadding > 0) {
-                        let rowTotalWidth1=0.9 * width - 2 * Minleftpadding 
-                        let leftpadding = (1 * width - rowTotalWidth1  - 2 * Minleftpadding) / 2 + Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column))       
-                    }
-                    else if (0.9 * width - rowTotalWidth  - 2 * Minleftpadding <=0) {
-                        let leftpadding = 1*Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column))   
-                    }
-                    return null;
-                }
-            })
-            let columnTotalHeight;
-            if (row % 2 === 0) {
-                columnTotalHeight = 2 * maxR * row;//2.4
-            } else {
-                columnTotalHeight = 2 * maxR * (row + 1);
-            }
-
-            let centernodey = yValueFreq.map(function (d, i) {
-                if (row > 2) {
-                    columnTotalHeight = d3.min([columnTotalHeight, height * 0.8])
-                    let topPadding = (0.7 * height - columnTotalHeight) / 2 + 2 * maxR;
-                    return topPadding + d3.min([(height - 6 * maxR) / (row - 1), 4 * maxR]) * (i);
-                }
-                else {
-                    let topPadding = ((height - 3.6 * maxR) / (row - 1) <= 3 * maxR ? 3 * maxR : (height - 3 * maxR * (row - 1)) / 1.4);
-                    return topPadding + d3.min([(height - 3.6 * maxR) / (row - 1), 3 * maxR]) * (i);
-                }
-            })
-            let unitnew = [];
-            let nodesvalue1 = [];
-            let xValue = xValueFreq.map(d => d['key']);
-            let yValue = yValueFreq.map(d => d['key']);
-            // let aggregateValue = aggregated.map(d => d['value'])
-
-            unitnew = this.units.map(function (d, i) {
-                nodesvalue1[i] = d[sizeField]
-                return {
-                    id: d.id(),
-                    distribution: d[xField],
-                    category: [xValue.indexOf(d[xField]), yValue.indexOf(d[yField])],
-                    radius: 0,
-                    value: xy_aggregared[d[xField]][d[yField]],
-                    color: COLOR.CATEGORICAL[yValue.indexOf(d[yField]) % 8]
-                }
-            })
-
-            
-            let yScale = d3.scaleLinear()
-            .range([
-                centernodey[centernodey.length - 1] + 1.8 * maxR, 
-                height<200?10:80])
-            .domain([0, 1.1* d3.max(unitnew, d => d.value)])
-            .nice();
-
-
-
-            let axisY = d3.axisLeft(yScale)
-            .ticks(5)
-            .tickPadding(5)
-            .tickFormat(function (d) {
-                if ((d / 1000000) >= 1) {
-                    d = d / 1000000 + "M";
-                } else if ((d / 1000) >= 1) {
-                    d = d / 1000 + "K";
-                }
-                return d;
-            });
-
-
-            let unitExtent = d3.extent(this.units, d => d[sizeField]); //d3.extent(focusextent1.concat(focusextent2))
-            let size = d3.scaleLinear()
-                .domain([unitExtent[0], unitExtent[1]])
-                .range([radiusa / 100, radiusa]);
-
-            for (let index in unitnew) {
-                unitnew[index].radius = Math.sqrt(size(unitnew[index].value))
-            }
-
-
-            let simulation = d3.forceSimulation(unitnew)
-                .force('charge', d3.forceManyBody().strength(0.01))
-                .force('x', d3.forceX().x(function (d) {
-                    return centernodex[d.category[0]]
-                }))
-                .force('y', d3.forceY().y(function (d) {
-                    return centernodey[d.category[1]];
-                }))
-                .force('collision', d3.forceCollide().strength(1).radius(d => d.radius + 0.3))
-                .stop()
-
-
-
-            simulation.tick(200);
-            for (let index in this.units) {
-                let f = unitnew.find(item => item.id == index) //eslint-disable-line
-                if (f) {
-                    if(aggregatedunit){
-                        this.units[f.id].x(aggregatedunit[0].x());
-                        this.units[f.id].y(aggregatedunit[0].y());
-                        this.units[index].radius(aggregatedunit[0].radius())    
-                    }
-                    else {
-                        this.units[f.id].x(centernodex[f.category[0]]);
-                        this.units[f.id].y(yScale(f.value));
-                        // this.units[f.id].y(centernodey[f.category[1]]);
-                        this.units[index].radius(f.radius*2);
-                    }
-                    this.units[f.id].visible("1")
-                    this.units[f.id].color(f.color)
-                    this.units[f.id].unitgroup('size',sizeField)
-                }
-                else {
-                    this.units[index].visible("0")
-                }
-
-                this.units[index].opacity("1")
-            }
-
-            svg.select(".content").selectAll("text")
-            .transition()
-            // .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
-
-            svg.select(".content")
-            .append("g")
-            .attr("class", "axis_y")
-            .attr("transform", `translate(${centernodex[0] - maxR}, ${0})`)
-            .transition()
-            // .delay(this.delay + this.duration/2)
-            .call(axisY)
-            // .attr("fill-opacity", 0)
-            // .transition()
-            // .delay(this.delay + this.duration/2)
-            // .duration(this.duration/2)
-            // .attr("fill-opacity", 1)
-
-
-            xValueFreq.forEach((bar, iBar) => {
-                svg.select(".content")
-                    .append("text")
-                    .attr("fill", COLOR.TEXT)
-                    .text(xValue[iBar])
-                    .attr("x", centernodex[iBar])
-                    .attr("y", centernodey[centernodey.length - 1] + 2 * maxR)
-                    .attr("font-size", textSize * 0.8)
-                    .attr("text-anchor", "middle")
-                    .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
-                    .attr("fill-opacity", 0)
-                    .transition()
-                    // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
-                    .attr("fill-opacity", 1)
-
-            })
-
-            let rectsize = height<200? 5: 15
-            yValueFreq.forEach((bar, iBar) => {
-                svg.select(".content")
-                    .append("text")
-                    .attr("fill", COLOR.TEXT)
-                    .text(yValue[iBar])
-                    .attr("x", centernodex[centernodex.length-1] + 1.5 * maxR)
-                    .attr("y", d3.min(this.units, d => d.y()) - rectsize*(iBar+1) )
-                    .attr("font-size", textSize)
-                    .attr("text-anchor", "start")
-                    // .attr("fill-opacity", 0)
-                    // .transition()
-                    // .delay(this.delay + this.duration/2)
-                    // .duration(this.duration/2)
-                    // .attr("fill-opacity", 1)
-                svg.select(".content")
-                    .append("rect")
-                    .attr("x", centernodex[centernodex.length-1] + 1.5 * maxR -rectsize)
-                    .attr("y", d3.min(this.units, d => d.y()) - rectsize*(iBar+1) - 12)
-                    .attr("height", rectsize)
-                    .attr("width", rectsize)
-                    // .style("fill", COLOR.CATEGORICAL[iBar % 8])
-                    // .attr("fill-opacity", 0)
-                    // .transition()
-                    // .delay(this.delay + this.duration/2)
-                    // .duration(this.duration/2)
-                    // .attr("fill-opacity", 1)
-            })
-
-
-            svg.select(".content").append("text")
-                .attr("fill", COLOR.TEXT)
-                .text(xField)
-                .attr("x", width / 2)
-                .attr("y", Math.min(centernodey[centernodey.length - 1] + 2 * maxR + 3 * textSize, height))
-
-                .attr("font-size", textSize * 0.9)
-                .attr('text-anchor', 'middle')
-                .attr("fill-opacity", 0)
-                .transition()
-                // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
-                .attr("fill-opacity", 1)
-
-
-                svg.select(".content").append("text")
-                .attr("fill", COLOR.TEXT)
-                .text(sizeField + ` (${operator}) `)
-                .attr("x", function() {
-                    if (height<200) {
-                        return centernodex[0] - 2 * maxR - 1.5 * textSize 
-                    } 
-                    else if (column<3) {
-                        return centernodex[0] -  1.5 * maxR 
-                    }         
-                    else {
-                        return  centernodex[0] - 2 * maxR - 3 * textSize -5
-                    }
-                })
-                .attr("y", function() {
-                    if (height<200) {
-                        return height / 3
-                    } else {
-                        return  height / 2
-                    }
-                })
-                .attr("font-size", textSize)
-                .attr('text-anchor', 'middle')
-                // .attr("transform", "rotate(90)")
-                .attr("transform", function() {
-                    if (height<200) {
-                        return `rotate(-90, ${centernodex[0] - 2 * maxR - 1.5 * textSize}, ${height / 3})`
-                    } 
-                    else if (column<3) {
-                        return `rotate(-90, ${centernodex[0] -  1.5 * maxR}, ${height / 2})`
-                    } 
-                    
-                    else {
-                        return  `rotate(-90, ${centernodex[0] - 2 * maxR - 3 * textSize - 5}, ${height / 2})`
-                    }
-                })                    
-                .attr("fill-opacity", 0)
-                .transition()
-                // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
-                .attr("fill-opacity", 1)
-
-            }
-        // situation 2
-        else if (this.x && this.size) {
-
-            let xValueFreq = d3.nest().key(function (d) { return d[xField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
-
-
-            xValueFreq.sort(function (x, y) {
-                return d3.ascending(x['key'], y['key']);
-            })
-
-            let xValue = xValueFreq.map(d => d['key']);
-
-            let categories = xValueFreq
-
-            let row = 1
-            let column = xValueFreq.length
-
-            let maxR = d3.min([0.8 * height / (row + 1) / 2, 0.8 * width / (column + 1) / 2])
-
-
-            let nodesmaxcount = d3.max(xValueFreq, function (d) { return d.value; })
-
-
-            let averageradius;
-            if (column > 4)
-                averageradius = Math.sqrt(nodesmaxcount) / 3;
-            else
-                averageradius = Math.sqrt(nodesmaxcount) / 2;
-
-            let ratio = 1.8;
-            let radiusa = maxR / Math.sqrt(averageradius) * ratio;
-
-            let rowTotalWidth;
-            if (categories.length % 2 === 0) {
-                rowTotalWidth = 2.5 * maxR * column;//2.4
-            } else {
-                rowTotalWidth = 2.5 * maxR * (column + 1);
-            }
-
-            rowTotalWidth = d3.min([rowTotalWidth, width * 0.9])
-
-
-            let centernodex = xValueFreq.map(function (d, i) {
-                if (column === 1) {
-                    if (xValueFreq.length === 2) {//
-                        return i === 0 ? radiusa : 3.1 * maxR + radiusa
-                    }
-                    return (width - radiusa) / 2
-                }
-                else {
-                    rowTotalWidth = d3.min([rowTotalWidth, width])
-                    let paddingMaxR = 3.3;
-                    let leftPadding = (width - (rowTotalWidth - paddingMaxR * maxR)) / 2;
-                    return leftPadding + (rowTotalWidth - paddingMaxR * maxR) / (column - 1) * (Math.floor(i % column));
-                }
-            })
-
-            let centernodey = xValueFreq.map(function (d, i) {
-                let startPoint = ((height - 3.6 * maxR - 5 * radiusa) / (row - 1) <= 3 * maxR ? 1.8 * maxR : (height - 3 * maxR * (row - 1) - 5 * radiusa) / 1.4);
-                return 1.1*startPoint + d3.min([(height - 3.6 * maxR) / (row - 1), 3 * maxR]) * (Math.floor(i / column));
-            })
-
-            let unitnew = [];
-            let nodesvalue1 = [];
-
-            let aggregateValue = aggregated.map(d => d['value'])
-            unitnew = this.units.map(function (d, i) {
-                nodesvalue1[i] = d[sizeField]
-                
-                return {
-                    id: d.id(),
-                    distribution: d[xField],
-                    category: xValue.indexOf(d[xField]),
-                    radius: 0,
-                    value: aggregateValue[aggregated.map(d => d['key']).indexOf(d[xField])]
-                }
-            })
-            
-            let unitExtent = d3.extent(this.units, d => d[sizeField]); //d3.extent(focusextent1.concat(focusextent2))
-            let size = d3.scaleLinear()
-                .domain([unitExtent[0], unitExtent[1]])
-                .range([radiusa / 200, radiusa]);
-            
-            for (let index in unitnew) {
-                unitnew[index].radius = Math.sqrt(size(unitnew[index].value))
-            }
-
-            let yScale = d3.scaleLinear()
-            .range([
-                1.1* ((centernodey[0] + 2 * radiusa + 1 * maxR) - d3.min(this.units, d => d.y())) + 80, 
-                80])
-            .domain([0, 1.1* d3.max(aggregateValue)])
-            .nice();
-
-            let axisY = d3.axisLeft(yScale)
-            .ticks(5)
-            .tickPadding(5)
-            .tickFormat(function (d) {
-                if ((d / 1000000) >= 1) {
-                    d = d / 1000000 + "M";
-                } else if ((d / 1000) >= 1) {
-                    d = d / 1000 + "K";
-                }
-                return d;
-            });
-
-            // let axis = svg.append("g")
-            //     .attr("class", "axis")
-            //     .attr("fill-opacity", 0)
-            //     .transition()
-            //     .delay(this.delay + this.duration/2)
-            //     .duration(this.duration/2)
-            //     .attr("fill-opacity", 1)
-
-            
-            let simulation = d3.forceSimulation(unitnew)
-                .force('charge', d3.forceManyBody().strength(0.01))
-                .force('x', d3.forceX().x(function (d) {
-                    return centernodex[d.category]
-                }))
-                .force('y', d3.forceY().y(function (d) {
-                    return centernodey[d.category];
-                }))
-                .force('collision', d3.forceCollide().strength(1).radius(d => d.radius + 0.15))
-                .stop()
-
-            simulation.tick(200);
-            for (let index in this.units) {
-
-                let f = unitnew.find(item => item.id == index) //eslint-disable-line
-                if (f) {
-                    
-                    if(aggregatedunit){
-                        this.units[f.id].x(aggregatedunit[0].x());
-                        this.units[f.id].y(aggregatedunit[0].y());
-                        this.units[index].radius(aggregatedunit[0].radius())    
-                    }
-                    else{
-                        this.units[f.id].x(centernodex[f.category]);
-                        // this.units[f.id].y(centernodey[f.category]);
-                        this.units[f.id].y(yScale(f.value));
-                        this.units[f.id].visible("1")
-                        this.units[index].radius(f.radius * 2)
-                        this.units[f.id].color(f.color)
-                        this.units[f.id].unitgroup('size',sizeField)
-                    }
-
-                }
-                else {
-                    this.units[index].visible("0")
-                }
-
-                this.units[index].opacity("1")
-            }
-
-
-            // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
-            svg.select(".content").selectAll("text")
-            .transition()
-            // .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
-
-            svg.select(".content")
-            .append("g")
-            .attr("class", "axis_y")
-            .attr("transform", `translate(${centernodey[0]}, ${centernodey[0] - 2*maxR})`)
-            // .transition()
-            // .delay(this.delay + this.duration/2)
-            .call(axisY)
-
-
-            xValueFreq.forEach((bar, iBar) => {
-                svg.select(".content").append("text")
-                    .attr("fill", COLOR.TEXT)
-                    .attr("fill", COLOR.TEXT)
-                    .text(xValue[iBar])
-                    .attr("x", centernodex[iBar])
-                    .attr("y", centernodey[0] + 2 * radiusa + 1.5 * maxR)
-                    .attr("font-size", 14)
-                    .attr("text-anchor", "middle")
-                    .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
-                    // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
-                    .attr("fill-opacity", 0)
-                    .transition()
-                    // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
-                    .attr("fill-opacity", 1)
-            })
-            let textSize = 14
-            svg.select(".content").append("text")
-                .attr("fill", COLOR.TEXT)
-                .text(xField)
-                .attr("x", width / 2)
-                .attr("y", Math.min(centernodey[0] + 2 * radiusa + 3 * maxR, height))
-                .attr("font-size", 14)
-                .attr('text-anchor', 'middle')
-                .attr("fill-opacity", 0)
-                .transition()
-                // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
-                .attr("fill-opacity", 1)
-
-
-                svg.select(".content").append("text")
-                .attr("fill", COLOR.TEXT)
-                .text(sizeField + `(${operator})`)
-                .attr("x", function() {
-                    if (height<200) {
-                        return centernodex[0] - 2 * maxR - 1.5 * textSize 
-                    } 
-                    else if (column<3) {
-                        return centernodex[0] -  1.5 * maxR 
-                    }         
-                    else {
-                        return  centernodex[0] - 2 * maxR - 3 * textSize -5
-                    }
-                })
-                .attr("y", function() {
-                    if (height<200) {
-                        return height / 3
-                    } else {
-                        return  height / 2
-                    }
-                })
-                .attr("font-size", textSize)
-                .attr('text-anchor', 'middle')
-                // .attr("transform", "rotate(90)")
-                .attr("transform", function() {
-                    if (height<200) {
-                        return `rotate(-90, ${centernodex[0] - 2 * maxR - 1.5 * textSize}, ${height / 3})`
-                    } 
-                    else if (column<3) {
-                        return `rotate(-90, ${centernodex[0] -  1.5 * maxR}, ${height / 2})`
-                    } 
-                    
-                    else {
-                        return  `rotate(-90, ${centernodex[0] - 2 * maxR - 3 * textSize - 5}, ${height / 2})`
-                    }
-                })                    
-                .attr("fill-opacity", 0)
-                .transition()
-                // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
-                .attr("fill-opacity", 1)
-
-
-
-        }
-        
-
-        this.svg().select(".content")
-            .selectAll("circle")
-            .transition("change layout")
-            // .delay(this.delay)
-            .duration(this.duration)
-            .attr("cx", d => d.x())
-            .attr("cy", d => d.y())
-            .attr("r", d => d.radius())
-            .attr("fill", d => d.color());
-
-            // .style("opacity", d => d.opacity());
     }
 
 

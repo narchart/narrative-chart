@@ -2,8 +2,12 @@ import * as d3 from 'd3';
 import Chart from '../chart';
 import Color from '../../visualization/color';
 import Point from './point';
+import Background from '../../visualization/background';
+
 
 const COLOR = new Color();
+const background = new Background();
+
 
 /**
  * @description A scatterplot chart is a chart type.
@@ -42,6 +46,14 @@ class Scatterplot extends Chart {
             .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
             .attr("transform", "translate(" + 20 + "," + margin.top + ")");
 
+        if(background.Background_Image){
+                d3.select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
+            }
+    
+        if(background.Background_Color){
+                d3.select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
+            }
+    
         this._svg = d3.select("svg")
             .append("g")
             .attr("transform", "translate(" + (margin.left + 10) + "," + margin.top + ")");

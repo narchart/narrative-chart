@@ -29,7 +29,7 @@ class Tooltip extends Annotator {
      */
 
 
-    textMultiline (container, text, textSize, maxWidth, x, y, textAnchor = "middle"){
+    textMultiline (container, text, textSize, maxWidth, x, y, style, textAnchor = "middle"){
 
         let words = text.split(" ").filter(d => d !== "");
     
@@ -39,10 +39,14 @@ class Tooltip extends Annotator {
             .text(words[0]);
     
         let textE = container.append("text")
+            .attr("id","tooltipstextContent")
             .attr("transform", "translate(" + x + "," + (y) + ")")
             .attr("font-family", 'Arial-Regular')
             .attr("font-size", textSize)
-            .attr("text-anchor", textAnchor);
+            .attr("text-anchor", textAnchor)
+            .attr("font-family", style['font-family']?? 'Arial-Regular')
+            .attr("font-weight",  style['font-weight']?? "normal")
+            .attr("font-style",  style['font-style']?? "normal");
     
         maxWidth = Math.max(virtualE.node().getComputedTextLength(), maxWidth);
         const lineHeight = virtualE.node().getBBox().height * 0.9;
@@ -91,7 +95,7 @@ class Tooltip extends Annotator {
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{text: text}} style Style parameters of the annotation.
-     * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
+     * @param {{delay: number, type: string}} animation Animation parameters of the annotation.
      * 
      * @return {void}
      */
@@ -177,21 +181,21 @@ class Tooltip extends Annotator {
             
             let tooltip = toolTipSvg.append("text")
                         .attr("font-size", fontsize)                            
-                        .attr("fill", () => {
-                            if ("color" in style) {
-                                return style["color"];
-                            } else {
-                                return '#FFFFFF';
-                            }
-                        })
                         .attr("text-anchor", "start");
             
             if ("text" in style){
                 tooltip.remove();
-                tooltip = this.textMultiline(toolTipSvg, formatData, fontsize, 80, data_x, data_y);
+                tooltip = this.textMultiline(toolTipSvg, formatData, fontsize, 80, data_x, data_y, style);
                 tooltip
                     .attr("transform", "translate(" + data_x + "," + 0 + ")")
-                    .attr("fill", 'white');
+                    .attr("fill", () => {
+                        if ("font-color" in style) {
+                            return style["font-color"];
+                        } else {
+                            return COLOR.TITLE;
+                        }
+                    });
+                    
                 }
             else if ("field in style"){
                 tooltip.append("tspan")
@@ -212,7 +216,7 @@ class Tooltip extends Annotator {
                     .attr("ry", 0.1 * textHeight)
                     .attr("width", rectWidth)
                     .attr("height", rectHeight)
-                    .attr("fill", COLOR.TOOLTIP)
+                    .attr("fill", style["tooltip-color"]?? COLOR.TOOLTIP)
                     .attr("opacity", 1.0);
 
             // let yyy = data_y - 10
@@ -220,7 +224,7 @@ class Tooltip extends Annotator {
                 .attr("class", "triangle")
                 .attr("transform", "translate(" + data_x + "," + (data_y + offset_y) + ")rotate(180)")
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(tranglesize))
-                .attr("fill", COLOR.TOOLTIP)
+                .attr("fill", style["tooltip-color"]?? COLOR.TOOLTIP)
 
 
                 
@@ -235,10 +239,86 @@ class Tooltip extends Annotator {
                         
             tooltipTriangle.attr("opacity", 1);
 
-            toolTipSvg.attr("opacity", 0)
-                        .transition()
-                        .duration('duration' in animation ? animation['duration']*0.25: 0)
-                        .attr("opacity", 1)
+
+            switch (animation.type) {
+                case 'wipe':
+                    let bbox = toolTipSvg.node().getBBox();
+                    var gradient = toolTipSvg.append("defs")
+                                            .append("linearGradient")
+                                            .attr("id", "gradient")
+                                            .attr("x1", "0%")
+                                            .attr("x2", "0%")
+                                            .attr("spreadMethod", "pad"); 
+                    
+                        gradient.append("stop")
+                                .attr("offset", "0%")
+                                .attr("stop-color", COLOR.BACKGROUND)
+                                .attr("stop-opacity", 1);
+
+                        gradient.append("stop")
+                                .attr("offset", "100%")
+                                .attr("stop-color", COLOR.BACKGROUND)
+                                .attr("stop-opacity", 0);
+
+                        let fadeBox = toolTipSvg.append('rect')
+                                                .attr('x', bbox.x)
+                                                .attr('y', bbox.y)
+                                                .attr('width', bbox.width)
+                                                .attr('height', bbox.height)
+                                                .style("fill", "url(#gradient)");
+
+                        toolTipSvg.attr("opacity", 0)
+                                  .transition()
+                                  .duration(animation['duration']?? 0)
+                                  .attr("opacity", 1)
+                        
+                        fadeBox.transition()
+                                .duration(animation['duration']?? 0)
+                                .attr('width', 0)
+                                .attr('x', bbox.x + bbox.width)
+
+                        gradient.transition()
+                                .duration(animation['duration']?? 0)
+                                .attr('x1','100%')                        
+
+                        break;
+
+                case 'fly':  
+
+                    tooltipRect.attr("x", 640)
+                               .transition()
+                               .duration(animation['duration']?? 0)
+                               .attr("x", data_x - rectWidth / 2);
+                               
+                    
+                    d3.select("#tooltipstextContent tspan")
+                               .attr("fill-opacity", 0)
+                               .attr("x", 10)
+                               .transition()
+                               .delay(animation['duration']*0.75?? 0)
+                               .duration(animation['duration']*0.25 ?? 0)
+                               .attr("x", 0)
+                               .attr("fill-opacity", 1);
+
+                    tooltipTriangle.attr("transform", "translate(" + 640 + "," + (data_y + offset_y) + ")rotate(180)")
+                                   .transition()
+                                   .duration(animation['duration']?? 0)
+                                   .attr("transform", "translate(" + data_x + "," + (data_y + offset_y) + ")rotate(180)")
+
+
+                    break;
+
+
+
+                default:
+                    toolTipSvg.attr("opacity", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']*0.25: 0)
+                                .attr("opacity", 1)
+                    break;
+
+            }
+
 
 
 

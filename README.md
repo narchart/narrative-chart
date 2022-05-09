@@ -540,9 +540,14 @@ Adding graphical and textural annotations.
     ],
     "style": {
         "text": text,
-        "font-size": font-size
+        "font-size": int, // (optional)
+        "font-family": string, // (optional)
+        "font-color": string, // (optional)
+        "font-weight": string, // (optional)
+        "font-style": string, // (optional)
+        "tooltip-color": string // (optional)
       },
-    "animation": { "duration": number }
+    "animation": { "duration": number, "type": string}
 
     
 }
@@ -560,8 +565,11 @@ Adding title or caption.
     "style": {
         "text": string,
         "font-size": int, // (optional)
+        "font-family": string, // (optional)
+        "font-color": string, // (optional)
+        "font-weight": string, // (optional)
+        "font-style": string, // (optional)
         "position": string, // (optional)
-        "text-background-color": string, // (optional)
         "background-color": string, // (optional)
         "background-image": image-url, // (optional)
         "border-width": int, // (optional)
@@ -569,7 +577,7 @@ Adding title or caption.
         "divide-line-width": int, // (optional)
         "divide-line-color": string, // (optional)
       },
-    "animation": {"duration": int} // (optional)
+    "animation": {"duration": int, "type": string} // (optional)
 
 }
 ```
@@ -582,7 +590,12 @@ Adding title or caption.
     "style": {
         "text": text,
         "font-size": size, // (optional)
+        "font-family": string, // (optional)
+        "font-color": string, // (optional)
+        "font-weight": string, // (optional)
+        "font-style": string, // (optional)
         "position": string, // (optional)
+
     },
     "animation": { "duration": number }
 }
