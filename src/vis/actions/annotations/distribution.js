@@ -64,20 +64,52 @@ class Distribution extends Annotator {
             .x(d => d[0]) 
             .y(d => d[1])
             .curve(d3.curveCatmullRom);
+            
+        const line_path = svg.append("path")
+                .attr("class", "regression")
+                .attr("d", line_generator(positions))  
+                .attr("stroke-width", 3)
+                .attr("fill", "none")
+                .attr("stroke", () => {
+                    if ("color" in style) {
+                        return style["color"];
+                    } else {
+                        return COLOR.ANNOTATION;
+                    }
+                })
 
-        svg.append("path")
-            .attr("class", "regression")
-            .attr("d", line_generator(positions))
-            .attr("stroke", () => {
-                if ("color" in style) {
-                    return style["color"];
-                } else {
-                    return COLOR.ANNOTATION;
-                }
-            })
-            .attr("stroke-width", 3)
-            .attr("fill", "none");
+        if ("type" in animation && animation["type"] === "wipe") {
+            // const bbox = svg.node().getBBox();
+            // const parentWidth = Number(svg.node().parentNode.getAttribute("width"));
+            
+            let pathLength;
+            line_path.attr("stroke-dasharray", function() {
+                            return pathLength = this.getTotalLength();
+                        })
+                        .attr("stroke-dashoffset", pathLength)
+                        .transition()
+                        .duration('duration' in animation ? animation['duration']: 0)
+                        .attr("stroke-dashoffset", 0);
 
+        } else {
+            svg.append("path")
+                .attr("class", "regression")
+                .attr("d", line_generator(positions))  
+                .attr("stroke-width", 3)
+                .attr("fill", "none")
+                .attr("opacity", 0)
+                .transition()
+                .duration('duration' in animation ? animation['duration']: 0)
+                .attr("stroke", () => {
+                    if ("color" in style) {
+                        return style["color"];
+                    } else {
+                        return COLOR.ANNOTATION;
+                    }
+                })
+                .attr("opacity", 1);
+        }
+    
     }
 }
 

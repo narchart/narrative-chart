@@ -89,6 +89,19 @@
         },
         {
             "add": "annotation",
+            "method": "label",
+            "target": [{
+                "field": "Brand",
+                "value": "Ford"
+            }
+            ],
+            "animation": {
+                "type": "fly",
+                "duration": 2000
+              }
+        },
+        {
+            "add": "annotation",
             "method": "symbol",
             "target": [{
                 "field": "Brand",
@@ -97,19 +110,11 @@
             ],
             "style": {
               "icon-url": "http://localhost:3000/icon/rank-1.png"
-            }
-        },
-        {
-            "add": "annotation",
-            "method": "symbol",
-            "target": [{
-                "field": "Brand",
-                "value": "Hyundai"
-            }
-            ],
-            "style": {
-              "icon-url": "http://localhost:3000/icon/rank-2.png"
-            }
+            },
+            "animation": {
+                "type": "fly",
+                "duration": 2000
+              }
         },
         {
             "add": "image",
@@ -122,6 +127,15 @@
             },
             "animation": {
               "duration": 2000
+            }
+        },
+        {
+            "add": "annotation",
+            "method": "distribution",
+            "target": [],
+            "animation": {
+                "type": "wipe",
+                "duration": 1000
             }
         }
     ]
