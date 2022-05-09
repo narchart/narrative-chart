@@ -9,9 +9,9 @@ class AddChart extends Action {
         let mark = spec.mark
         this._mark = mark['type'];
         this._mark_animation = {};
-        if ('animation' in mark) { this._mark_animation = spec.animation; }
+        if ('animation' in mark) { this._mark_animation = mark.animation; }
         this._mark_style = {};
-        if ('style' in mark) { this._mark_style = spec.style; }
+        if ('style' in mark) { this._mark_style = mark.style; }
         this._animation = {};
         if ('animation' in spec) { this._animation = spec.animation; }
         this._style = {};
