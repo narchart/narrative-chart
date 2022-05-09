@@ -28,8 +28,6 @@ class Configure extends Action {
             background.setBackgroundImage(this._background_image)
         }
 
-        console.log(background.Background_Image);
-
     }
 
 }
