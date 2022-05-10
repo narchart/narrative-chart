@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { Scatterplot } from '../../charts';
+import { Scatterplot, PieChart } from '../../charts';
 import Color from '../../visualization/color';
 
 const COLOR = new Color();
@@ -46,7 +46,6 @@ class Label extends Annotator {
         if (focus_elements.length === 0) {
             return;
         }
-
         for(let focus_element of focus_elements.nodes()) {
            
             // get node data info
@@ -58,7 +57,10 @@ class Label extends Annotator {
                 formatData = focus_element.__data__[style["field"]]
             } else if (chart instanceof Scatterplot) {
                 formatData = focus_element.__data__[yEncoding]
-            } else {
+            } else if (chart instanceof PieChart){
+                formatData = focus_element.__data__.text();
+            }
+            else {
                 let data_d = parseFloat(focus_element.__data__[yEncoding]);
                 if ((data_d / 1000000) >= 1) {
                     formatData = data_d / 1000000 + "M";
@@ -83,8 +85,15 @@ class Label extends Annotator {
                 data_x = bbox.x + bbox.width / 2;
                 data_y = bbox.y;
                 offset_y = -10;
-            } else { // currently not support
-                return;
+            } else { // currently only support pie
+                if(chart instanceof PieChart){
+                    let data_temp = focus_element.__data__;
+                    data_x = data_temp.textX();
+                    data_y = data_temp.textY();
+                    offset_y = 0;
+                }else{
+                    return;
+                }
             }
             // draw text
             svg.append("text")

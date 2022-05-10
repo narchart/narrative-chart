@@ -1,5 +1,6 @@
 import Annotator from './annotator'
 import Color from '../../visualization/color';
+import { PieChart } from '../../charts';
 import * as d3 from 'd3';
 
 const COLOR = new Color();
@@ -68,8 +69,15 @@ class Arrow extends Annotator {
                 offset = parseFloat(one_element.getAttribute("width")) / 2;
                 data_x = parseFloat(one_element.getAttribute("x")) + offset;
                 data_y = parseFloat(one_element.getAttribute("y"));
-            } else { // currently not support
-                return;
+            } else { // currently only support piechart
+                if(chart instanceof PieChart){
+                    let data_temp = one_element.__data__;
+                    data_x = data_temp.centroidX();
+                    data_y = data_temp.centroidY();
+                    offset = 0;
+                }else{
+                    return;
+                }
             }
 
             // move the arrow to the data point

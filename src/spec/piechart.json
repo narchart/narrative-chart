@@ -49,10 +49,15 @@
             "mark": {
                 "type": "arc",
                 "style": {
-                    "innerRadius": 0, 
-                    "outerRadius": 200,
-                    "textRadius":245,
-                    "cornerRadius":0
+                    "inner-radius": 100, 
+                    "outer-radius": 200,
+                    "text-radius":245,
+                    "corner-radius":5,
+                    "stroke": "yellow",
+                    "stroke-width":2,
+                    "stroke-opacity":1,
+                    "fill":"#FC4B4B",
+                    "fill-opacity":0.4
                 }
             },
             "style": {}

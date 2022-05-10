@@ -138,44 +138,39 @@ class PieChart extends Chart {
             .attr("class", "content")
             .attr("chartWidth", width)
             .attr("chartHeight", height);    
-        let dataTemp=[]
-        this.arcs.forEach((d,i)=>{
-            dataTemp.push({
-            startAngle: d.angleStart(),
-            endAngle: d.angleEnd(),
-            innerRadius: d.radiusInner(),
-            outerRadius: d.radiusOuter(),
-            color: COLOR.DEFAULT,            
-            })
-        })
-
-        this.dataTemp=dataTemp
 
         // init arcs
         let arcs = content.selectAll("g")
-            .data(this.dataTemp)
+            .data(this.arcs)
             .enter()
             .append("g")
             .attr("transform", "translate(" + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  + "," + chartbackgroundsize.height / 2 + ")");
 
+        let stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : "none";
+        let strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 1;
+        let strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
+        
         let arcFun = d3.arc()
             .padAngle(5)
             .padRadius(3)
         
         arcs.append("path")
             .attr("class","mark")
-            .attr("fill",  COLOR.DEFAULT)
+            .attr("fill", (d)=> d.color())
             .attr("d", (d, i) => arcFun(d))
-            .attr("opacity", 0)
+            .attr("opacity", (d, i) => d.opacity())
+            .attr("stroke",stroke)
+            .attr("stroke-width",strokeWidth)
+            .attr("stroke-opacity",strokeOpacity)
 
         //init text-label
-        arcs.append("text")        
-            .attr('class','arcText')
-            .attr('text-anchor', 'middle')
-            .attr("font-size", "16px")
-            .attr("font-weight", "500")
-            .attr("fill", COLOR.TEXT)
-            .attr("opacity", 0)
+        // arcs.append("text")        
+        //     .attr('class','arcText')
+        //     .attr('text-anchor', 'middle')
+        //     .attr("font-size", "16px")
+        //     .attr("font-weight", "500")
+        //     .attr("fill", COLOR.TEXT)
+        //     .attr("opacity", 1)
         }
     /**
      * @description Draw Arcs for pie chart with theta encoding.
@@ -183,20 +178,30 @@ class PieChart extends Chart {
      * @return {void}
      */
     encodeTheta(animation = {}) {
-        if(this.theta && this.color){
+        let width = this.width();
+        let chartbackgroundsize = {
+            width: 600,
+            height: 600
+        }
+        let innerRadius = this.markStyle()['inner-radius'] ? this.markStyle()['inner-radius'] : 3;
+        let outerRadius = this.markStyle()['outer-radius'] ? this.markStyle()['outer-radius'] : width/3;
+        let textRadius = this.markStyle()['text-radius'] ? this.markStyle()['text-radius'] : width/3+50;
+        let cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
+
+        let arcFun = d3.arc()
+            .padAngle(5)
+            .padRadius(3)
+            .cornerRadius(cornerRadius)
+
+        if(this.theta){
             const processedData = this.processedData();
             const thetaEncoding = this.theta,
                 colorEncoding = this.color;
             let pie = d3.pie()
                 .value(d => d[thetaEncoding]);
             let pieData = pie(processedData);
-            let width = this.width();
-
-            let innerRadius = this.markStyle()['innerRadius'] ? this.markStyle()['innerRadius'] : 3;
-            let outerRadius = this.markStyle()['outerRadius'] ? this.markStyle()['outerRadius'] : width/3;
-            let textRadius = this.markStyle()['textRadius'] ? this.markStyle()['textRadius'] : width/3+50;
-            let cornerRadius = this.markStyle()['cornerRadius'] ? this.markStyle()['cornerRadius'] : 0;
-
+            
+            this.dataTemp=[]
             this.arcs.forEach((d,i)=>{
                 d.angleEnd(pieData[i].endAngle);
                 d.angleStart(pieData[i].startAngle);
@@ -209,34 +214,50 @@ class PieChart extends Chart {
                     outerRadius: d.radiusOuter(),
                     color: COLOR.DEFAULT,                   
                     }
+
+                let midangle = Math.atan2(arcFun.centroid(this.dataTemp[i])[1] , arcFun.centroid(this.dataTemp[i])[0]);
+                let xlable = Math.cos(midangle) * textRadius;
+                let sign= xlable > 0 ? 1 :-1;
+                let x = xlable + 5 * sign + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2;
+                let y = Math.sin(midangle) * textRadius + chartbackgroundsize.height / 2;
+                d.centroidX(arcFun.centroid(this.dataTemp[i])[0] + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2)
+                d.centroidY(arcFun.centroid(this.dataTemp[i])[1] + chartbackgroundsize.height / 2)
+                d.textX(x);
+                d.textY(y);
+                let percent = Number(d[thetaEncoding]) / d3.sum(pieData, function (x) {
+                    return x.value;
+                }) * 100;
+                let text_temp = d[colorEncoding] + ":" + percent.toFixed(1) + '%';
+                d.text(text_temp)
             })
 
-            let arcFun = d3.arc()
-                .padAngle(5)
-                .padRadius(3)
-                .cornerRadius(cornerRadius)
 
             d3.selectAll(".mark")
                 .attr("d", (d, i) => arcFun(this.dataTemp[i]))
 
-            d3.selectAll(".arcText")
-                .attr('transform',(d, i)=> {
-                    let midangle = Math.atan2(arcFun.centroid(this.dataTemp[i])[1] , arcFun.centroid(this.dataTemp[i])[0])
-                    let xlable = Math.cos(midangle) * textRadius
-                    let sign= xlable > 0 ? 1 :-1
-                    let x=xlable + 5 * sign
-                    let y = Math.sin(midangle)*textRadius
-                    return 'translate(' + x + ', ' + y + ')';
-                })
-                .text((d,i) =>{
-                    let percent = Number(this.arcs[i][thetaEncoding]) / d3.sum(pieData, function (d) {
-                        return d.value;
-                    }) * 100;
-                    let text_temp = this.arcs[i][colorEncoding] + ":" + percent.toFixed(1) + '%';
-                    this.arcs[i].text(text_temp)
-                    // return  percent.toFixed(1) + '%';
-                    return text_temp;
-                });
+            // text-label
+            // d3.selectAll(".arcText")
+            //     .attr('transform',(d, i)=> {
+            //         let midangle = Math.atan2(arcFun.centroid(this.dataTemp[i])[1] , arcFun.centroid(this.dataTemp[i])[0])
+            //         let xlable = Math.cos(midangle) * textRadius
+            //         let sign= xlable > 0 ? 1 :-1
+            //         let x=xlable + 5 * sign
+            //         let y = Math.sin(midangle)*textRadius
+            //         return 'translate(' + x + ', ' + y + ')';
+            //     })
+            //     .text((d,i) =>{
+            //         let percent = Number(this.arcs[i][thetaEncoding]) / d3.sum(pieData, function (d) {
+            //             return d.value;
+            //         }) * 100;
+            //         let text_temp = this.arcs[i][colorEncoding] + ":" + percent.toFixed(1) + '%';
+            //         this.arcs[i].text(text_temp)
+            //         // return  percent.toFixed(1) + '%';
+            //         return text_temp;
+            //     });
+        }else{
+            let circleAll={startAngle:0,endAngle:2*Math.PI, innerRadius: innerRadius, outerRadius: outerRadius}
+            d3.select(".mark")
+                .attr("d", arcFun(circleAll))
         }
     }
 
@@ -246,21 +267,23 @@ class PieChart extends Chart {
      * @return {void}
      */
      encodeColor(animation = {}) {
-        if(this.color) {
+        let fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : COLOR.DEFAULT;
+        let fillOpacity= this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
+
+        if(this.color && !this.markStyle()['fill']) {
             let color = this.color
             let categories = Array.from(new Set(this.arcs.map(d => d[color])))
             this.arcs.forEach((d) =>{
                 let i = categories.indexOf(d[color]);
                 let arcColor = COLOR.CATEGORICAL[i % 8];
-                d.color(arcColor)
+                d.color(arcColor);
+                d.opacity(fillOpacity);
             })
-            // d3.selectAll(".mark")
-            //     .attr("fill",  (d, i) => COLOR.CATEGORICAL[i % 8])
-            // d3.selectAll(".arcText")
-            //     .attr("opacity","1")
-        }else{
+        }
+        else{
             this.arcs.forEach((d) => {
-                d.color(COLOR.DEFAULT)
+                d.color(fill);
+                d.opacity(fillOpacity);
             })
         }
     }
@@ -274,8 +297,8 @@ class PieChart extends Chart {
             this[channel] = field;
             let changeTheta = false;
             let changeColor = false;
-            if (this.theta && this.color) this.encodeTheta();
-            if (this.color) this.encodeColor();
+            this.encodeTheta();
+            this.encodeColor();
 
             switch(channel){
                 case 'theta':
@@ -292,13 +315,12 @@ class PieChart extends Chart {
             if(changeTheta||changeColor){
                 this.svg().select('.content')
                     .selectAll(".mark")
-                    .attr("fill",(d,i)=>this.arcs[i].color())
-                    .attr("opacity",1)
-                this.svg().select('.content')
-                    .selectAll(".arcText")
-                    .attr("fill",(d,i)=>this.arcs[i].textColor())
-                    .attr("opacity",1)
-                
+                    .attr("fill",(d,i)=>d.color())
+                    .attr("opacity",(d)=>d.opacity())
+                // this.svg().select('.content')
+                //     .selectAll(".arcText")
+                //     .attr("fill",(d,i)=>this.arcs[i].textColor())
+                //     .attr("opacity",1)
             }
         }
     }
@@ -313,8 +335,8 @@ class PieChart extends Chart {
             this[channel] = field;
             let changeTheta = false;
             let changeColor = false;
-            if (this.theta && this.color) this.encodeTheta();
-            if (this.color) this.encodeColor();
+            this.encodeTheta();
+            this.encodeColor();
 
             switch(channel){
                 case 'theta':
@@ -331,13 +353,12 @@ class PieChart extends Chart {
             if(changeTheta||changeColor){
                 this.svg().select('.content')
                     .selectAll(".mark")
-                    .attr("fill",(d,i)=>this.arcs[i].color())
-                    .attr("opacity",1)
-                this.svg().select('.content')
-                    .selectAll(".arcText")
-                    .attr("fill",(d,i)=>this.arcs[i].textColor())
-                    .attr("opacity",1)
-                
+                    .attr("fill",(d,i)=>d.color())
+                    .attr("opacity",(d)=>d.opacity())
+                // this.svg().select('.content')
+                //     .selectAll(".arcText")
+                //     .attr("fill",(d,i)=>this.arcs[i].textColor())
+                //     .attr("opacity",1)
             }
         }
     }
@@ -351,8 +372,8 @@ class PieChart extends Chart {
         this[channel] = null;
         let changeTheta = false;
         let changeColor = false;
-        if (this.theta && this.color) this.encodeTheta();
-        if (this.color) this.encodeColor();
+        this.encodeTheta();
+        this.encodeColor();
 
         switch(channel){
             case 'theta':
@@ -369,13 +390,12 @@ class PieChart extends Chart {
         if(changeTheta||changeColor){
             this.svg().select('.content')
                 .selectAll(".mark")
-                .attr("fill",(d,i)=>this.arcs[i].color())
-                .attr("opacity",1)
-            this.svg().select('.content')
-                .selectAll(".arcText")
-                .attr("fill",(d,i)=>this.arcs[i].textColor())
-                .attr("opacity",1)
-            
+                .attr("fill",(d,i)=>d.color())
+                .attr("opacity",(d)=>d.opacity())
+            // this.svg().select('.content')
+            //     .selectAll(".arcText")
+            //     .attr("fill",(d,i)=>this.arcs[i].textColor())
+            //     .attr("opacity",1)
         }
     }
 

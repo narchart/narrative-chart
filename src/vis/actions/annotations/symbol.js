@@ -1,4 +1,5 @@
 import Annotator from './annotator';
+import { PieChart } from '../../charts';
 
 /**
  * @description An annotator for drawing symbols.
@@ -56,8 +57,15 @@ class Symbol extends Annotator {
                 data_x = bbox.x + bbox.width / 2;
                 data_y = bbox.y;
                 offset_y = 10;
-            } else { // currently not support
-                return;
+            } else { // currently only support piechart
+                if(chart instanceof PieChart){
+                    let data_temp = focus_element.__data__;
+                    data_x = data_temp.centroidX();
+                    data_y = data_temp.centroidY();
+                    offset_y = 0;
+                }else{
+                    return;
+                }
             }
 
             // append icon

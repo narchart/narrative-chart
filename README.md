@@ -200,7 +200,7 @@ Add marks to initialize the chart.
 | Scatterplot | point | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
 | Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; corner-radius; bin-spacing|
 | Line Chart | line | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; |
-| Pie Chart | arc |  |
+| Pie Chart | arc | inner-radius; outer-radius; text-radius; corner-radius; stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
 | Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
 
 ```

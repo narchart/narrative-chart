@@ -14,10 +14,13 @@ class Arc extends Mark {
         this._outerRadius = 0;
         this._opacity = 1;
 
+        this._centroidX = 0;
+        this._centroidY = 0;
+
         //text
         this._text = "";
-        this._textColor = COLOR.TEXT;
-        this._textOpacity = 1;
+        this._textX = 0;
+        this._textY = 0;
     }
 
   
@@ -66,6 +69,20 @@ class Arc extends Mark {
         this._opacity = value;
     }
     
+    centroidX(value){
+        if(!value){
+            return this._centroidX;
+        }
+        this._centroidX= value;
+    }
+
+    centroidY(value){
+        if(!value){
+            return this._centroidY;
+        }
+        this._centroidY = value;
+    }
+
     text(value){
         if(!value){
             return this._text;
@@ -73,18 +90,18 @@ class Arc extends Mark {
         this._text = value;
     }
 
-    textColor(value){
+    textX(value){
         if(!value){
-            return this._textColor;
+            return this._textX;
         }
-        this._textColor = value;
+        this._textX= value;
     }
 
-    textOpacity(value){
+    textY(value){
         if(!value){
-            return this._textOpacity;
+            return this._textY;
         }
-        this._textOpacity = value;
+        this._textY = value;
     }
 }
 
