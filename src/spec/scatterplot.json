@@ -119,20 +119,6 @@
       "animation": {
         "duration": 1000
       }
-    },
-    {
-      "add": "annotation",
-      "method": "reference",
-      "target": [
-        {
-          "field": "Name",
-          "value": "datsun 280-zx"
-        }
-      ],
-      "animation": {
-        "type": "wipe",
-        "duration": 1000
-      }
     }
   ]
 }

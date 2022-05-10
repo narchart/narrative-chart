@@ -258,6 +258,15 @@ class LineChart extends Chart {
         let width = this.width() - 12,
             height = this.height() - 7;
         let processedData = this.processedData();
+
+        const lineWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 2;
+        const lineColor = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
+        const dotRadius = this.markStyle()['point-radius'] ? this.markStyle()['point-radius'] : Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
+        const dotFill = this.markStyle()['point-fill'] ? this.markStyle()['point-fill'] : COLOR.DEFAULT;
+        const dotStroke = this.markStyle()['point-stroke'] ? this.markStyle()['point-stroke'] : COLOR.DEFAULT;
+        const dotStrokeWidth = this.markStyle()['point-stroke-width'] ? this.markStyle()['point-stroke-width'] : 0;
+        const dotOpacity = this.markStyle()['point'] ? 1 : 0;
+
         const line = d3.line()
             .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
             .y(d => yScale(d[yEncoding]))
@@ -283,8 +292,8 @@ class LineChart extends Chart {
         content.append("g")
             .attr("class", "lineGroup")
             .attr("fill", "none")
-            .attr("stroke", COLOR.DEFAULT)
-            .attr("stroke-width", 2)
+            .attr("stroke", lineColor)
+            .attr("stroke-width", lineWidth)
             .attr("opacity", 1)
             .selectAll("path")
             .data(processedData)
@@ -294,15 +303,17 @@ class LineChart extends Chart {
             .attr("d" , line(processedData));   
             
         /* draw points */
-        const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
         content.append("g")
             .attr("class", "circleGroup")
-            .attr("fill", COLOR.DEFAULT)
+            .attr("fill",  dotFill)
+            .attr("stroke", dotStroke)
+            .attr("stroke-width", dotStrokeWidth)
+            .attr("opacity", dotOpacity)
             .selectAll("circle")
             .data(processedData)
             .enter().append("circle")
             .attr("class", "mark")
-            .attr("r", circleSize)
+            .attr("r", dotRadius)
             .attr("cx", d => {
                 return xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2;
             })

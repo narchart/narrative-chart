@@ -59,7 +59,6 @@ class Texture extends Annotator {
 
             focus_elements.nodes().forEach(one_element => {
                 const nodeName = one_element.nodeName;
-                console.log('one_element',one_element)
                 if (nodeName === "rect") {
                     let e_x = parseFloat(one_element.getAttribute("x"));
                     let e_y = parseFloat(one_element.getAttribute("y"));
