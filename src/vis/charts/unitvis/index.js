@@ -171,13 +171,11 @@ class Unitvis extends Chart {
             .attr("r", d => d.radius())
             .attr("stroke", this.markStyle()["stroke-color"]?? "#FFF")
             .attr("stroke-width", this.markStyle()["stroke-width"]?? 0)
-            .attr("fill", d => d.color())
-            .attr("opacity", 0)
+            .attr("stroke-opacity", this.markStyle()["stroke-opacity"]?? 1)
+            .attr("fill", this.markStyle()["fill"]?  this.markStyle()["fill"] : d => d.color())
+            .attr("opacity", this.markStyle()["fill-opacity"]?? 1)
             .attr("cx", d => d.x())
-            .attr("cy", d => d.y())
-            .transition()
-            .attr("opacity", 1)         
-            ;
+            .attr("cy", d => d.y());
 
     }
 

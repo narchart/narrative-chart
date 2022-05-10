@@ -1,5 +1,4 @@
 import Annotator from './annotator';
-import { Scatterplot } from '../../charts';
 import Color from '../../visualization/color';
 import * as d3 from 'd3';
 
@@ -29,25 +28,28 @@ class Tooltip extends Annotator {
      */
 
 
-    textMultiline (container, text, textSize, maxWidth, x, y, style, textAnchor = "middle"){
+    textMultiline(container, text, textSize, maxWidth, x, y, style, textAnchor = "middle") {
+
+
 
         let words = text.split(" ").filter(d => d !== "");
-    
+
         let virtualE = container.append("text")
-            .attr("font-family", 'Arial-Regular')
+            .attr("font-family", style['font-family'] ?? 'Arial-Regular')
+            .attr("font-weight", style['font-weight'] ?? "normal")
+            .attr("font-style", style['font-style'] ?? "normal")
             .attr("font-size", textSize)
             .text(words[0]);
-    
+
         let textE = container.append("text")
-            .attr("id","tooltipstextContent")
+            .attr("id", "tooltipstextContent")
             .attr("transform", "translate(" + x + "," + (y) + ")")
-            .attr("font-family", 'Arial-Regular')
             .attr("font-size", textSize)
             .attr("text-anchor", textAnchor)
-            .attr("font-family", style['font-family']?? 'Arial-Regular')
-            .attr("font-weight",  style['font-weight']?? "normal")
-            .attr("font-style",  style['font-style']?? "normal");
-    
+            .attr("font-family", style['font-family'] ?? 'Arial-Regular')
+            .attr("font-weight", style['font-weight'] ?? "normal")
+            .attr("font-style", style['font-style'] ?? "normal");
+
         maxWidth = Math.max(virtualE.node().getComputedTextLength(), maxWidth);
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         let line = '';
@@ -56,39 +58,39 @@ class Tooltip extends Annotator {
         for (let n = 0; n < words.length; n++) {
             let testLine = line + ' ' + words[n];
             /*  Add line in testElement */
-            if(rowCount === maxRow - 1){
-                virtualE.text(testLine+ "…");
-            }else{
+            if (rowCount === maxRow - 1) {
+                virtualE.text(testLine + "…");
+            } else {
                 virtualE.text(testLine);
             }
             /* Messure textElement */
             let testWidth = virtualE.node().getComputedTextLength();
             if (testWidth > maxWidth) {
-                if(rowCount === maxRow - 1){//最后一行还有文字没显示
+                if (rowCount === maxRow - 1) {//最后一行还有文字没显示
                     line += "…";
                     break;
-                }else{//new row
+                } else {//new row
                     textE.append("tspan")
                         .attr("x", 0)
                         .attr("dy", lineHeight)
                         .text(line);
                     line = words[n];
-                    rowCount ++;
+                    rowCount++;
                 }
             } else {
                 line = testLine;
             }
         }
-        
+
         textE.append("tspan")
             .attr("x", 0)
             .attr("dy", lineHeight)
             .text(line);
         virtualE.remove();
-    
+
         return textE;
     }
-    
+
     /**
      * @description Add a tooltip above a mark
      * 
@@ -102,12 +104,12 @@ class Tooltip extends Annotator {
 
 
     annotate(chart, target, style, animation) {
-      
+
         let svg = chart.svg();
-        let yEncoding = chart.y;
-         
+        // let yEncoding = chart.y;
+
         let focus_elements = svg.selectAll(".mark")
-            .filter(function(d) {
+            .filter(function (d) {
                 if (target.length === 0) {
                     return true
                 }
@@ -120,46 +122,38 @@ class Tooltip extends Annotator {
                 }
                 return true
             });
-        
+
         // if the focus defined in the spec does not exist
         if (focus_elements.length === 0) {
             return;
         }
 
-        for(let focus_element of focus_elements.nodes()) {
-           
+        for (let focus_element of focus_elements.nodes()) {
+
             // get node data info
             let formatData
             if ("text" in style) {
                 formatData = style["text"];
             }
             else if ("field" in style) {
-                formatData = focus_element.__data__[style["field"]]
-            } else if (chart instanceof Scatterplot) {
-                formatData = focus_element.__data__[yEncoding]
-            } else {
-                let data_d = parseFloat(focus_element.__data__[yEncoding]);
-                if ((data_d / 1000000) >= 1) {
-                    formatData = data_d / 1000000 + "M";
-                } else if ((data_d / 1000) >= 1) {
-                    formatData = data_d / 1000 + "K";
-                }else {
-                    formatData = data_d + "";
-                }
+                formatData = focus_element.__data__[style["field"]].toString()
+            }
+            else {
+                formatData = "tooltip"
             }
 
             // identify the position
             let data_x, data_y, data_r, offset_y;
             const nodeName = focus_element.nodeName;
             let tranglesize = 50
-            let fontsize 
+            let fontsize
 
-             if ("font-size" in style) 
-                fontsize =  style["font-size"];
-            else 
-                fontsize =  10;                
+            if ("font-size" in style)
+                fontsize = style["font-size"];
+            else
+                fontsize = 10;
 
-            
+
             if (nodeName === "circle") { // get center
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
@@ -176,67 +170,58 @@ class Tooltip extends Annotator {
 
             let toolTipSvg = svg.append("g").attr("class", "tooltip")
             let tooltipRect = toolTipSvg
-                            .append('rect')
-                            .attr("class", "tooltipRect");
-            
+                .append('rect')
+                .attr("class", "tooltipRect");
+
             let tooltip = toolTipSvg.append("text")
-                        .attr("font-size", fontsize)                            
-                        .attr("text-anchor", "start");
-            
-            if ("text" in style){
-                tooltip.remove();
-                tooltip = this.textMultiline(toolTipSvg, formatData, fontsize, 80, data_x, data_y, style);
-                tooltip
-                    .attr("transform", "translate(" + data_x + "," + 0 + ")")
-                    .attr("fill", () => {
-                        if ("font-color" in style) {
-                            return style["font-color"];
-                        } else {
-                            return COLOR.TITLE;
-                        }
-                    });
-                    
-                }
-            else if ("field in style"){
-                tooltip.append("tspan")
-                .text(formatData)
-                .attr("dy", tooltip.selectAll("tspan").node().getBBox().height * 0.9);
-            }
-            
-        
+                .attr("font-size", fontsize)
+                .attr("text-anchor", "start");
+
+            tooltip = this.textMultiline(toolTipSvg, formatData, fontsize, 80, data_x, data_y, style);
+            tooltip.attr("transform", "translate(" + data_x + "," + 0 + ")")
+                .attr("fill", () => {
+                    if ("font-color" in style) {
+                        return style["font-color"];
+                    } else {
+                        return COLOR.TEXT;
+                    }
+                });
+
+
+
 
             let textWidth = tooltip.node().getBBox().width;
             let textHeight = tooltip.node().getBBox().height;
             let widthAlpha = 0.7;
             let rectWidth = Math.min(textWidth / widthAlpha, textWidth + 12);
             let rectHeight = textHeight / 0.8;
-                                                
+
             tooltipRect
-                    .attr("rx", 0.1 * textHeight)
-                    .attr("ry", 0.1 * textHeight)
-                    .attr("width", rectWidth)
-                    .attr("height", rectHeight)
-                    .attr("fill", style["tooltip-color"]?? COLOR.TOOLTIP)
-                    .attr("opacity", 1.0);
+                .attr("rx", 0.1 * textHeight)
+                .attr("ry", 0.1 * textHeight)
+                .attr("width", rectWidth)
+                .attr("height", rectHeight)
+                .attr("fill", style["tooltip-color"] ?? COLOR.TOOLTIP)
+                .attr("opacity", 1.0);
 
             // let yyy = data_y - 10
             let tooltipTriangle = toolTipSvg.append("path")
                 .attr("class", "triangle")
                 .attr("transform", "translate(" + data_x + "," + (data_y + offset_y) + ")rotate(180)")
                 .attr("d", d3.symbol().type(d3.symbolTriangle).size(tranglesize))
-                .attr("fill", style["tooltip-color"]?? COLOR.TOOLTIP)
+                .attr("fill", style["tooltip-color"] ?? COLOR.TOOLTIP)
 
 
-                
+
             tooltipRect.attr("x", data_x - rectWidth / 2)
-                        .attr("y", data_y + offset_y - rectHeight );
-            
+                .attr("y", data_y + offset_y - rectHeight);
+
             tooltip.attr("width", textWidth)
-                    .attr("height", textHeight)
-                    .attr("x", data_x - rectWidth / 2 + (rectWidth- textWidth)/2 )
-                    .attr("y",  data_y + offset_y - rectHeight );
-                            
-                        
+                .attr("height", textHeight)
+                .attr("x", data_x - rectWidth / 2 + (rectWidth - textWidth) / 2)
+                .attr("y", data_y + offset_y - rectHeight);
+
+
             tooltipTriangle.attr("opacity", 1);
 
 
@@ -244,77 +229,72 @@ class Tooltip extends Annotator {
                 case 'wipe':
                     let bbox = toolTipSvg.node().getBBox();
                     var gradient = toolTipSvg.append("defs")
-                                            .append("linearGradient")
-                                            .attr("id", "gradient")
-                                            .attr("x1", "0%")
-                                            .attr("x2", "0%")
-                                            .attr("spreadMethod", "pad"); 
-                    
-                        gradient.append("stop")
-                                .attr("offset", "0%")
-                                .attr("stop-color", COLOR.BACKGROUND)
-                                .attr("stop-opacity", 1);
+                        .append("linearGradient")
+                        .attr("id", "gradient")
+                        .attr("x1", "0%")
+                        .attr("x2", "0%")
+                        .attr("spreadMethod", "pad");
 
-                        gradient.append("stop")
-                                .attr("offset", "100%")
-                                .attr("stop-color", COLOR.BACKGROUND)
-                                .attr("stop-opacity", 0);
+                    gradient.append("stop")
+                        .attr("offset", "0%")
+                        .attr("stop-color", COLOR.BACKGROUND)
+                        .attr("stop-opacity", 1);
 
-                        let fadeBox = toolTipSvg.append('rect')
-                                                .attr('x', bbox.x)
-                                                .attr('y', bbox.y)
-                                                .attr('width', bbox.width)
-                                                .attr('height', bbox.height)
-                                                .style("fill", "url(#gradient)");
+                    gradient.append("stop")
+                        .attr("offset", "100%")
+                        .attr("stop-color", COLOR.BACKGROUND)
+                        .attr("stop-opacity", 0);
 
-                        toolTipSvg.attr("opacity", 0)
-                                  .transition()
-                                  .duration(animation['duration']?? 0)
-                                  .attr("opacity", 1)
-                        
-                        fadeBox.transition()
-                                .duration(animation['duration']?? 0)
-                                .attr('width', 0)
-                                .attr('x', bbox.x + bbox.width)
+                    let fadeBox = toolTipSvg.append('rect')
+                        .attr('x', bbox.x)
+                        .attr('y', bbox.y)
+                        .attr('width', bbox.width)
+                        .attr('height', bbox.height)
+                        .style("fill", "url(#gradient)");
 
-                        gradient.transition()
-                                .duration(animation['duration']?? 0)
-                                .attr('x1','100%')                        
+                    toolTipSvg.attr("opacity", 0)
+                        .transition()
+                        .duration(animation['duration'] ?? 0)
+                        .attr("opacity", 1)
 
-                        break;
+                    fadeBox.transition()
+                        .duration(animation['duration'] ?? 0)
+                        .attr('width', 0)
+                        .attr('x', bbox.x + bbox.width)
 
-                case 'fly':  
+                    gradient.transition()
+                        .duration(animation['duration'] ?? 0)
+                        .attr('x1', '100%')
+
+                    break;
+
+                case 'fly':
 
                     tooltipRect.attr("x", 640)
-                               .transition()
-                               .duration(animation['duration']?? 0)
-                               .attr("x", data_x - rectWidth / 2);
-                               
-                    
+                        .transition()
+                        .duration(animation['duration'] ?? 0)
+                        .attr("x", data_x - rectWidth / 2);
+
+
                     d3.select("#tooltipstextContent tspan")
-                               .attr("fill-opacity", 0)
-                               .attr("x", 10)
-                               .transition()
-                               .delay(animation['duration']*0.75?? 0)
-                               .duration(animation['duration']*0.25 ?? 0)
-                               .attr("x", 0)
-                               .attr("fill-opacity", 1);
+                        .attr("x", 640 - (data_x - rectWidth / 2))
+                        .transition()
+                        .duration(animation['duration'] ?? 0)
+                        .attr("x", 0)
 
                     tooltipTriangle.attr("transform", "translate(" + 640 + "," + (data_y + offset_y) + ")rotate(180)")
-                                   .transition()
-                                   .duration(animation['duration']?? 0)
-                                   .attr("transform", "translate(" + data_x + "," + (data_y + offset_y) + ")rotate(180)")
+                        .transition()
+                        .duration(animation['duration'] ?? 0)
+                        .attr("transform", "translate(" + data_x + "," + (data_y + offset_y) + ")rotate(180)")
 
 
                     break;
 
-
-
                 default:
                     toolTipSvg.attr("opacity", 0)
-                                .transition()
-                                .duration('duration' in animation ? animation['duration']*0.25: 0)
-                                .attr("opacity", 1)
+                        .transition()
+                        .duration('duration' in animation ? animation['duration'] * 0.25 : 0)
+                        .attr("opacity", 1)
                     break;
 
             }
@@ -325,7 +305,7 @@ class Tooltip extends Annotator {
 
 
         }
-            
+
     }
 }
 

@@ -29,33 +29,41 @@ class Title extends Titler {
             height: 130
         }
 
-        let titleborderarea= {
-            width : 600
+
+        let titleborderpadding = {
+            left: style['left-padding']?? 2,
+            top: style['top-padding']?? 2
         }
+
+        let titleborderarea= {
+            width : 600 + titleborderpadding.left*2
+        }
+
 
         let titlebordermargin = {
             left: 20,
-            top: 12
+            top: 10
         }
 
+
         let titlbackgroundearea= {
-            width : 600
+            width : 600 + titleborderpadding.left*2
         }
 
         let titlebackgroundmargin= {
             left: 20,
-            top: 12
+            top: 10
         }
 
         let titleposition = {
-            left: 30 , 
+            left: 30, 
             center: "50%", 
             right: 610
         }
 
         let titletransform = {
-            left: 0, 
-            top: 10 
+            left: 0 + (titleborderpadding.left), 
+            top: 6 + (titleborderpadding.top)
         }
 
         
@@ -69,11 +77,15 @@ class Title extends Titler {
         
     
         let virtualE = svg.append("text")
-            .attr("font-family", 'Arial-Regular')
+            .attr("font-family", style['font-family']?? 'Arial-Regular')
+            .attr("font-weight",  style['font-weight']?? "bold")
+            .attr("font-style",  style['font-style']?? "normal")
             .attr("font-size", textsize)
             .text(words[0]);
+        
+        
+        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), 595-titleborderpadding.left*2);
 
-        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), 590);
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         const maxRow = textsize > 16 ? 2: 3;
     
@@ -196,7 +208,7 @@ class Title extends Titler {
                 .attr("id","titleBackGrnd")
                 .append("rect")
                 .attr("width", titlbackgroundearea.width)
-                .attr("height", textE.node().getBBox().height)
+                .attr("height", textE.node().getBBox().height + titleborderpadding.top*2)
                 .attr("transform", "translate(" + titlebackgroundmargin.left + "," + titlebackgroundmargin.top + ")")
                 .attr("fill", style["background-color"]);
             }
@@ -207,7 +219,7 @@ class Title extends Titler {
             .attr("id","titleBorder")
             .append("rect")
             .attr("width", titleborderarea.width)
-            .attr("height", textE.node().getBBox().height)
+            .attr("height", textE.node().getBBox().height + titleborderpadding.top*2)
             .attr("transform", "translate(" + titlebordermargin.left + "," + titlebordermargin.top + ")")
             .attr("stroke", style["border-color"]??  "black")
             .attr("stroke-width", style["border-width"]?? 2)

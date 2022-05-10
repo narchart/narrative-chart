@@ -201,7 +201,7 @@ Add marks to initialize the chart.
 | Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
 | Line Chart | line | stroke; stroke-width; |
 | Pie Chart | arc |  |
-| Unitvis | unit |  |
+| Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
 
 ```
 {
@@ -549,7 +549,8 @@ Adding graphical and textural annotations.
         }
     ],
     "style": {
-        "text": text,
+        "field": field,
+        "text": text, // (optional)
         "font-size": int, // (optional)
         "font-family": string, // (optional)
         "font-color": string, // (optional)
@@ -586,6 +587,8 @@ Adding title or caption.
         "border-color": string, // (optional)
         "divide-line-width": int, // (optional)
         "divide-line-color": string, // (optional)
+        "left-padding": int, // (optional)
+        "top-padding": int, // (optional)
       },
     "animation": {"duration": int, "type": string} // (optional)
 

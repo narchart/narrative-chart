@@ -34,7 +34,9 @@ class Caption extends Captioner {
 
     
         let virtualE = svg.append("text")
-            .attr("font-family", 'Arial-Regular')
+            .attr("font-family", style['font-family']?? 'Arial-Regular')
+            .attr("font-weight",  style['font-weight']?? "normal")
+            .attr("font-style",  style['font-style']?? "normal")
             .attr("font-size", textsize)
             .text(words[0]);
 

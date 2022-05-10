@@ -92,15 +92,27 @@
                     "field": "dataid"
                 }
             ],
-            "filter": [ { "field": "Weight", "op":"less" ,"value": 4000}]
+            "filter": [
+                {
+                    "field": "Weight",
+                    "op": "less",
+                    "value": 4000
+                }
+            ]
         },
         {
             "add": "chart",
             "mark": {
-              "type": "unit",
-              "style": {"stroke-color": "pink", "stroke-width":0}
+                "type": "unit",
+                "style": {
+                    "stroke-color": "black",
+                    "stroke-width": 2,
+                    "fill": "pink",
+                    "stroke-opacity": 0,
+                    "fill-opacity": 1
+                }
             }
-          },
+        },
         {
             "add": "encoding",
             "channel": "x",
@@ -120,23 +132,24 @@
         {
             "add": "title",
             "style": {
-                "position": "top-center",
-                "text": "This is title This is title This is title This is title This is title This is title",
-                "font-size": 22,
+                "position": "top-left",
+                "text": "This is title This is title This is title This is title This is title This is title ",
+                "font-size": 20,
                 "background-color": "lightblue",
                 "border-color": "black",
-                "border-width": 3
-              }
-          },
-          {
+                "border-width": 2,
+                "top-padding": 2
+            }
+        },
+        {
             "add": "caption",
             "style": {
                 "position": "top-left",
                 "text": " This is caption This is caption This is caption This is caption This is caption This is caption",
                 "font-size": 18
             }
-          },
-          {
+        },
+        {
             "add": "annotation",
             "method": "tooltip",
             "target": [
@@ -145,14 +158,14 @@
                     "value": "300"
                 }
             ],
-            "style":{
-                "text": "hhhhhhh",
+            "style": {
+                "text": "hhhh",
                 "font-color": "black"
             },
             "animation": {
-                "type": "wipe",
+                "type": "fade",
                 "duration": 1000
             }
         }
-        ]
+    ]
 }
