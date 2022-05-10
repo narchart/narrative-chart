@@ -198,7 +198,7 @@ Add marks to initialize the chart.
 | Chart | Mark | Mark Style |
 |:--|:--|:--|
 | Scatterplot | point | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
-| Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
+| Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; corner-radius; bin-spacing|
 | Line Chart | line | stroke; stroke-width; |
 | Pie Chart | arc |  |
 | Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |

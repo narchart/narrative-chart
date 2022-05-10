@@ -180,13 +180,21 @@ class BarChart extends Chart {
             const processedData = this.processedData();
             const xEncoding = this.x,
                 yEncoding = this.y;
-            
+
+            const cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
+            const binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
+            const stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
+            const strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
+            const strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
+            const fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : (this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
+            const fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
+
         
             /** set the ranges */
             let xScale = d3.scaleBand()
                 .range([0, width - 12])
                 .domain(processedData.map(d => d[xEncoding]))
-                .padding(0.5);
+                .padding(binSpacing);
         
             let yScale = d3.scaleLinear()
                 .range([height, 0])
@@ -305,7 +313,13 @@ class BarChart extends Chart {
                 .attr("y", d => yScale(d[yEncoding]))
                 .attr("width", xScale.bandwidth())
                 .attr("height", d => height - yScale(d[yEncoding]))
-                .attr("fill", this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
+                .attr("fill", fill)
+                .attr("rx", cornerRadius)
+                .attr("ry", cornerRadius)
+                .attr("fill-opacity", fillOpacity)
+                .attr("stroke", stroke)
+                .attr("stroke-width", strokeWidth)
+                .attr("stroke-opacity", strokeOpacity)
         }
     }
 
@@ -324,6 +338,14 @@ class BarChart extends Chart {
                 yEncoding = this.y;
             const colorEncoding = this.color;
             let content = d3.select(".content");
+
+            const cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
+            const binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
+            const stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
+            const strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
+            const strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
+            const fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : (this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
+            const fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
 
             /** clear rects */
             d3.selectAll(".rects").remove();
@@ -365,7 +387,7 @@ class BarChart extends Chart {
             let xScale = d3.scaleBand()
             .range([0, width])
             .domain(data.map(d => d[xEncoding]))
-            .padding(0.5);
+            .padding(binSpacing);
 
             let yScale = d3.scaleLinear()
                 .range([height, 0])
@@ -386,7 +408,14 @@ class BarChart extends Chart {
                 .attr("x", d => xScale(d.data[xEncoding]))
                 .attr("y", d => yScale(d[1]))
                 .attr("width", xScale.bandwidth())
-                .attr("height", d => Math.abs(yScale(d[1]) - yScale(d[0])));
+                .attr("height", d => Math.abs(yScale(d[1]) - yScale(d[0])))
+                .attr("rx", cornerRadius)
+                .attr("ry", cornerRadius)
+                .attr("fill", fill)
+                .attr("fill-opacity", fillOpacity)
+                .attr("stroke", stroke)
+                .attr("stroke-width", strokeWidth)
+                .attr("stroke-opacity", strokeOpacity)
         }
     }
 

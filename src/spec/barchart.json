@@ -48,7 +48,15 @@
             "add": "chart",
             "mark": {
                 "type": "bar",
-                "style": {}
+                "style": {
+                    "corner-radius": 8,
+                    "bin-spacing": 0.5,
+                    "stroke": "#FFBE32",
+                    "stroke-width": 3,
+                    "stroke-opacity": 1,
+                    "fill": "rgb(113,201,244)",
+                    "fill-opacity": 1
+                }
             },
             "style": {
                 "mask-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
@@ -63,29 +71,6 @@
             "add": "encoding",
             "channel": "y",
             "field":"Sales"
-        },
-        {
-            "add": "annotation",
-            "method": ["label"]
-        },
-        {
-            "add": "annotation",
-            "method": "texture",
-            "target": [
-              {
-                "field": "Brand",
-                "value": "GMC"
-              }
-            ],
-            "style": {
-              "background-image": "http://localhost:3000/texture/stripe.png"
-            },
-            "animation": {
-              "type": "wipe",
-              "duration": 1000,
-              "delay": 2000
-            },
-            "leave_space": false
         },
         {
             "add": "annotation",
@@ -110,32 +95,6 @@
             ],
             "style": {
               "icon-url": "http://localhost:3000/icon/rank-1.png"
-            },
-            "animation": {
-                "type": "fly",
-                "duration": 2000
-              }
-        },
-        {
-            "add": "image",
-            "style": {
-                "image": "http://localhost:3000/img/undraw_data.png",
-                "x": 400,
-                "y": 300,
-                "width": 240,
-                "height": 240
-            },
-            "animation": {
-              "duration": 2000
-            }
-        },
-        {
-            "add": "annotation",
-            "method": "distribution",
-            "target": [],
-            "animation": {
-                "type": "wipe",
-                "duration": 1000
             }
         }
     ]
