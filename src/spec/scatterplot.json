@@ -82,10 +82,15 @@
       "add": "chart",
       "mark": {
         "type": "point",
-        "style": {}
+        "style": {
+          "stroke-color": "green",
+          "stroke-width": 1,
+          "stroke-opacity": 0.4,
+          "fill-opacity": 0.4,
+          "fill": "#FF7602"
+        }
       },
       "style": {
-        "background-image": "http://localhost:3000/background/R-C-3.png"
       }
     },
     {
@@ -100,11 +105,6 @@
           "add": "encoding",
           "channel": "y",
           "field": "Miles per Gallon"
-        },
-        {
-          "add": "encoding",
-          "channel": "color",
-          "field": "Origin"
         }
       ],
       "animation": {

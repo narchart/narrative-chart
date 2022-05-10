@@ -121,6 +121,12 @@ class Scatterplot extends Chart {
             height = this.height();
         let initX = width / 2;
         let initY = height / 2;
+
+        let strokeColor = this.markStyle()['stroke-color'] ? this.markStyle()['stroke-color'] : "#000000";
+        let strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
+        let strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
+        let fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
+        let fillColor = this.markStyle()['fill'] ? this.markStyle()['fill'] : COLOR.DEFAULT;
         let content = svg.append("g")
                 .attr("class", "content")
                 .attr("chartWidth", width)
@@ -131,11 +137,13 @@ class Scatterplot extends Chart {
                 .data(this.points)
                 .enter().append("circle")
                 .attr("class", "mark")
-                .attr("stroke", "#FFF")
-                .attr("stroke-width", 0)
+                .attr("stroke", strokeColor)
+                .attr("stroke-width", strokeWidth)
+                .attr("stroke-opacity", strokeOpacity)
+                .attr("fill-opacity", fillOpacity)
+                .attr("fill", fillColor)
                 .attr("cx", initX)
                 .attr("cy", initY)
-                .attr("fill", COLOR.DEFAULT)
                 .attr("opacity", 0)
     }
 
