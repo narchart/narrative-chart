@@ -193,6 +193,16 @@ Operating a SQL-like action to query data from the spreadsheet.
 
 ##### Add Marks
 
+Add marks to initialize the chart.
+
+| Chart | Mark | Mark Style |
+|:--|:--|:--|
+| Scatterplot | point | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
+| Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
+| Line Chart | line | stroke; stroke-width; |
+| Pie Chart | arc |  |
+| Unitvis | unit |  |
+
 ```
 {
     "add": "chart",
