@@ -1,6 +1,7 @@
 import * as d3 from 'd3';
 import Color from '../../visualization/color';
 import Annotator from './annotator';
+import { PieChart } from '../../charts';
 
 const COLOR = new Color();
 
@@ -48,18 +49,32 @@ class Contour extends Annotator {
         focus_elements.nodes().forEach((one_element) => {
             const nodeName = one_element.nodeName;
             if (nodeName === 'rect') {
-                const _x = parseFloat(one_element.getAttribute("x")) - 1;
-                const _y = parseFloat(one_element.getAttribute("y")) - 1;
-                const _width = parseFloat(one_element.getAttribute("width")) + 2;
-                const _height = parseFloat(one_element.getAttribute("height")) + 2;
+                const _x = parseFloat(one_element.getAttribute("x"));
+                const _y = parseFloat(one_element.getAttribute("y"));
+                const _width = parseFloat(one_element.getAttribute("width"));
+                const _height = parseFloat(one_element.getAttribute("height"));
 
-                const d_contour_rect = `M${_x+_width},${_y}
-                                      V${_y+_height}
-                                      H${_x}
-                                      V${_y}
-                                      H${_x+_width+1}`;
-                const contour_rect = svg.append("path")
-                    .attr("d", d_contour_rect)
+                const d_width = "stroke-width" in chart.markStyle() && Number(chart.markStyle()["stroke-width"])>0 ? chart.markStyle()["stroke-width"]: 2;
+
+                function draw_rect(x, y, w, h, r) {
+                    let retval;
+                    retval  = "M" + (x + r) + "," + y;
+                    retval += "h" + (w - 2*r);
+                    retval += "a" + r + "," + r + " 0 0 1 " + r + "," + r; 
+                    retval += "v" + (h - 2*r);
+                    retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + r;
+                    retval += "h" + (2*r - w);
+                    retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + -r;
+                    retval += "v" + (2*r - h);
+                    retval += "a" + r + "," + r + " 0 0 1 " + r + "," + -r; 
+                    retval += "z";
+                    
+                    return retval;
+
+                }
+                const contour_rect = svg
+                    .append("path")
+                    .attr("d", draw_rect(_x, _y, _width, _height, 'corner-radius' in chart.markStyle() ? chart.markStyle()['corner-radius'] : 0))
                     .attr("fill", "none")
                     .attr("stroke", function() {
                         if ('color' in style) {
@@ -68,7 +83,8 @@ class Contour extends Annotator {
                             return COLOR.ANNOTATION
                         }
                     })
-                    .attr("stroke-width", 2);
+                    .attr("stroke-width", d_width)
+                    .attr("stroke-linecap", "square"); // to make sure the path can be closed completely
                 if ("type" in animation && animation["type"] === "wipe") {
                     let pathLength;
                     
@@ -86,13 +102,15 @@ class Contour extends Annotator {
                                 .attr("opacity", 1);
                 }
             } else if (nodeName === 'circle') {
-                let _r = Number(one_element.getAttribute("r")) + 1,
+                let _r = Number(one_element.getAttribute("r")),
                     _x = Number(one_element.getAttribute("cx")),
                     _y = Number(one_element.getAttribute("cy"));
 
                 const d_contour_circle = d3.path();
 
                 d_contour_circle.arc(_x, _y , _r, 0, 360)
+
+                const d_width = "stroke-width" in chart.markStyle() && Number(chart.markStyle()["stroke-width"])>0 ? chart.markStyle()["stroke-width"] : 2;
 
                 const contour_circle = svg.append("path")
                     .attr("d", d_contour_circle)
@@ -104,7 +122,7 @@ class Contour extends Annotator {
                             return COLOR.ANNOTATION
                         }
                     })
-                    .attr("stroke-width", 2);
+                    .attr("stroke-width", d_width);
                 
                 if ("type" in animation && animation["type"] === "wipe") {
                     let pathLength;
@@ -121,6 +139,40 @@ class Contour extends Annotator {
                                 .duration('duration' in animation ? animation['duration']: 0)
                                 .attr("opacity", 1);
                 }
+            } else if(chart instanceof PieChart){
+                const d_contour_arc = one_element.getAttribute("d");
+                const d_width = "stroke-width" in chart.markStyle() && Number(chart.markStyle()["stroke-width"])>0 ? chart.markStyle()["stroke-width"] : 2;
+                const contour_arc = svg.append("path")
+                    .attr("d", d_contour_arc)
+                    .attr("fill", "none")
+                    .attr("transform", one_element.parentNode.getAttribute("transform"))
+                    .attr("stroke", function() {
+                        if ('color' in style) {
+                            return style['color']
+                        } else {
+                            return COLOR.ANNOTATION
+                        }
+                    })
+                    .attr("stroke-width", d_width)
+                    .attr("stroke-linecap", "square"); // to make sure the path can be closed completely
+                if ("type" in animation && animation["type"] === "wipe") {
+                    let pathLength;
+                    
+                    contour_arc.attr("stroke-dasharray", function() {
+                                    return pathLength = this.getTotalLength();
+                                })
+                                .attr("stroke-dashoffset", pathLength)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("stroke-dashoffset", 0);
+                } else {
+                    contour_arc.attr("opacity", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("opacity", 1);
+                }
+            } else{
+                return;
             }
         }) 
 
