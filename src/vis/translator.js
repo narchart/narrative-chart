@@ -87,9 +87,8 @@ class Translator {
         titleText = getTitle(factspec);
         titlespec = {
             "add": "title",
-            "style": {
-                "text": titleText
-            }
+            "text": titleText,
+            "style": {}
         }
         
         let captionspec;
@@ -103,9 +102,8 @@ class Translator {
         captionText = getCaption(factspec);
         captionspec = {
             "add": "caption",
-            "style": {
-                "text": captionText
-            }
+            "text": captionText,
+            "style": {}
         }
         
         /* Step4: Chart, measure, breakdown => Visual encodings */

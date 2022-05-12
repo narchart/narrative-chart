@@ -131,9 +131,9 @@
         },
         {
             "add": "title",
+            "text": "This is title This is title This is title This is title This is title This is title ",
             "style": {
                 "position": "top-left",
-                "text": "This is title This is title This is title This is title This is title This is title ",
                 "font-size": 20,
                 "background-color": "lightblue",
                 "border-color": "black",
@@ -143,9 +143,9 @@
         },
         {
             "add": "caption",
+            "text": " This is caption This is caption This is caption This is caption This is caption This is caption",
             "style": {
                 "position": "top-left",
-                "text": " This is caption This is caption This is caption This is caption This is caption This is caption",
                 "font-size": 18
             }
         },

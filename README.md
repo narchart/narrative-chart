@@ -289,6 +289,7 @@ Adding graphical and textural annotations.
             "value": value
         }
     ],
+    "text": string,
     "style": {
         ...
     },
@@ -454,8 +455,8 @@ Adding graphical and textural annotations.
             "value": value
         }
     ],
+    "text": text, // (optional)
     "style": {
-        "text": text,
         "font-size": font-size,
         "color": color
     },
@@ -548,16 +549,15 @@ Adding graphical and textural annotations.
             "value": value
         }
     ],
+    "text": text, // (optional)
     "style": {
-        "field": field,
-        "text": text, // (optional)
         "font-size": int, // (optional)
         "font-family": string, // (optional)
         "font-color": string, // (optional)
         "font-weight": string, // (optional)
         "font-style": string, // (optional)
         "tooltip-color": string // (optional)
-      },
+    },
     "animation": { "duration": number, "type": string}
 
     
@@ -573,8 +573,8 @@ Adding title or caption.
 ```
 {
     "add": "title",
+    "text": string,
     "style": {
-        "text": string,
         "font-size": int, // (optional)
         "font-family": string, // (optional)
         "font-color": string, // (optional)
@@ -600,8 +600,8 @@ Adding title or caption.
 ```
 {
     "add": "caption",
+    "text": string,
     "style": {
-        "text": text,
         "font-size": size, // (optional)
         "font-family": string, // (optional)
         "font-color": string, // (optional)

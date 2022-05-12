@@ -9,10 +9,12 @@ class AddAnnotation extends Action {
         if ('target' in spec) {
             this._target = spec.target;
         }
-        
-        
+        this._style = {};
         if ('style' in spec) {
             this._style = spec.style;
+        }
+        if ('text' in spec) {
+            this._style['text'] = spec.text;
         }
         if ('animation' in spec) {
             this._animation = spec.animation;
