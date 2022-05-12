@@ -1,110 +1,112 @@
 {
     "data": {
-        "url": "http://localhost:3000/spreadsheets/sales.csv",
-        "schema": [
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
+      "schema": [
         {
-            "field": "Year",
-            "type": "temporal"
+          "field": "Year",
+          "type": "temporal"
         },
         {
-            "field": "Brand",
-            "type": "categorical"
+          "field": "Brand",
+          "type": "categorical"
         },
         {
-            "field": "Category",
-            "type": "categorical"
+          "field": "Category",
+          "type": "categorical"
         },
         {
-            "field": "Sales",
-            "type": "numerical"
+          "field": "Sales",
+          "type": "numerical"
         }
-        ]
+      ]
     },
-   
+
     "actions": [
-        {
-            "add": "config",
-            "mode": "light",
-            "emotion": "exciting"
+      {
+        "add": "config",
+        "mode": "light",
+        "emotion": "exciting"
+      },
+      {
+        "select": [
+          {
+            "field": "Sales",
+            "aggregate": "min"
           },
-        {
-            "select": [
-                {
-                    "field": "Sales",
-                    "aggregate": "min"
-                },
-                {
-                    "field": "Brand"
-                }
-            ],
-            "groupby": [
-                {
-                    "field": "Brand"
-                }
-            ],
-            "filter": []
+          {
+            "field": "Brand"
+          }
+        ],
+        "groupby": [
+          {
+            "field": "Brand"
+          }
+        ],
+        "filter": []
+      },
+      {
+        "add": "chart",
+        "mark": {
+          "type": "bar",
+          "style": {
+            "corner-radius": 8,
+            "bin-spacing": 0.5,
+            "stroke": "#FFBE32",
+            "stroke-width": 3,
+            "stroke-opacity": 1,
+            "fill-opacity": 1,
+            "background-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
+          }
         },
-        {
-            "add": "chart",
-            "mark": {
-                "type": "bar",
-                "style": {
-                    "corner-radius": 8,
-                    "bin-spacing": 0.5,
-                    "stroke": "#FFBE32",
-                    "stroke-width": 3,
-                    "stroke-opacity": 1,
-                    "fill": "rgb(113,201,244)",
-                    "fill-opacity": 1
-                }
-            },
-            "style": {
-                "mask-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
-            }
-        },
-        {
-            "add": "group",
-          	"actions": [
-              {
-            		"add": "encoding",
-            		"channel": "x",
-            		"field":"Brand"
-        			},
-        			{
-            		"add": "encoding",
-            		"channel": "y",
-            		"field":"Sales"
-        			}
-            ],
-            "animation": {
-        			"sync": false,
-        			"duration": 2000
-      			}
-        },
-        {
-            "add": "annotation",
-            "method": "label",
-            "target": [{
-                "field": "Brand",
-                "value": "Ford"
-            }
-            ],
-            "animation": {
-                "type": "fly",
-                "duration": 2000
-              }
-        },
-        {
-            "add": "annotation",
-            "method": "symbol",
-            "target": [{
-                "field": "Brand",
-                "value": "Ford"
-            }
-            ],
-            "style": {
-              "icon-url": "http://localhost:3000/icon/rank-1.png"
-            }
+        "style": {
+          "mask-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
         }
+      },
+      {
+        "add": "group",
+        "actions": [
+          {
+            "add": "encoding",
+            "channel": "x",
+            "field": "Brand"
+          },
+          {
+            "add": "encoding",
+            "channel": "y",
+            "field": "Sales"
+          }
+        ],
+        "animation": {
+          "sync": false,
+          "duration": 2000
+        }
+      },
+      {
+        "add": "annotation",
+        "method": "label",
+        "target": [
+          {
+            "field": "Brand",
+            "value": "Ford"
+          }
+        ],
+        "animation": {
+          "type": "fly",
+          "duration": 2000
+        }
+      },
+      {
+        "add": "annotation",
+        "method": "symbol",
+        "target": [
+          {
+            "field": "Brand",
+            "value": "Ford"
+          }
+        ],
+        "style": {
+          "icon-url": "http://localhost:3000/icon/rank-1.png"
+        }
+      }
     ]
-}
+  }
