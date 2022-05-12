@@ -1,4 +1,4 @@
-import { max, min, sum } from 'd3';
+import { max, min, sum, ascending, descending } from 'd3';
 import Action from './action';
 
 /**
@@ -13,6 +13,7 @@ class DataProcess extends Action {
         this._select = [];
         this._groupby = [];
         this._filter = [];
+        this._orderby = [];
         if ('select' in spec) {
             this._select = spec['select'];
         }
@@ -21,6 +22,9 @@ class DataProcess extends Action {
         }
         if ('filter' in spec) {
             this._filter = spec['filter'];
+        }
+        if ('orderby' in spec) {
+            this._orderby = spec['orderby'];
         }
     }
 
@@ -106,6 +110,26 @@ class DataProcess extends Action {
         } catch (error) {
             console.error('Data Processing: Error In Select:\n' + Error);
         }
+        // Step 4: Orderby
+        try {
+            // prepare ascending and descending operations
+            processedData.sort((a, b) => {
+                let sorting;
+                this._orderby.forEach(function(req) {
+                    if (!('field' in req)) return;
+                    if ('sort' in req && req.sort === 'ASC') {
+                        sorting = sorting || ascending(a[req.field], b[req.field]);
+                    } else { // DESC as default
+                        sorting = sorting || descending(a[req.field], b[req.field]);
+                    }
+                })
+                return sorting;
+            })
+        } catch (error) {
+            console.error('Data Processing: Error In Orderby:\n' + Error);
+        }
+
+        // Step 5: Store
         // store the processed data in `vis` object
         vis.processedData(processedData);
     }
