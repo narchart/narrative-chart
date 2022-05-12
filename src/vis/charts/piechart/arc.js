@@ -63,7 +63,7 @@ class Arc extends Mark {
 
 
     opacity(value){
-        if(!value){
+        if(!value && value !==0){
             return this._opacity;
         }
         this._opacity = value;

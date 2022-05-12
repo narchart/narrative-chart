@@ -74,6 +74,7 @@ class Label extends Annotator {
             // identify the position
             let data_x, data_y, data_r, offset_y;
             const nodeName = focus_element.nodeName;
+            let arc_angle;
 
             if (nodeName === "circle") { // get center
                 data_x = parseFloat(focus_element.getAttribute("cx"));
@@ -90,6 +91,7 @@ class Label extends Annotator {
                     let data_temp = focus_element.__data__;
                     data_x = data_temp.textX();
                     data_y = data_temp.textY();
+                    arc_angle = (focus_element.__data__.angleStart() + focus_element.__data__.angleEnd())/2
                     offset_y = 0;
                 }else{
                     return;
@@ -115,7 +117,7 @@ class Label extends Annotator {
                         return COLOR.TEXT;
                     }
                 })
-                .attr("text-anchor", "middle")
+                .attr("text-anchor", (chart instanceof PieChart) ? (arc_angle > Math.PI ? "end":"start"):"middle")
                 .attr("alignment-baseline", "Alphabetic")
                 .attr("fill-opacity", 0)
                 .transition()

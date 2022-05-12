@@ -62,7 +62,7 @@ class Symbol extends Annotator {
                     let data_temp = focus_element.__data__;
                     data_x = data_temp.centroidX();
                     data_y = data_temp.centroidY();
-                    offset_y = 0;
+                    offset_y = -size_icon/2;
                 }else{
                     return;
                 }
