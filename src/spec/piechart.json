@@ -102,8 +102,22 @@
                 "type": "fly",
                 "duration": 2000
               }
+        },
+        {
+            "add": "annotation",
+            "method": "texture",
+            "target": [{
+                "field": "Brand",
+                "value": "BMW"
+            }
+            ],
+            "style": {
+                "background-image": "http://localhost:3000/texture/stripe.png"
+              },
+            "animation": {
+                "type": "fade",
+                "duration": 2000
+              }
         }
-
-     
     ]
 }

@@ -1,5 +1,6 @@
 import * as d3 from 'd3';
 import Annotator from './annotator';
+import { PieChart } from '../../charts';
 
 /**
  * @description An annotator for filling texture.
@@ -40,23 +41,23 @@ class Texture extends Annotator {
             .attr("x", 0)
             .attr("y", 0);
 
-        if ("type" in animation && animation["type"] === "wipe") {
-            const uid = Date.now().toString() + Math.random().toString(36).substring(2);
-            let focus_elements = svg.selectAll(".mark")
-            .filter(function (d) {
-                if (target.length === 0) {
-                    return true
-                }
-                for (const item of target) {
-                    if (d[item.field] === item.value) {
-                        continue
-                    } else {
-                        return false
-                    }
-                }
+        const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+        let focus_elements = svg.selectAll(".mark")
+        .filter(function (d) {
+            if (target.length === 0) {
                 return true
-            });
+            }
+            for (const item of target) {
+                if (d[item.field] === item.value) {
+                    continue
+                } else {
+                    return false
+                }
+            }
+            return true
+        });
 
+        if ("type" in animation && animation["type"] === "wipe") {
             focus_elements.nodes().forEach(one_element => {
                 const nodeName = one_element.nodeName;
                 if (nodeName === "rect") {
@@ -111,9 +112,19 @@ class Texture extends Annotator {
             .transition()
             .duration('duration' in animation ? animation['duration']: 0)
             .style("fill", "url(#texture_background)")
-        }
-        
-    
+
+            focus_elements.nodes().forEach(one_element => {
+                console.log(one_element);
+                if(chart instanceof PieChart){
+                    let data_temp = one_element.__data__;
+                    let data_x = data_temp.centroidX();
+                    let data_y = data_temp.centroidY();
+                    d3.selectAll("pattern")
+                    .attr("x",(d,i)=>data_x-150)
+                    .attr("y",(d,i)=>data_y-150)
+                }
+            })
+        }      
     }
 }
 

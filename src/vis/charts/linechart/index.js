@@ -409,7 +409,6 @@ class LineChart extends Chart {
             }
 
             /* draw points */
-            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
             for(let factKey in processedData) {
                 d3.select(".content")
                     .append("g")
@@ -422,7 +421,7 @@ class LineChart extends Chart {
                     .data(processedData[factKey])
                     .enter().append("circle")
                     .attr("class", "mark")
-                    .attr("r", circleSize)
+                    .attr("r", dotRadius)
                     .attr("cx", d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
                     .attr("cy", d => yScale(d[yEncoding]));
             }
