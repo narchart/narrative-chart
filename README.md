@@ -197,11 +197,11 @@ Add marks to initialize the chart.
 
 | Chart | Mark | Mark Style |
 |:--|:--|:--|
-| Scatterplot | point | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
-| Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; corner-radius; bin-spacing|
-| Line Chart | line | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; |
-| Pie Chart | arc | inner-radius; outer-radius; text-radius; corner-radius; stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
-| Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; |
+| Scatterplot | point | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image;|
+| Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; corner-radius; bin-spacing; background-image;|
+| Line Chart | line | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image; |
+| Pie Chart | arc | inner-radius; outer-radius; text-radius; corner-radius; stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
+| Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 
 ```
 {
