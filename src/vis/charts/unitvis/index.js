@@ -162,6 +162,24 @@ class Unitvis extends Chart {
             .attr("chartWidth", width)
             .attr("chartHeight", height);
 
+        if(this.markStyle()["background-image"]){
+            let config = {
+                "texture_size" : 300
+            }    
+
+            let defs = svg.append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "texture_background")
+                .attr("width", config.texture_size)
+                .attr("height", config.texture_size)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.markStyle()["background-image"])
+                .attr("x", 0)
+                .attr("y", 0);
+        }
+        
+
         content.append("g")
             .attr("class", "circleGroup")
             .selectAll("circle")
@@ -172,10 +190,12 @@ class Unitvis extends Chart {
             .attr("stroke", this.markStyle()["stroke-color"]?? "#FFF")
             .attr("stroke-width", this.markStyle()["stroke-width"]?? 0)
             .attr("stroke-opacity", this.markStyle()["stroke-opacity"]?? 1)
-            .attr("fill", this.markStyle()["fill"]?  this.markStyle()["fill"] : d => d.color())
+            .attr("fill", this.markStyle()["background-image"]? "url(#texture_background)" : this.markStyle()["fill"]?  this.markStyle()["fill"] : d => d.color())
             .attr("opacity", this.markStyle()["fill-opacity"]?? 1)
             .attr("cx", d => d.x())
             .attr("cy", d => d.y());
+
+        
 
     }
 

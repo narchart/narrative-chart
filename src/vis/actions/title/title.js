@@ -62,7 +62,7 @@ class Title extends Titler {
         }
 
         let titletransform = {
-            left: 0 + (titleborderpadding.left), 
+            left: -2 + (titleborderpadding.left), 
             top: 6 + (titleborderpadding.top)
         }
 
