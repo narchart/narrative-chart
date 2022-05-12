@@ -63,14 +63,23 @@
             }
         },
         {
-            "add": "encoding",
-            "channel": "x",
-            "field":"Brand"
-        },
-        {
-            "add": "encoding",
-            "channel": "y",
-            "field":"Sales"
+            "add": "group",
+          	"actions": [
+              {
+            		"add": "encoding",
+            		"channel": "x",
+            		"field":"Brand"
+        			},
+        			{
+            		"add": "encoding",
+            		"channel": "y",
+            		"field":"Sales"
+        			}
+            ],
+            "animation": {
+        			"sync": false,
+        			"duration": 2000
+      			}
         },
         {
             "add": "annotation",

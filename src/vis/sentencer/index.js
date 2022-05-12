@@ -296,7 +296,7 @@ export const getTitle = function (fact) {
             break;
         case FactType.Categorization:
             // title += ' of ' + fact.groupby[0]
-            title = fact.breakdown[0]
+            title = fact.breakdown[0].field
             break;
 
         case FactType.Difference:

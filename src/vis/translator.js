@@ -21,13 +21,33 @@ class Translator {
      */
      translate(factspec, schemaspec) {
         let actionspecs = []
-        let animationDuration = 1000;
+        //let animationDuration = 1000;
+
+        /* Step1: emotion => Config */
+        let hasEmotion = false;
+        if ("emotion" in factspec){
+            hasEmotion = true;
+            let emotion = factspec.emotion;
+            let emotionspec = {
+                "add": "config",
+                "mode": emotion.mode ? emotion.mode : "light",
+                "emotion": emotion.emotion
+            }
+            actionspecs.push(emotionspec)
+        }
 
         /* Step1: measure, breakdown, subspace => Data processing */
         let selectspec = [];
-        let groupbyspec = factspec.breakdown;
+        let groupbyspec = [];
         let filterspec = factspec.subspace;
-        selectspec = groupbyspec.concat(factspec.measure);
+        if (factspec.type === FactType.Categorization){
+            groupbyspec = [{"field": "dataid"}]
+            selectspec = groupbyspec.concat(factspec.breakdown);
+        }
+        else {
+            groupbyspec = factspec.breakdown;
+            selectspec = groupbyspec.concat(factspec.measure);
+        }
         
         let dataprespec = {
             "select": selectspec,
@@ -114,12 +134,14 @@ class Translator {
                     "mark": chartMark
                 }
                 actionspecs.push(markspec);
-                actionspecs.push(titlespec);
-                actionspecs.push(captionspec);
+                // actionspecs.push(titlespec);
+                // actionspecs.push(captionspec);
                 encodingspec = this.getBarChartSpec(schemaspec, breakdown, measure, type)
                 for(let i=0; i<encodingspec.length; i++){
                     actionspecs.push(encodingspec[i]);
                 }
+                actionspecs.push(titlespec);
+                actionspecs.push(captionspec);
                 break;
             case MarkType.LINE:
                 chartMark = "line";
@@ -131,6 +153,20 @@ class Translator {
                 actionspecs.push(titlespec);
                 actionspecs.push(captionspec);
                 encodingspec = this.getLineChartSpec(schemaspec, breakdown, measure)
+                for(let i=0; i<encodingspec.length; i++){
+                    actionspecs.push(encodingspec[i]);
+                }
+                break;
+            case MarkType.UNIT:
+                chartMark = "unit";
+                markspec = {
+                    "add": "chart",
+                    "mark": chartMark
+                }
+                actionspecs.push(markspec);
+                actionspecs.push(titlespec);
+                actionspecs.push(captionspec);
+                encodingspec = this.getUnitVisSpec(schemaspec, breakdown, measure,type)
                 for(let i=0; i<encodingspec.length; i++){
                     actionspecs.push(encodingspec[i]);
                 }
@@ -152,13 +188,6 @@ class Translator {
             let annoMethod;
             let annospec;
             const COLOR = new Color();
-            let fillColor
-            if (type === FactType.Difference){
-                fillColor = COLOR.DEFAULT;
-            }
-            else{
-                fillColor = COLOR.ANNOTATION;
-            }
             for(let i=0; i<annoTypes.length; i++){
                 annotation = annoTypes[i];
                 switch(annotation){
@@ -171,13 +200,10 @@ class Translator {
                             annospec = {
                                 "add": "annotation",
                                 "method": annoMethod,
-                                "target": [focus[j]],
-                                "style": {
-                                    "color": COLOR.ANNOTATION
-                                },
-                                "animation": {
-                                    "duration": animationDuration
-                                }
+                                "target": [focus[j]]
+                                // "animation": {
+                                //     "duration": animationDuration
+                                // }
                             }
                             actionspecs.push(annospec);
                         }
@@ -185,18 +211,45 @@ class Translator {
                     case AnnotationType.FILL:
                         annoMethod = annotation;
                         for(let j=0; j<focus.length; j++){
-                            annospec = {
-                                "add": "annotation",
-                                "method": annoMethod,
-                                "target": [focus[j]],
-                                "style": {
-                                    "color": fillColor
-                                },
-                                "animation": {
-                                    "duration": animationDuration
+                            if((type === FactType.Outlier) && (!hasEmotion)) {
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[j]],
+                                    "style": {
+                                        "color": "#F12E2E"
+                                    },
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
                                 }
+                                actionspecs.push(annospec);
                             }
-                            actionspecs.push(annospec);
+                            else if((type === FactType.Difference) && (!hasEmotion)) {
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[j]],
+                                    "style": {
+                                        "color": COLOR.DEFAULT
+                                    },
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                            }
+                            else{
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[j]]
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                            }
                         }
                         break;
                     case AnnotationType.REFERENCE:
@@ -206,18 +259,18 @@ class Translator {
                                 "add": "annotation",
                                 "method": annoMethod,
                                 "target": [focus[0]],
-                                "animation": {
-                                    "duration": animationDuration
-                                }
+                                // "animation": {
+                                //     "duration": animationDuration
+                                // }
                             }
                             actionspecs.push(annospec);
                             annospec = {
                                 "add": "annotation",
                                 "method": annoMethod,
                                 "target": [focus[1]],
-                                "animation": {
-                                    "duration": animationDuration
-                                }
+                                // "animation": {
+                                //     "duration": animationDuration
+                                // }
                             }
                             actionspecs.push(annospec);
                         }
@@ -233,9 +286,9 @@ class Translator {
                             "add": "annotation",
                             "method": annoMethod,
                             "target": [],
-                            "animation": {
-                                "duration": animationDuration
-                            }
+                            // "animation": {
+                            //     "duration": animationDuration
+                            // }
                         }
                         actionspecs.push(annospec);
                         break;
@@ -244,23 +297,89 @@ class Translator {
                         annospec = {
                             "add": "annotation",
                             "method": annoMethod,
-                            "target": [],
-                            "style": {
-                                "color": COLOR.ANNOTATION
-                            },
-                            "animation": {
-                                "duration": animationDuration
-                            }
+                            "target": []
+                            // "animation": {
+                            //     "duration": animationDuration
+                            // }
                         }
                         actionspecs.push(annospec);
                         break;
+                        case AnnotationType.SYMBOL:
+                            annoMethod = annotation;
+                            if(type === FactType.Rank && focus.length === 3) {
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[0]],
+                                    "style": {
+                                        "icon-url": "http://localhost:3001/icon/rank-1.png"
+                                    }
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[1]],
+                                    "style": {
+                                        "icon-url": "http://localhost:3001/icon/rank-2.png"
+                                    }
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[2]],
+                                    "style": {
+                                        "icon-url": "http://localhost:3001/icon/rank-3.png"
+                                    }
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                            }
+                            else if(type === FactType.Extreme && focus.length === 1) {
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[0]],
+                                    "style": {
+                                        "icon-url": "http://localhost:3001/icon/max.png"
+                                    }
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                            }
+                            else if(type === FactType.Outlier && focus.length === 1) {
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[0]],
+                                    "style": {
+                                        "icon-url": "http://localhost:3001/icon/outlier.png"
+                                    }
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                            }
+                            break;
                     default:
                         console.log("wrong annotation type")
                         break;
                 }
             }
         }
-
+        console.log(actionspecs)
         return actionspecs;
     }
 
@@ -274,7 +393,7 @@ class Translator {
      getScatterplotSpec(schema, breakdown, measure) {
         let measureNum = measure.length;
         let encodingspec = [];
-        let animationDuration = 1000;
+        //let animationDuration = 1000;
 
         if (measureNum >= 2){
             let measureSchemaFst = schema.filter(s => s.field === measure[0].field)
@@ -288,9 +407,9 @@ class Translator {
                 "add": "encoding",
                 "channel": "x",
                 "field": measure[0].field,
-                "animation": {
-                    "duration": animationDuration
-                }
+                // "animation": {
+                //     "duration": animationDuration
+                // }
             }
             encodingspec.push(encodingX);
             //the second element in measure => encodingY（numeriacl）
@@ -298,9 +417,9 @@ class Translator {
                 "add": "encoding",
                 "channel": "y",
                 "field": measure[1].field,
-                "animation": {
-                    "duration": animationDuration
-                }
+                // "animation": {
+                //     "duration": animationDuration
+                // }
             }
             encodingspec.push(encodingY);
             return encodingspec;
@@ -324,7 +443,7 @@ class Translator {
         let measureNum = measure.length;
         let breakdownNum = breakdown.length;
         let encodingspec = [];
-        let animationDuration = 1000;
+        //let animationDuration = 1000;
 
         //the first element in breakdown => encodingX（categorical）
         if(breakdownNum > 0 && breakdownSchema[0].type === FieldType.CATEGORICAL){
@@ -332,9 +451,9 @@ class Translator {
                 "add": "encoding",
                 "channel": "x",
                 "field": breakdown[0].field,
-                "animation": {
-                    "duration": animationDuration
-                }
+                // "animation": {
+                //     "duration": animationDuration
+                // }
             }
             encodingspec.push(encodingX);
             if (measureNum > 0 || facttype !== FactType.Categorization){
@@ -348,9 +467,9 @@ class Translator {
                     "add": "encoding",
                     "channel": "y",
                     "field": measure[0].field,
-                    "animation": {
-                        "duration": animationDuration
-                    }
+                    // "animation": {
+                    //     "duration": animationDuration
+                    // }
                 }
                 encodingspec.push(encodingY)
 
@@ -367,9 +486,9 @@ class Translator {
                         "add": "encoding",
                         "channel": "color",
                         "field": breakdown[1].field,
-                        "animation": {
-                            "duration": animationDuration
-                        }
+                        // "animation": {
+                        //     "duration": animationDuration
+                        // }
                     }
                     encodingspec.push(encodingColor)
                 }
@@ -394,7 +513,7 @@ class Translator {
         let measureNum = measure.length;
         let breakdownNum = breakdown.length;
         let encodingspec = [];
-        let animationDuration = 1000;
+        //let animationDuration = 1000;
 
         //the first element in breakdown => encodingX（temporal）
         if (breakdownNum > 0 && breakdownSchema[0].type === FieldType.TEMPORAL){
@@ -402,9 +521,9 @@ class Translator {
                 "add": "encoding",
                 "channel": "x",
                 "field": breakdown[0].field,
-                "animation": {
-                    "duration": animationDuration
-                }
+                // "animation": {
+                //     "duration": animationDuration
+                // }
             }
             encodingspec.push(encodingX);
             if (measureNum > 0) {
@@ -418,9 +537,9 @@ class Translator {
                     "add": "encoding",
                     "channel": "y",
                     "field": measure[0].field,
-                    "animation": {
-                        "duration": animationDuration
-                    }
+                    // "animation": {
+                    //     "duration": animationDuration
+                    // }
                 }
                 encodingspec.push(encodingY)
             
@@ -432,9 +551,9 @@ class Translator {
                             "add": "encoding",
                             "channel": "color",
                             "field": breakdown[1].field,
-                            "animation": {
-                                "duration": animationDuration
-                            }
+                            // "animation": {
+                            //     "duration": animationDuration
+                            // }
                         }
                         encodingspec.push(encodingColor)
                     }
@@ -450,6 +569,54 @@ class Translator {
         else{
             console.log("LineChart breakdown lacks")
             return;
+        }
+    }
+
+    /**
+     * @description Get action specification for unitvis
+     * @param {Object} schema Data schema specification.
+     * @param {Object} breakdown Breakdown field in fact specification.
+     * @param {Object} measure Measure field in fact specification.
+     * @param facttype Type field in fact specification.
+     * @returns {Array} encodingspec Encoding specification in actions specification,
+     */
+     getUnitVisSpec(schema, breakdown, measure, facttype){
+        let breakdownNum = breakdown.length;
+        let encodingspec = [];
+        //let animationDuration = 1000;
+
+        if(facttype === FactType.Proportion) {
+            encodingspec = [];
+            return encodingspec;
+        }
+        else if(facttype === FactType.Categorization) {
+            let breakdownSchema = schema.filter(s => s.field === breakdown[0].field)
+            if (breakdownNum > 0 && breakdownSchema[0].type === FieldType.CATEGORICAL){
+                let encodingX = {
+                    "add": "encoding",
+                    "channel": "x",
+                    "field": breakdown[0].field,
+                    // "animation": {
+                    //     "duration": animationDuration
+                    // }
+                }
+                encodingspec.push(encodingX);
+                let encodingColor = {
+                    "add": "encoding",
+                    "channel": "color",
+                    "field": breakdown[0].field,
+                    // "animation": {
+                    //     "duration": animationDuration
+                    // }
+                }
+                encodingspec.push(encodingColor);
+                return encodingspec;
+            }
+        }
+        else {
+            console.log("Unitvis encoding lacks")
+            encodingspec = [];
+            return encodingspec;
         }
     }
 
@@ -473,7 +640,7 @@ class Translator {
             "measureLen": 1,
             "breakdownType": [FieldType.CATEGORICAL],
             "needFocus": true,
-            "annotationType": [AnnotationType.DESATURATE, AnnotationType.FILL]
+            "annotationType": [AnnotationType.DESATURATE, AnnotationType.FILL, AnnotationType.SYMBOL]
         },
         {
             "fact": FactType.Outlier,
@@ -481,7 +648,7 @@ class Translator {
             "measureLen": 1,
             "breakdownType": [FieldType.TEMPORAL],
             "needFocus": true,
-            "annotationType": [AnnotationType.DESATURATE, AnnotationType.FILL]
+            "annotationType": [AnnotationType.DESATURATE, AnnotationType.FILL, AnnotationType.SYMBOL]
         },
         //extreme
         {
@@ -490,7 +657,7 @@ class Translator {
             "measureLen": 1,
             "breakdownType": [FieldType.CATEGORICAL],
             "needFocus": true,
-            "annotationType": [AnnotationType.FILL]
+            "annotationType": [AnnotationType.FILL, AnnotationType.SYMBOL]
         },
         {
             "fact": FactType.Extreme,
@@ -498,7 +665,7 @@ class Translator {
             "measureLen": 1,
             "breakdownType": [FieldType.TEMPORAL],
             "needFocus": true,
-            "annotationType": [AnnotationType.FILL]
+            "annotationType": [AnnotationType.FILL, AnnotationType.SYMBOL]
         },
         //rank
         {
@@ -507,7 +674,7 @@ class Translator {
             "measureLen": 1,
             "breakdownType": [FieldType.CATEGORICAL],
             "needFocus": true,
-            "annotationType": [AnnotationType.FILL]
+            "annotationType": [AnnotationType.FILL, AnnotationType.SYMBOL]
         },
         //distribution
         {
@@ -530,7 +697,7 @@ class Translator {
         //categorization
         {
             "fact": FactType.Categorization,
-            "chart": MarkType.BAR,
+            "chart": MarkType.UNIT,
             "measureLen": 0,
             "breakdownType": [FieldType.CATEGORICAL],
             "needFocus": true,
@@ -544,6 +711,24 @@ class Translator {
             "breakdownType": [FieldType.TEMPORAL],
             "needFocus": false,
             "annotationType": [AnnotationType.REGRESSION]
+        },
+        //proportion
+        {
+            "fact": FactType.Proportion,
+            "chart": MarkType.UNIT,
+            "measureLen": 0,
+            "breakdownType": [FieldType.CATEGORICAL],
+            "needFocus": true,
+            "annotationType": [AnnotationType.FILL]
+        },
+        //value
+        {
+            "fact": FactType.Value,
+            "chart": MarkType.BAR,
+            "measureLen": 0,
+            "breakdownType": [],
+            "needFocus": true,
+            "annotationType": []
         }
     ];
 

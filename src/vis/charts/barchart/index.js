@@ -34,10 +34,45 @@ class BarChart extends Chart {
         //         .append("g")
                 // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        this.cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
+        this.binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
+        this.stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
+        this.strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
+        this.strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
+        this.fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : (this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
+        this.fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
+
         this.drawBackground();
-        // this.drawAxis();
-        this.encodeXY();
-        this.encodeColor();
+
+        let svg = this.svg();
+
+        if(this.style()["mask-image"]) {
+            let margin = this.margin()
+            let chartmaskgroundsize = {
+                width: 600,
+                height: 600
+            }
+            let defs = svg.append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "chart-mask-image")
+                .attr("width", chartmaskgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.style()["mask-image"])
+                .attr("width", chartmaskgroundsize.width)
+                .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
+                .attr("x", 0)
+                .attr("y", 0);
+        }
+
+        this.axis = svg.append("g")
+           .attr("class", "axis")
+        this.content = svg.append("g")
+           .attr("class", "content")
+           .attr("chartWidth", this.width())
+           .attr("chartHeight", this.height())
+
         return this.svg();       
     }
 
@@ -180,21 +215,12 @@ class BarChart extends Chart {
             const processedData = this.processedData();
             const xEncoding = this.x,
                 yEncoding = this.y;
-
-            const cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
-            const binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
-            const stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
-            const strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
-            const strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
-            const fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : (this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
-            const fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
-
         
             /** set the ranges */
             let xScale = d3.scaleBand()
                 .range([0, width - 12])
                 .domain(processedData.map(d => d[xEncoding]))
-                .padding(binSpacing);
+                .padding(this.binSpacing);
         
             let yScale = d3.scaleLinear()
                 .range([height, 0])
@@ -204,7 +230,7 @@ class BarChart extends Chart {
             /** draw axis */
             let axis = svg.append("g")
                 .attr("class", "axis"),
-            content = svg.append("g")
+                content = svg.append("g")
                 .attr("class", "content")
                 .attr("chartWidth", width)
                 .attr("chartHeight", height);
@@ -283,26 +309,6 @@ class BarChart extends Chart {
                 });
             
             /* draw rects */
-            if(this.style()["mask-image"]) {
-                let margin = this.margin()
-                let chartmaskgroundsize = {
-                    width: 600,
-                    height: 600
-                }
-                let defs = this._svg.append('svg:defs');
-                defs.append("svg:pattern")
-                    .attr("id", "chart-mask-image")
-                    .attr("width", chartmaskgroundsize.width)
-                    .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
-                    .attr("patternUnits", "userSpaceOnUse")
-                    .append("svg:image")
-                    .attr("xlink:href", this.style()["mask-image"])
-                    .attr("width", chartmaskgroundsize.width)
-                    .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
-                    .attr("x", 0)
-                    .attr("y", 0);
-            }
-
             content.append("g")
                 .attr("class", "rects")
                 .selectAll("rect")
@@ -313,13 +319,165 @@ class BarChart extends Chart {
                 .attr("y", d => yScale(d[yEncoding]))
                 .attr("width", xScale.bandwidth())
                 .attr("height", d => height - yScale(d[yEncoding]))
-                .attr("fill", fill)
-                .attr("rx", cornerRadius)
-                .attr("ry", cornerRadius)
-                .attr("fill-opacity", fillOpacity)
-                .attr("stroke", stroke)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke-opacity", strokeOpacity)
+                .attr("fill", COLOR.DEFAULT);
+        }
+    }
+
+     /**
+     * @description Using X-axis to encode a data field.
+     *
+     * @return {void}
+     */
+      encodeX() {
+          if (this.x) {
+            let svg = this.svg();
+            let width = this.width(),
+                height = this.height();
+            const processedData = this.processedData();
+            const xEncoding = this.x;
+
+            /** set the ranges */
+            this.xScale = d3.scaleBand()
+                .range([0, width - 12])
+                .domain(processedData.map(d => d[xEncoding]))
+                .padding(this.binSpacing);
+
+            let axisX = d3.axisBottom(this.xScale);
+
+            let axis_X = this.axis.append("g")
+            .attr("class", "axis_x")
+            .attr('transform', `translate(0, ${height})`)
+            .call(axisX);
+            
+            // specify color for axis elements
+            // tick
+            axis_X.selectAll(".tick line")
+                .attr("stroke", COLOR.AXIS);
+            // domain path
+            axis_X.selectAll(".domain")
+                .attr("stroke", COLOR.AXIS);
+            // tick label
+            axis_X.selectAll(".tick")
+                .selectAll("text")
+                .attr("fill", COLOR.AXIS);
+            
+            // axix-label
+            const fontsize = 12;
+
+            axis_X.append("text")
+                 .attr("x", width / 2)
+                 .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + 10)
+                 .attr("text-anchor", "middle")
+                 .attr("dominant-baseline", "hanging")
+                 .attr("font-size", fontsize)
+                 .attr("fill", COLOR.AXIS)
+                 .text(xEncoding);
+          } 
+      }
+
+     /**
+     * @description Using X-axis to encode a data field.
+     *
+     * @return {void}
+     */
+    encodeY() {
+        if (this.y) {
+            let height = this.height();
+            const processedData = this.processedData();
+            const yEncoding = this.y;
+
+            let obj = {};
+            this.bardata = [];
+
+            //
+            if(this.x){
+                processedData.forEach(item => {
+                    if(obj.hasOwnProperty(item[this.x])) {
+                        obj[item[this.x]] =  obj[item[this.x]] + item[this.y]
+                    }
+                    else{
+                        obj[item[this.x]] = item[this.y]
+                    }
+                })
+                for(let key in obj){
+                    let temp = {};
+                    temp[this.x] = key
+                    temp[this.y] = obj[key]
+                    this.bardata.push(temp)
+                }
+            }
+            else{
+                console.log("encode x lacks")
+            }
+
+            /** set the ranges */
+            // this.yScale = d3.scaleLinear()
+            //     .range([height, 0])
+            //     .domain([0, d3.max(processedData, d => d[yEncoding])])
+            //     .nice();
+            
+            this.yScale = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, d3.max(this.bardata, d => d[yEncoding])])
+                .nice();
+
+            let axisY = d3.axisLeft(this.yScale)
+                .ticks(5)
+                .tickSize(0, 0, 0)
+                .tickPadding(5)
+                .tickFormat(function (d) {
+                    if ((d / 1000000) >= 1) {
+                        d = d / 1000000 + "M";
+                    } else if ((d / 1000) >= 1) {
+                        d = d / 1000 + "K";
+                    }
+                    return d;
+                });
+
+            let axis_Y = this.axis.append("g")
+                .attr("class", "axis_y")
+                .call(axisY);
+
+            // specify color for axis elements
+            // tick
+            axis_Y.selectAll(".tick line")
+                .attr("stroke", COLOR.AXIS);
+            // domain path
+            axis_Y.selectAll(".domain")
+                .attr("stroke", COLOR.AXIS);
+            // tick label
+            axis_Y.selectAll(".tick")
+                .selectAll("text")
+                .attr("fill", COLOR.AXIS);
+            
+            // draw y axis path
+            axis_Y.selectAll(".axis_y")
+                .append("line")
+                .attr("x1", 0)
+                .attr("y1", 0)
+                .attr("x2", 0)
+                .attr("y2", height);
+
+            axis_Y.selectAll(".axis_y .tick text")
+                .attr("transform",  "translate(3, 0)");
+            
+            // axix-label
+            const labelPadding = 20, fontsize = 12;
+
+            axis_Y.append("text")
+                .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
+                .attr("text-anchor", "middle")
+                .attr("font-size", fontsize)
+                .attr("fill", COLOR.AXIS)
+                .text(yEncoding);
+            
+            /** draw grid */
+            axis_Y.selectAll(".axis_y .tick line")
+                .attr("class", "gridline")
+                .attr("stroke", d => {
+                    if(d ===0) return 0;
+                    else return COLOR.DIVIDER;
+                });
         }
     }
 
@@ -328,7 +486,7 @@ class BarChart extends Chart {
      *
      * @return {void}
      */
-    encodeColor() {
+    encodeColor(animation = {}) {
         // if colorEncoding, clear and redraw 
         if(this.color) {
             let width = this.width(),
@@ -339,13 +497,6 @@ class BarChart extends Chart {
             const colorEncoding = this.color;
             let content = d3.select(".content");
 
-            const cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
-            const binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
-            const stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
-            const strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
-            const strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
-            const fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : (this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
-            const fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
 
             /** clear rects */
             d3.selectAll(".rects").remove();
@@ -377,17 +528,21 @@ class BarChart extends Chart {
             for(let category in categoriesData) {
                 let row = {};
                 row[xEncoding] = category;
-                series.map(s => row[s] = 0); 
-                categoriesData[category].map(d => row[d[colorEncoding]] = d[yEncoding]);
+                // series.map(s => row[s] = 0); 
+                // categoriesData[category].map(d => row[d[colorEncoding]] = d[yEncoding]);
+                series.map(s => row[s] = [0]); 
+                categoriesData[category].map(d => row[d[colorEncoding]].push(d[yEncoding]));
+                series.map(s => row[s] = d3.sum(row[s]));
+
                 processedData.push(row);
             }
             stackData = d3.stack().keys(series)(processedData);
 
             /** set the ranges */
             let xScale = d3.scaleBand()
-            .range([0, width])
+            .range([0, width - 12])
             .domain(data.map(d => d[xEncoding]))
-            .padding(binSpacing);
+            .padding(this.binSpacing);
 
             let yScale = d3.scaleLinear()
                 .range([height, 0])
@@ -395,12 +550,13 @@ class BarChart extends Chart {
                 .nice();
 
             /** draw rect layers */
-                let rectLayers = content.append("g")
+            let rectLayers = content.append("g")
                 .selectAll("g")
                 .data(stackData)
                 .join("g")
                 .attr("class", "rectLayer")
-                .attr("fill", (d, i) => COLOR.CATEGORICAL[i]);
+                // .attr("fill", (d, i) => COLOR.CATEGORICAL[i]);
+                .attr("fill", COLOR.DEFAULT);
             rectLayers.selectAll("rect")
                 .data(d => d)
                 .enter().append("rect")
@@ -409,13 +565,18 @@ class BarChart extends Chart {
                 .attr("y", d => yScale(d[1]))
                 .attr("width", xScale.bandwidth())
                 .attr("height", d => Math.abs(yScale(d[1]) - yScale(d[0])))
-                .attr("rx", cornerRadius)
-                .attr("ry", cornerRadius)
-                .attr("fill", fill)
-                .attr("fill-opacity", fillOpacity)
-                .attr("stroke", stroke)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke-opacity", strokeOpacity)
+                .attr("rx", this.cornerRadius)
+                .attr("ry", this.cornerRadius)
+                .attr("fill", this.fill)
+                .attr("fill-opacity", this.fillOpacity)
+                .attr("stroke", this.stroke)
+                .attr("stroke-width", this.strokeWidth)
+                .attr("stroke-opacity", this.strokeOpacity)
+
+            d3.selectAll(".rectLayer")
+                .transition()
+                .duration('duration' in animation ? animation['duration'] : 0)
+                .attr("fill", (d, i) => COLOR.CATEGORICAL[i]);
         }
     }
 
@@ -424,14 +585,57 @@ class BarChart extends Chart {
      *
      * @return {void}
      */
-    addEncoding(channel, field) {
+    addEncoding(channel, field, animation = {}) {
         if(!this[channel]) {
             this[channel] = field;
-            d3.selectAll("svg > g > *").remove();
-            this.drawBackground();
-            this.drawAxis();
-            if (this.x && this.y) this.encodeXY();
-            if (this.color) this.encodeColor();
+
+            let changeX = false;
+            let changeY = false;
+
+            switch(channel) {
+                case "x":
+                    changeX = true;
+                    this.encodeX();
+                    break;
+                case "y":
+                    changeY = true;
+                    this.encodeY()
+                    break;
+                case "color":
+                    this.encodeColor(animation);
+                    break;
+                default:
+                    console.log("no channel select") ;   
+            }
+
+            if((this.x && this.y) && (changeX || changeY)) {
+                this.content.append("g")
+                    .attr("class", "rects")
+                    .selectAll("rect")
+                    .data(this.bardata)
+                    .enter().append("rect")
+                    .attr("class", "mark")
+                    .attr("x", d => this.xScale(d[this.x]))
+                    .attr("y", this.height())
+                    .attr("width", this.xScale.bandwidth())
+                    .attr("height", 0)
+                    .attr("fill", this.fill)
+                    .attr("rx", this.cornerRadius)
+                    .attr("ry", this.cornerRadius)
+                    .attr("fill-opacity", this.fillOpacity)
+                    .attr("stroke", this.stroke)
+                    .attr("stroke-width", this.strokeWidth)
+                    .attr("stroke-opacity", this.strokeOpacity);
+                if( 'duration' in animation ){
+                    this.animationGrow(animation);
+                }
+                else{
+                    this.content.selectAll(".mark")
+                        .attr("y", d => this.yScale(d[this.y]))
+                        .attr("height", d => this.height() - this.yScale(d[this.y]))
+                }
+                
+            }
         }
     }
 
@@ -440,14 +644,103 @@ class BarChart extends Chart {
      *
      * @return {void}
      */
-    modifyEncoding(channel, field) {
+    modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field;
-            d3.selectAll("svg > g > *").remove();
-            this.drawBackground();
-            this.drawAxis();
-            if (this.x && this.y) this.encodeXY();
-            if (this.color) this.encodeColor();
+
+            switch (channel) {
+                case 'x':
+                    new Promise((resolve, reject) => {
+                        this.content.selectAll(".mark")
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']/2 : 0)
+                                .style('opacity', 0)
+                                .on("end", resolve)
+                    })
+                    .then(()=>{
+                        this.svg().selectAll(".rects").remove();
+                        this.svg().selectAll(".axis_x").remove();
+                        this.svg().selectAll(".axis_y").remove();
+                    })
+                    .then(()=>{
+                        this.encodeX();
+                        this.encodeY();
+                        this.content.append("g")
+                            .attr("class", "rects")
+                            .selectAll("rect")
+                            .data(this.bardata)
+                            .enter().append("rect")
+                            .attr("class", "mark")
+                            .attr("x", d => this.xScale(d[this.x]))
+                            .attr("y", this.height())
+                            .attr("width", this.xScale.bandwidth())
+                            .attr("height", 0)
+                            .attr("fill", this.fill)
+                            .attr("rx", this.cornerRadius)
+                            .attr("ry", this.cornerRadius)
+                            .attr("fill-opacity", this.fillOpacity)
+                            .attr("stroke", this.stroke)
+                            .attr("stroke-width", this.strokeWidth)
+                            .attr("stroke-opacity", this.strokeOpacity);
+                        if('duration' in animation){
+                            animation['duration'] = animation['duration']/2
+                            this.animationGrow(animation)
+                        }
+                        else{
+                            this.content.selectAll(".mark")
+                                    .attr("y", d => this.yScale(d[this.y]))
+                                    .attr("height", d => this.height() - this.yScale(d[this.y]))
+                        }
+                    })
+                    break;
+                case 'y':
+                    new Promise((resolve, reject) => {
+                        this.content.selectAll(".mark")
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']/2 : 0)
+                                .style('opacity', 0)
+                                .on("end", resolve)
+                    })
+                    .then(()=>{
+                        this.svg().selectAll(".rects").remove();
+                        this.svg().selectAll(".axis_y").remove();
+                    })
+                    .then(()=>{
+                        this.encodeY();
+                        this.content.append("g")
+                            .attr("class", "rects")
+                            .selectAll("rect")
+                            .data(this.bardata)
+                            .enter().append("rect")
+                            .attr("class", "mark")
+                            .attr("x", d => this.xScale(d[this.x]))
+                            .attr("y", this.height())
+                            .attr("width", this.xScale.bandwidth())
+                            .attr("height", 0)
+                            .attr("fill", this.fill)
+                            .attr("rx", this.cornerRadius)
+                            .attr("ry", this.cornerRadius)
+                            .attr("fill-opacity", this.fillOpacity)
+                            .attr("stroke", this.stroke)
+                            .attr("stroke-width", this.strokeWidth)
+                            .attr("stroke-opacity", this.strokeOpacity);;
+                        if('duration' in animation){
+                            animation['duration'] = animation['duration']/2
+                            this.animationGrow(animation)
+                        }
+                        else{
+                            this.content.selectAll(".mark")
+                                    .attr("y", d => this.yScale(d[this.y]))
+                                    .attr("height", d => this.height() - this.yScale(d[this.y]))
+                        }
+                    })
+                    break;
+                case 'color':
+                    this.encodeColor(animation)
+                    break;
+                default:
+                    console.log("no channel select")
+            }
         }
     }
 
@@ -456,13 +749,94 @@ class BarChart extends Chart {
      *
      * @return {void}
      */
-    removeEncoding(channel) {
+    removeEncoding(channel, animation = {}) {
         this[channel] = null;
-        d3.selectAll("svg > g > *").remove();
-        this.drawBackground();
-        if (this.x && this.y) this.encodeXY();
-        if (this.color) this.encodeColor();
+
+        if(channel === 'x'){
+            new Promise((resolve, reject) => {
+                this.content.selectAll(".mark")
+                        .transition()
+                        .duration('duration' in animation ? animation['duration'] : 0)
+                        .style('opacity', 0)
+                        .on("end", resolve)
+            })
+            .then(()=>{
+                this.svg().selectAll(".rects").remove();
+                this.svg().selectAll(".axis_x").remove();
+            })
+        }
+        if(channel === 'y'){
+            new Promise((resolve, reject) => {
+                this.content.selectAll(".mark")
+                        .transition()
+                        .duration('duration' in animation ? animation['duration']-100 : 0)
+                        .style('opacity', 0)
+                        .on("end", resolve)
+            })
+            .then(()=>{
+                this.svg().selectAll(".axis_y").remove().on("end", this.removemark = true);      
+            })
+        }
+        if(channel === 'color'){
+            new Promise((resolve, reject) => {
+                this.content.selectAll(".rectLayer")
+                .transition()
+                .duration('duration' in animation ? animation['duration'] : 0)
+                .attr("fill", COLOR.DEFAULT)
+                .on("end", resolve)
+            })
+            .then(()=>{
+                this.svg().selectAll(".rectLayer").remove();
+                let processedData = this.processedData();
+                this.content.append("g")
+                    .attr("class", "rects")
+                    .selectAll("rect")
+                    .data(processedData)
+                    .enter().append("rect")
+                    .attr("class", "mark")
+                    .attr("x", d => this.xScale(d[this.x]))
+                    .attr("y", d => this.yScale(d[this.y]))
+                    .attr("width", this.xScale.bandwidth())
+                    .attr("height", d => this.height() - this.yScale(d[this.y]))
+                    .attr("fill", this.fill)
+                    .attr("rx", this.cornerRadius)
+                    .attr("ry", this.cornerRadius)
+                    .attr("fill-opacity", this.fillOpacity)
+                    .attr("stroke", this.stroke)
+                    .attr("stroke-width", this.strokeWidth)
+                    .attr("stroke-opacity", this.strokeOpacity);             
+            })
+        }
     }
+
+    /**
+     * @description Adding grow(one by one) animation to the chart
+     * 
+     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
+     * 
+     * @return {void}
+    */
+   animationGrow(animation){
+        let processedData = this.processedData();
+        //let barduration = animation['duration']/processedData.length
+        let unitnum = d3.sum(processedData, item => item[this.y]);
+        let unitduration  = animation['duration']/unitnum;
+        let duration = 0;
+        let transDelay = d3.scaleBand()
+                .range([0, animation['duration']])
+                .domain(processedData.map(d => d[this.x]))
+
+        this.content.selectAll(".mark")
+                .transition()
+                //.duration(barduration)
+                .duration(d => {duration = d[this.y] * unitduration; return duration})
+                .ease(d3.easeLinear)
+                .attr("y", d => this.yScale(d[this.y]))
+                .attr("height", d => this.height() - this.yScale(d[this.y]))
+                //.delay((d, i) => {return (i*barduration)})
+                .delay(d => {return transDelay(d[this.x])})
+                //.delay((d, i) => {if(i===0){delay = 0}else{delay = delay + durationlist[i-1];};return delay})
+   }
 
 }
 export default BarChart;
