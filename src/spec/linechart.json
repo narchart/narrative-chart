@@ -58,10 +58,11 @@
                     "stroke":"red",
                     "stroke-width":"3",
                     "point":true,
-                    "point-radius":"6",
+                    "point-radius":"15",
                     "point-fill":"blue",
                     "point-stroke":"yellow",
-                    "point-stroke-width":"2"
+                    "point-stroke-width":"2",
+                    "background-image": "http://localhost:3000/texture/circle.png"
                 }
             }
         },

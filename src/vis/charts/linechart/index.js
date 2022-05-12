@@ -267,6 +267,21 @@ class LineChart extends Chart {
         const dotStrokeWidth = this.markStyle()['point-stroke-width'] ? this.markStyle()['point-stroke-width'] : 0;
         const dotOpacity = this.markStyle()['point'] ? 1 : 0;
 
+        var config = {
+            "point_size" : 300
+        }
+        var defs = svg.append('svg:defs');
+        defs.append("svg:pattern")
+            .attr("id", "point_image_background")
+            .attr("width", config.point_size)
+            .attr("height", config.point_size)
+            .attr("patternUnits", "userSpaceOnUse")
+            .append("svg:image")
+            .attr("xlink:href", this.markStyle()['background-image'])
+            .attr("x", 0)
+            .attr("y", 0);
+        
+        
         const line = d3.line()
             .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
             .y(d => yScale(d[yEncoding]))
@@ -303,7 +318,7 @@ class LineChart extends Chart {
             .attr("d" , line(processedData));   
             
         /* draw points */
-        content.append("g")
+        let points = content.append("g")
             .attr("class", "circleGroup")
             .attr("fill",  dotFill)
             .attr("stroke", dotStroke)
@@ -318,6 +333,11 @@ class LineChart extends Chart {
                 return xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2;
             })
             .attr("cy", d => yScale(d[yEncoding]));
+        
+
+        if (this.markStyle()['background-image']){
+            points.style("fill", "url(#point_image_background)")
+        }
     }
 
     /**
@@ -327,6 +347,86 @@ class LineChart extends Chart {
      */
     encodeColor() {           
         if(this.color) {
+            let width = this.width(),
+            height = this.height();
+            const data = this.data();
+            const xEncoding = this.x,
+                yEncoding = this.y;
+            const colorEncoding = this.color;
+
+            const lineWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 2;
+            const lineColor = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
+            const dotRadius = this.markStyle()['point-radius'] ? this.markStyle()['point-radius'] : Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
+            const dotFill = this.markStyle()['point-fill'] ? this.markStyle()['point-fill'] : COLOR.DEFAULT;
+            const dotStroke = this.markStyle()['point-stroke'] ? this.markStyle()['point-stroke'] : COLOR.DEFAULT;
+            const dotStrokeWidth = this.markStyle()['point-stroke-width'] ? this.markStyle()['point-stroke-width'] : 0;
+            const dotOpacity = this.markStyle()['point'] ? 1 : 0;
+
+            let processedData = [];
+            /** get series */
+            let seriesData = {};
+            data.forEach(d => {
+                if(seriesData[d[colorEncoding]]) {
+                    seriesData[d[colorEncoding]].push(d);
+                } else {
+                    seriesData[d[colorEncoding]] = [d];
+                }
+            });
+            processedData = seriesData;
+
+            /** set the ranges */
+            let xScale = d3.scaleBand()
+                .range([0, width])
+                .domain(data.map(d => d[xEncoding]));
+
+            let yScale = d3.scaleLinear()
+                .range([height, 0])
+                .domain([0, d3.max(data, d => d[yEncoding])])
+                .nice();
+
+            this.svg().selectAll(".circleGroup").remove();
+            this.svg().selectAll(".lineGroup").remove();
+
+            /* draw lines */
+            for(let factKey in processedData) {
+                const line = d3.line()
+                .x(d => xScale(d[xEncoding]))
+                .y(d => yScale(d[yEncoding]))
+
+                d3.select(".content")
+                    .append("g")
+                    .attr("class", "lineGroup")
+                    .attr("fill", "none")
+                    .attr("stroke", lineColor)
+                    .attr("stroke-width", lineWidth)
+                    .attr("opacity", 1)
+                    .selectAll("path")
+                    .data(processedData[factKey])
+                    .enter()
+                    .append("path")
+                    .attr("class", "path")
+                    .attr("d" , line(processedData[factKey]));
+            }
+
+            /* draw points */
+            const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 4);
+            for(let factKey in processedData) {
+                d3.select(".content")
+                    .append("g")
+                    .attr("class", "circleGroup")
+                    .attr("fill", dotFill)
+                    .attr("stroke", dotStroke)
+                    .attr("stroke-width", dotStrokeWidth)
+                    .attr("opacity", dotOpacity)
+                    .selectAll("circle")
+                    .data(processedData[factKey])
+                    .enter().append("circle")
+                    .attr("class", "mark")
+                    .attr("r", circleSize)
+                    .attr("cx", d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
+                    .attr("cy", d => yScale(d[yEncoding]));
+            }
+
             d3.selectAll(".circleGroup")
                 .attr("fill", (d,i) => {
                     return COLOR.CATEGORICAL[i]
@@ -336,8 +436,7 @@ class LineChart extends Chart {
                 .attr("stroke", (d,i) => {
                     return COLOR.CATEGORICAL[i]
                 })
-
-        } 
+        }
     }
 
     /**
