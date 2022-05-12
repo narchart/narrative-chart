@@ -87,7 +87,8 @@
           "stroke-width": 1,
           "stroke-opacity": 0.4,
           "fill-opacity": 0.4,
-          "fill": "#FF7602"
+          "fill": "#FF7602",
+          "background-image": "http://localhost:3000/texture/circle.png"
         }
       },
       "style": {

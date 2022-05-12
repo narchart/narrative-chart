@@ -122,11 +122,31 @@ class Scatterplot extends Chart {
         let initX = width / 2;
         let initY = height / 2;
 
-        let strokeColor = this.markStyle()['stroke-color'] ? this.markStyle()['stroke-color'] : "#000000";
+        let stroke = this.markStyle()['stroke-color'] ? this.markStyle()['stroke-color'] : "#000000";
         let strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
         let strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
         let fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
-        let fillColor = this.markStyle()['fill'] ? this.markStyle()['fill'] : COLOR.DEFAULT;
+        let fill;       
+        if (this.markStyle()['background-image']){
+            fill = 'url(#point_image_background)';
+        } else {
+            fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : COLOR.DEFAULT;
+        }
+
+        var config = {
+            "point_size" : 300
+        }
+        var defs = svg.append('svg:defs');
+        defs.append("svg:pattern")
+            .attr("id", "point_image_background")
+            .attr("width", config.point_size)
+            .attr("height", config.point_size)
+            .attr("patternUnits", "userSpaceOnUse")
+            .append("svg:image")
+            .attr("xlink:href", this.markStyle()['background-image'])
+            .attr("x", 0)
+            .attr("y", 0);
+
         let content = svg.append("g")
                 .attr("class", "content")
                 .attr("chartWidth", width)
@@ -137,11 +157,11 @@ class Scatterplot extends Chart {
                 .data(this.points)
                 .enter().append("circle")
                 .attr("class", "mark")
-                .attr("stroke", strokeColor)
+                .attr("stroke", stroke)
                 .attr("stroke-width", strokeWidth)
                 .attr("stroke-opacity", strokeOpacity)
                 .attr("fill-opacity", fillOpacity)
-                .attr("fill", fillColor)
+                .attr("fill", fill)
                 .attr("cx", initX)
                 .attr("cy", initY)
                 .attr("opacity", 0)
