@@ -310,10 +310,10 @@ Adding graphical and textural annotations.
 | Fade | |
 | Fill | |
 | Glow | |
-| Label | |
+| Label | font-size; font-family; font-color; font-weight; font-style |
 | Reference | |
 | Regression | stroke-width; color |
-| Symbol | |
+| Symbol | icon-url; size |
 | Texture | |
 | Tooltip | |
 

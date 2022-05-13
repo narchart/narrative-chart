@@ -45,13 +45,14 @@ class Symbol extends Annotator {
 
             // identify the position
             let data_x, data_y, data_r, offset_y;
-            const size_icon = 20;
+            const width_icon = parseFloat(style["size"].split(/[(]|[)]|,/)[1]) || 20;
+            const height_icon = parseFloat(style["size"].split(/[(]|[)]|,/)[2]) || 20;
             const nodeName = focus_element.nodeName;
             if (nodeName === "circle") { // get center
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
                 data_r = parseFloat(focus_element.getAttribute("r"));
-                offset_y = - data_r - size_icon;
+                offset_y = - data_r - height_icon;
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
                 data_x = bbox.x + bbox.width / 2;
@@ -62,7 +63,7 @@ class Symbol extends Annotator {
                     let data_temp = focus_element.__data__;
                     data_x = data_temp.centroidX();
                     data_y = data_temp.centroidY();
-                    offset_y = -size_icon/2;
+                    offset_y = -height_icon/2;
                 }else{
                     return;
                 }
@@ -73,8 +74,8 @@ class Symbol extends Annotator {
                 const parentWidth = Number(svg.node().parentNode.getAttribute("width"));
                 svg.append("image")
                     .attr("class", "icon-img")
-                    .attr("width", size_icon)
-                    .attr("height", size_icon)
+                    .attr("width", width_icon)
+                    .attr("height", height_icon)
                     .attr("xlink:href", () => {
                         if("icon-url" in style) {
                             return style["icon-url"];
@@ -86,17 +87,17 @@ class Symbol extends Annotator {
                     .attr("y", data_y + offset_y)
                     .transition()
                     .duration('duration' in animation ? animation['duration']: 0)
-                    .attr("x", data_x - size_icon / 2)
+                    .attr("x", data_x - width_icon / 2)
                     .attr("y", data_y + offset_y)
 
             } else if ("type" in animation && animation["type"] === "wipe") {
-                // ensure that clip-paths for different arrows won't affect one another. 
+                // ensure that clip-paths for different symbols won't affect one another. 
                 const uid = Date.now().toString() + Math.random().toString(36).substring(2);
                 const icon = svg.append("image")
                     .attr("class", "icon-img")
                     .attr("clip-path", `url(#clip_icon_${uid})`)
-                    .attr("width", size_icon)
-                    .attr("height", size_icon)
+                    .attr("width", width_icon)
+                    .attr("height", height_icon)
                     .attr("xlink:href", () => {
                         if("icon-url" in style) {
                             return style["icon-url"];
@@ -104,7 +105,7 @@ class Symbol extends Annotator {
                             return ;
                         }
                     })
-                    .attr("x",  data_x - size_icon / 2)
+                    .attr("x",  data_x - width_icon / 2)
                     .attr("y", data_y + offset_y)
 
                 const iconBox = icon.node().getBBox();
@@ -125,10 +126,10 @@ class Symbol extends Annotator {
             } else {
                 svg.append("image")
                     .attr("class", "icon-img")
-                    .attr("x", data_x - size_icon / 2)
+                    .attr("x", data_x - width_icon / 2)
                     .attr("y", data_y + offset_y)
-                    .attr("width", size_icon)
-                    .attr("height", size_icon)
+                    .attr("width", width_icon)
+                    .attr("height", height_icon)
                     .attr("xlink:href", () => {
                         if("icon-url" in style) {
                             return style["icon-url"];

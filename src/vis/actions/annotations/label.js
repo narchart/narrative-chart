@@ -103,20 +103,11 @@ class Label extends Annotator {
                 .attr("x", data_x)
                 .attr("y", data_y + offset_y)
                 .text(formatData)
-                .attr("font-size", () => {
-                    if ("font-size" in style) {
-                        return style["font-size"];
-                    } else {
-                        return 12;
-                    }
-                })
-                .attr("fill", () => {
-                    if ("color" in style) {
-                        return style["color"];
-                    } else {
-                        return COLOR.TEXT;
-                    }
-                })
+                .attr("font-size", style["font-size"] || 12)
+                .attr("font-family", style["font-family"] || "Inter")
+                .attr("fill", style["font-color"] || COLOR.TEXT)
+                .attr("font-weight", style["font-weight"] || 100)
+                .attr("font-style", style["font-style"] || "normal")
                 .attr("text-anchor", (chart instanceof PieChart) ? (arc_angle > Math.PI ? "end":"start"):"middle")
                 .attr("alignment-baseline", "Alphabetic")
                 .attr("fill-opacity", 0)
