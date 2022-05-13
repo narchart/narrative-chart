@@ -302,9 +302,9 @@ Adding graphical and textural annotations.
 
 | Annotation | Style |
 |:--|:--|
-| Arrow | |
+| Arrow | height; width; color |
 | Circle | |
-| Contour | |
+| Contour | stroke-width; color |
 | Desaturate | |
 | Distribution | |
 | Fade | |
@@ -312,7 +312,7 @@ Adding graphical and textural annotations.
 | Glow | |
 | Label | |
 | Reference | |
-| Regression | |
+| Regression | stroke-width; color |
 | Symbol | |
 | Texture | |
 | Tooltip | |

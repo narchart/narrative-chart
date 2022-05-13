@@ -46,17 +46,43 @@ class Arrow extends Annotator {
         }
 
         // arrow shape params
+        // const arrow_points = [
+        //     [0, 0],
+        //     [20, 5],
+        //     [15, 10],
+        //     [25, 20],
+        //     [20, 25],
+        //     [10, 15],
+        //     [5, 20],
+        //     [0, 0]
+        // ];
+
         const arrow_points = [
             [0, 0],
-            [20, 5],
-            [15, 10],
-            [25, 20],
-            [20, 25],
-            [10, 15],
-            [5, 20],
+            [6, 20],
+            [12, 14],
+            [34, 36],
+            [36, 34],
+            [14, 12],
+            [20, 6],
             [0, 0]
         ];
-
+        // scale on x and y 
+        let scale_x, scale_y;
+        if ('width' in style && 'height' in style) {
+            scale_x = style['width'] / 36;
+            scale_y = style['height'] / 36;
+        } else if ('width' in style) {
+            scale_x = style['width'] / 36;
+            scale_y = style['width'] / 36;
+        } else if ('height' in style) {
+            scale_x = style['height'] / 36;
+            scale_y = style['height'] / 36;
+        } else {
+            scale_x = 1;
+            scale_y = 1;
+        }
+ 
         focus_elements.nodes().forEach((one_element) => {
             // identify the position to place the arrow
             let data_x, data_y, offset;
@@ -64,10 +90,10 @@ class Arrow extends Annotator {
             if (nodeName === "circle") { // get center 
                 data_x = parseFloat(one_element.getAttribute("cx"));
                 data_y = parseFloat(one_element.getAttribute("cy"));
-                offset = parseFloat(one_element.getAttribute("r")) / 1.414; // √2 ~ 1.414
+                offset = 0// parseFloat(one_element.getAttribute("r")) / 1.414; // √2 ~ 1.414
             } else if (nodeName === "rect") {
-                offset = parseFloat(one_element.getAttribute("width")) / 2;
-                data_x = parseFloat(one_element.getAttribute("x")) + offset;
+                offset = 0 // parseFloat(one_element.getAttribute("width")) / 2;
+                data_x = parseFloat(one_element.getAttribute("x")) + parseFloat(one_element.getAttribute("width")) / 2;
                 data_y = parseFloat(one_element.getAttribute("y"));
             } else { // currently only support piechart
                 if(chart instanceof PieChart){
@@ -81,7 +107,7 @@ class Arrow extends Annotator {
             }
 
             // move the arrow to the data point
-            const new_arrow_points = arrow_points.map((point) => [data_x + offset + point[0], data_y + offset + point[1]]);
+            const new_arrow_points = arrow_points.map((point) => [data_x + offset + scale_x*point[0], data_y + offset + scale_y* point[1]]);
 
             // draw arrow
             if ("type" in animation && animation["type"] === "fly") {

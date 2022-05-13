@@ -54,7 +54,7 @@ class Contour extends Annotator {
                 const _width = parseFloat(one_element.getAttribute("width"));
                 const _height = parseFloat(one_element.getAttribute("height"));
 
-                const d_width = "stroke-width" in chart.markStyle() && Number(chart.markStyle()["stroke-width"])>0 ? chart.markStyle()["stroke-width"]: 2;
+                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2; 
 
                 function draw_rect(x, y, w, h, r) {
                     let retval;
@@ -110,7 +110,7 @@ class Contour extends Annotator {
 
                 d_contour_circle.arc(_x, _y , _r, 0, 360)
 
-                const d_width = "stroke-width" in chart.markStyle() && Number(chart.markStyle()["stroke-width"])>0 ? chart.markStyle()["stroke-width"] : 2;
+                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2; 
 
                 const contour_circle = svg.append("path")
                     .attr("d", d_contour_circle)
@@ -141,7 +141,7 @@ class Contour extends Annotator {
                 }
             } else if(chart instanceof PieChart){
                 const d_contour_arc = one_element.getAttribute("d");
-                const d_width = "stroke-width" in chart.markStyle() && Number(chart.markStyle()["stroke-width"])>0 ? chart.markStyle()["stroke-width"] : 2;
+                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2; 
                 const contour_arc = svg.append("path")
                     .attr("d", d_contour_arc)
                     .attr("fill", "none")

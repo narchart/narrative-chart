@@ -105,6 +105,8 @@ class Regression extends Annotator {
             }
         }
 
+        const s_width = style['stroke-width'] ?? 2;
+
         // step 4: draw regression line
         if ("type" in animation && animation["type"] === "wipe") {
             svg.append("line")
@@ -113,8 +115,8 @@ class Regression extends Annotator {
                 .attr("x2", x1)
                 .attr("y1", y1)
                 .attr("y2", y1)
-                .attr("stroke-width", 2)
-                .attr("stroke-dasharray", "8, 4")
+                .attr("stroke-width", s_width)
+                .attr("stroke-dasharray", `${Math.min(s_width * 4, 300)} ${Math.min(s_width*2, 150)}`)
                 .attr("stroke", () => {
                     if ("color" in style) {
                         return style["color"];
@@ -133,8 +135,8 @@ class Regression extends Annotator {
                 .attr("x2", x2)
                 .attr("y1", y1)
                 .attr("y2", y2)
-                .attr("stroke-width", 2)
-                .attr("stroke-dasharray", "8, 4")
+                .attr("stroke-width", s_width)
+                .attr("stroke-dasharray", `${Math.min(s_width * 4, 300)} ${Math.min(s_width*2, 150)}`)
                 .attr("stroke", () => {
                     if ("color" in style) {
                         return style["color"];
