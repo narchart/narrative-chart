@@ -300,6 +300,23 @@ Adding graphical and textural annotations.
 }
 ```
 
+| Annotation | Style |
+|:--|:--|
+| Arrow | |
+| Circle | |
+| Contour | |
+| Desaturate | |
+| Distribution | |
+| Fade | |
+| Fill | |
+| Glow | |
+| Label | |
+| Reference | |
+| Regression | |
+| Symbol | |
+| Texture | |
+| Tooltip | |
+
 ##### Arrow
 
 ```
