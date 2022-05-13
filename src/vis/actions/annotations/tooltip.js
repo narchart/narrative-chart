@@ -191,7 +191,7 @@ class Tooltip extends Annotator {
                     if ("font-color" in style) {
                         return style["font-color"];
                     } else {
-                        return COLOR.TEXT;
+                        return COLOR.BACKGROUND;
                     }
                 });
 
