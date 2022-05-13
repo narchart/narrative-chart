@@ -86,6 +86,7 @@ class Reference extends Annotator {
         }
 
         // step 4: draw value line
+        const strokeWidth = style["stroke-width"]?style["stroke-width"]:2;
         if ("type" in animation && animation["type"] === "wipe") {
             const uid = Date.now().toString() + Math.random().toString(36).substring(2);
 
@@ -96,7 +97,7 @@ class Reference extends Annotator {
                 .attr("x2", x2)
                 .attr("y1", y1)
                 .attr("y2", y2)
-                .attr("stroke-width", 2)
+                .attr("stroke-width", strokeWidth)
                 .attr("stroke-dasharray", "8, 4")
                 .attr("stroke", () => {
                     if ("color" in style) {
@@ -112,8 +113,8 @@ class Reference extends Annotator {
                 .attr("id", `clip_reference_${uid}`)
                 .append("rect")
                 .attr("x", positions[0][0])
-                .attr("y", regBox.y-1)
-                .attr("height", regBox.height+2)
+                .attr("y", regBox.y-strokeWidth/2)
+                .attr("height", regBox.height+strokeWidth)
                 .attr("width", 0)
                 .transition()
                 .duration('duration' in animation ? animation['duration']: 0)
@@ -122,7 +123,6 @@ class Reference extends Annotator {
 
         }else if("type" in animation && animation["type"] === "fly"){
             const uid = Date.now().toString() + Math.random().toString(36).substring(2);
-
             const reference = svg.append("line")
                 .attr("class", "value")
                 .attr("clip-path", `url(#clip_reference_${uid})`)
@@ -130,7 +130,7 @@ class Reference extends Annotator {
                 .attr("x2", x2)
                 .attr("y1", y1)
                 .attr("y2", y2)
-                .attr("stroke-width", 2)
+                .attr("stroke-width", strokeWidth)
                 .attr("stroke-dasharray", "8, 4")
                 .attr("stroke", () => {
                     if ("color" in style) {
@@ -146,8 +146,8 @@ class Reference extends Annotator {
                 .attr("id", `clip_reference_${uid}`)
                 .append("rect")
                 .attr("x", regBox.width)
-                .attr("y", regBox.y-1)
-                .attr("height", regBox.height+2)
+                .attr("y", regBox.y-strokeWidth/2)
+                .attr("height", regBox.height+strokeWidth)
                 .attr("width", 0)
                 .transition()
                 .duration('duration' in animation ? animation['duration']: 0)
@@ -167,7 +167,7 @@ class Reference extends Annotator {
                     return COLOR.ANNOTATION
                 }
             })
-            .attr("stroke-width", 2)
+            .attr("stroke-width", strokeWidth)
             .attr("stroke-dasharray", "8, 4");
         }
 

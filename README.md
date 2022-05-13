@@ -314,7 +314,7 @@ Adding graphical and textural annotations.
 | Reference | |
 | Regression | stroke-width; color |
 | Symbol | icon-url; size |
-| Texture | |
+| Texture | background-image; |
 | Tooltip | |
 
 ##### Arrow
