@@ -305,11 +305,11 @@ Adding graphical and textural annotations.
 | Arrow | height; width; color |
 | Circle | |
 | Contour | stroke-width; color |
-| Desaturate | |
-| Distribution | |
-| Fade | |
-| Fill | |
-| Glow | |
+| Desaturate | \ |
+| Distribution | \ |
+| Fade | \ |
+| Fill | color |
+| Glow | color |
 | Label | font-size; font-family; font-color; font-weight; font-style |
 | Reference | |
 | Regression | stroke-width; color |
