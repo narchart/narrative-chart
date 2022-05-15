@@ -304,7 +304,7 @@ class LineChart extends Chart {
             .attr("chartWidth", width)
             .attr("chartHeight", height);
         /* draw lines */
-        content.append("g")
+        this.line = content.append("g")
             .attr("class", "lineGroup")
             .attr("fill", "none")
             .attr("stroke", lineColor)
@@ -390,7 +390,7 @@ class LineChart extends Chart {
             /* draw lines */
             for(let factKey in processedData) {
                 const line = d3.line()
-                .x(d => xScale(d[xEncoding]))
+                .x(d => xScale(d[xEncoding]) + xScale(processedData[factKey][1][xEncoding])/2)
                 .y(d => yScale(d[yEncoding]))
 
                 d3.select(".content")
@@ -422,7 +422,9 @@ class LineChart extends Chart {
                     .enter().append("circle")
                     .attr("class", "mark")
                     .attr("r", dotRadius)
-                    .attr("cx", d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
+                    .attr("cx", d => {
+                        return xScale(d[xEncoding])  + xScale(processedData[factKey][1][xEncoding])/2
+                    })
                     .attr("cy", d => yScale(d[yEncoding]));
             }
 
@@ -443,12 +445,15 @@ class LineChart extends Chart {
      *
      * @return {void}
      */
-    addEncoding(channel, field) {
+    addEncoding(channel, field, animation = {}) {
         if(!this[channel]) {
             this[channel] = field;
             if (this.x) this.encodeX();
             if (this.y) this.encodeY();
-            if (this.x && this.y) this.encodeLine();
+            if (this.x && this.y) {
+                this.encodeLine();
+                this.animationWipe(animation)
+            }
             if (this.color) this.encodeColor();
         }
     }
@@ -458,13 +463,99 @@ class LineChart extends Chart {
      *
      * @return {void}
      */
-    modifyEncoding(channel, field) {
+    modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field;
-            if (this.x) this.encodeX();
-            if (this.y) this.encodeY();
-            if (this.x && this.y) this.encodeLine();
-            if (this.color) this.encodeColor();
+
+            let svg = this.svg();
+            let content = svg.selectAll(".content")
+
+        new Promise((resolve) => {
+            if(channel === 'x' || channel === 'color' ){
+                content.selectAll(".lineGroup")
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']/2 : 0)
+                    .style('opacity', 0)
+                    .on("end", resolve)
+                content.selectAll(".circleGroup")
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']/2 : 0)
+                    .style('opacity', 0)
+                    .on("end", resolve)
+            }
+            else if(channel === 'y'){
+                resolve();
+            }
+        })
+        .then(()=>{
+            if(channel === 'x'){
+                this.svg().selectAll(".lineGroup").remove();
+                this.svg().selectAll(".circleGroup").remove();
+                this.svg().selectAll(".axis_X").remove();
+            }
+            if(channel === 'y'){
+                this.svg().selectAll(".axis_Y").remove();
+            }
+            if(channel === 'color'){
+                this.svg().selectAll(".lineGroup").remove();
+                this.svg().selectAll(".circleGroup").remove();
+            }
+        })
+        .then(()=>{
+            if(channel === 'x'){
+                this.encodeX();
+                this.encodeLine();
+                if(this.color) {
+                    this.encodeColor();
+                }
+                if('duration' in animation){
+                    animation['duration'] = animation['duration']/2
+                    this.animationWipe(animation)
+                }
+            }
+            if(channel === 'y'){
+                this.encodeY();
+                let processedData = this.processedData();
+                let width = this.width() - 12,
+                    height = this.height() - 7;
+                let svg = this.svg();
+                let content = svg.selectAll(".content");
+                let xScale = d3.scaleBand()
+                    .range([0, width])
+                    .domain(processedData.map(d => d[this.x]));
+                let yScale = d3.scaleLinear()
+                    .range([height, 0])
+                    .domain([0, d3.max(processedData, d => d[this.y])])
+                    .nice();
+                let newline = d3.line()
+                        .x(d => xScale(d[this.x]) + xScale(processedData[1][this.x])/2)
+                        .y(d => yScale(d[this.y]))
+                    
+                this.line.transition()
+                        .duration('duration' in animation ? animation['duration'] : 0)
+                        .attr("d", newline(processedData))
+                content.selectAll(".mark")
+                        .transition()
+                        .duration('duration' in animation ? animation['duration'] : 0)
+                        .attr("cy", d => yScale(d[this.y]))
+                if(this.color) {
+                    this.svg().selectAll(".lineGroup").remove();
+                    this.svg().selectAll(".circleGroup").remove();
+                    this.encodeColor();
+                    if('duration' in animation){
+                        animation['duration'] = animation['duration']/2
+                        this.animationWipe(animation)
+                    }
+                }
+            }
+            if(channel === 'color'){
+                this.encodeColor()
+                if('duration' in animation){
+                    animation['duration'] = animation['duration']/2
+                    this.animationWipe(animation)
+                }
+            }
+        })
         }
     }
 
@@ -473,13 +564,77 @@ class LineChart extends Chart {
      *
      * @return {void}
      */
-    removeEncoding(channel) {
+    removeEncoding(channel, animation = {}) {
         this[channel] = null;
-        if (this.x) this.encodeX();
-        if (this.y) this.encodeY();
-        if (this.x && this.y) this.encodeLine();
-        if (this.color) this.encodeColor();
+        let svg = this.svg();
+        let content = svg.selectAll(".content")
+
+        new Promise((resolve) => {
+            content.selectAll(".lineGroup")
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']/2 : 0)
+                    .style('opacity', 0)
+                    .on("end", resolve)
+            content.selectAll(".circleGroup")
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']/2 : 0)
+                    .style('opacity', 0)
+                    .on("end", resolve)
+        })
+        .then(()=>{
+            this.svg().selectAll(".lineGroup").remove();
+            this.svg().selectAll(".circleGroup").remove();
+            if(channel === 'x'){
+                this.svg().selectAll(".axis_X").remove();
+            }
+            if(channel === 'y'){
+                this.svg().selectAll(".axis_Y").remove();
+            }
+            if(channel === 'color'){
+                this.encodeX();
+                this.encodeY();
+                this.encodeLine();
+                if('duration' in animation){
+                    animation['duration'] = animation['duration']/2
+                    this.animationWipe(animation)
+                }
+            }
+        })
     }
+
+    /**
+     * @description Adding wipe animation to the chart
+     * 
+     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
+     * 
+     * @return {void}
+    */
+   animationWipe(animation){
+        let svg = this.svg();
+        let width = this.width() - 12,
+            height = this.height() - 7;
+        let content = svg.selectAll(".content")
+
+        content.attr("id", "lineChartClip")
+            .attr("clip-path", "url(#clip_linechart)");
+
+        content.append("defs")
+            .attr("class", "line_defs")
+            .append("clipPath")
+            .attr("id", "clip_linechart")
+            .append("rect")
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", 0)
+            .attr("height", height);
+
+        content.selectAll("#clip_linechart rect")
+            .attr("width", 0)
+            .transition()
+            .duration('duration' in animation ? animation['duration'] : 0)
+            .ease(d3.easeLinear)
+            .attr("width", width);
+   }
 
 
 }

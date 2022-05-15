@@ -9,7 +9,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -82,7 +82,7 @@ Visualization specification:
 ```json
 {
      "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -194,7 +194,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -279,7 +279,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -332,7 +332,7 @@ Visualization specification:
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -454,7 +454,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -544,7 +544,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -594,7 +594,7 @@ Visualization specification:
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -675,7 +675,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -765,7 +765,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -835,7 +835,7 @@ Visualization specification:
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -928,7 +928,7 @@ Visualization specification:
               }
             ],
             "style": {
-              "icon-url": "http://localhost:3001/icon/rank-1.png"
+              "icon-url": "http://localhost:3000/icon/rank-1.png"
             }
         },
         {
@@ -941,7 +941,7 @@ Visualization specification:
               }
             ],
             "style": {
-              "icon-url": "http://localhost:3001/icon/rank-2.png"
+              "icon-url": "http://localhost:3000/icon/rank-2.png"
             }
         },
         {
@@ -954,7 +954,7 @@ Visualization specification:
               }
             ],
             "style": {
-              "icon-url": "http://localhost:3001/icon/rank-3.png"
+              "icon-url": "http://localhost:3000/icon/rank-3.png"
             }
         },
         {
@@ -980,7 +980,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -1078,7 +1078,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -1128,7 +1128,7 @@ Visualization specification:
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -1206,7 +1206,7 @@ Visualization specification:
               }
             ],
             "style": {
-              "icon-url": "http://localhost:3001/icon/max.png"
+              "icon-url": "http://localhost:3000/icon/max.png"
             }
         },
         {
@@ -1372,7 +1372,7 @@ Visualization specification:
               }
             ],
             "style": {
-              "icon-url": "http://localhost:3001/icon/max.png"
+              "icon-url": "http://localhost:3000/icon/max.png"
             }
         },
         {
@@ -1398,7 +1398,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -1487,7 +1487,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -1537,7 +1537,7 @@ Visualization specification:
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/sales.csv",
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
       "schema": [
         {
           "field": "Year",
@@ -1623,7 +1623,7 @@ Visualization specification:
               }
             ],
             "style": {
-              "icon-url": "http://localhost:3001/icon/outlier.png"
+              "icon-url": "http://localhost:3000/icon/outlier.png"
             }
         },
         {
@@ -1797,7 +1797,7 @@ Visualization specification:
               }
             ],
             "style": {
-              "icon-url": "http://localhost:3001/icon/outlier.png"
+              "icon-url": "http://localhost:3000/icon/outlier.png"
             }
         },
         {
@@ -1823,7 +1823,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -2061,6 +2061,65 @@ Visualization specification:
 
 ## 8. Proportion
 
+### PieChart
+
+Fact specification：
+
+```json
+{
+    "data": {
+      "url": "http://localhost:3000/spreadsheets/sales.csv",
+      "schema": [
+        {
+          "field": "Year",
+          "type": "temporal",
+          "pictype": "time"
+        },
+        {
+          "field": "Brand",
+          "type": "categorical"
+        },
+        {
+          "field": "Category",
+          "type": "categorical"
+        },
+        {
+          "field": "Sales",
+          "type": "numerical"
+        }
+      ]
+    },
+    "fact": 
+    {
+      "type": "proportion",
+      "measure": [
+        {
+          "field":"Sales",
+          "subtype": "integer+",
+          "aggregate": "sum"
+        }
+      ],
+      "subspace": [],
+      "breakdown": [
+        { "field": "Brand" }
+      ],
+      "focus": [
+        {
+          "field": "Brand",
+          "value": "Ford"
+        }
+      ],
+      "score":2.346122155632163,
+      "parameter": "10%",
+      "possibility":0.125,
+      "information": 3.0,
+      "significance":0.7820407185440543
+    }
+  }
+```
+
+
+
 ### Unitvis
 
 Fact specification：
@@ -2138,7 +2197,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -2209,7 +2268,7 @@ Visualization specification:
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -2311,7 +2370,7 @@ Fact specification：
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",
@@ -2386,7 +2445,7 @@ Visualization specification:
 ```json
 {
     "data": {
-      "url": "http://localhost:3001/spreadsheets/cars.csv",
+      "url": "http://localhost:3000/spreadsheets/cars.csv",
       "schema": [
         {
           "field": "Name",

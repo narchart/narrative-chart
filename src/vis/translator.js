@@ -115,7 +115,9 @@ class Translator {
                 chartMark = "point";
                 markspec = {
                     "add": "chart",
-                    "mark": chartMark
+                    "mark": {
+                        "type": chartMark
+                    }
                 }
                 actionspecs.push(markspec);
                 actionspecs.push(titlespec);
@@ -129,23 +131,25 @@ class Translator {
                 chartMark = "bar";
                 markspec = {
                     "add": "chart",
-                    "mark": chartMark
+                    "mark": {
+                        "type": chartMark
+                    }
                 }
                 actionspecs.push(markspec);
-                // actionspecs.push(titlespec);
-                // actionspecs.push(captionspec);
+                actionspecs.push(titlespec);
+                actionspecs.push(captionspec);
                 encodingspec = this.getBarChartSpec(schemaspec, breakdown, measure, type)
                 for(let i=0; i<encodingspec.length; i++){
                     actionspecs.push(encodingspec[i]);
                 }
-                actionspecs.push(titlespec);
-                actionspecs.push(captionspec);
                 break;
             case MarkType.LINE:
                 chartMark = "line";
                 markspec = {
                     "add": "chart",
-                    "mark": chartMark
+                    "mark": {
+                        "type": chartMark
+                    }
                 }
                 actionspecs.push(markspec);
                 actionspecs.push(titlespec);
@@ -159,12 +163,30 @@ class Translator {
                 chartMark = "unit";
                 markspec = {
                     "add": "chart",
-                    "mark": chartMark
+                    "mark": {
+                        "type": chartMark
+                    }
                 }
                 actionspecs.push(markspec);
                 actionspecs.push(titlespec);
                 actionspecs.push(captionspec);
                 encodingspec = this.getUnitVisSpec(schemaspec, breakdown, measure,type)
+                for(let i=0; i<encodingspec.length; i++){
+                    actionspecs.push(encodingspec[i]);
+                }
+                break;
+            case MarkType.ARC:
+                chartMark = "arc";
+                markspec = {
+                    "add": "chart",
+                    "mark": {
+                        "type": chartMark
+                    }
+                }
+                actionspecs.push(markspec);
+                actionspecs.push(titlespec);
+                actionspecs.push(captionspec);
+                encodingspec = this.getPieChartSpec(schemaspec, breakdown, measure,type)
                 for(let i=0; i<encodingspec.length; i++){
                     actionspecs.push(encodingspec[i]);
                 }
@@ -191,7 +213,6 @@ class Translator {
                 switch(annotation){
                     case AnnotationType.ARROW:
                     case AnnotationType.CIRCLE:
-                    case AnnotationType.CONTOUR:
                     case AnnotationType.GLOW:
                         annoMethod = annotation;
                         for(let j=0; j<focus.length; j++){
@@ -206,6 +227,23 @@ class Translator {
                             actionspecs.push(annospec);
                         }
                         break;
+                        case AnnotationType.CONTOUR:
+                            annoMethod = annotation;
+                            for(let j=0; j<focus.length; j++){
+                                annospec = {
+                                    "add": "annotation",
+                                    "method": annoMethod,
+                                    "target": [focus[j]],
+                                    "style": {
+                                        "color": COLOR.DEFAULT
+                                    }
+                                    // "animation": {
+                                    //     "duration": animationDuration
+                                    // }
+                                }
+                                actionspecs.push(annospec);
+                            }
+                            break;
                     case AnnotationType.FILL:
                         annoMethod = annotation;
                         for(let j=0; j<focus.length; j++){
@@ -230,7 +268,7 @@ class Translator {
                                     "target": [focus[j]],
                                     "style": {
                                         "color": COLOR.DEFAULT
-                                    },
+                                    }
                                     // "animation": {
                                     //     "duration": animationDuration
                                     // }
@@ -310,7 +348,7 @@ class Translator {
                                     "method": annoMethod,
                                     "target": [focus[0]],
                                     "style": {
-                                        "icon-url": "http://localhost:3001/icon/rank-1.png"
+                                        "icon-url": "http://localhost:3000/icon/rank-1.png"
                                     }
                                     // "animation": {
                                     //     "duration": animationDuration
@@ -322,7 +360,7 @@ class Translator {
                                     "method": annoMethod,
                                     "target": [focus[1]],
                                     "style": {
-                                        "icon-url": "http://localhost:3001/icon/rank-2.png"
+                                        "icon-url": "http://localhost:3000/icon/rank-2.png"
                                     }
                                     // "animation": {
                                     //     "duration": animationDuration
@@ -334,7 +372,7 @@ class Translator {
                                     "method": annoMethod,
                                     "target": [focus[2]],
                                     "style": {
-                                        "icon-url": "http://localhost:3001/icon/rank-3.png"
+                                        "icon-url": "http://localhost:3000/icon/rank-3.png"
                                     }
                                     // "animation": {
                                     //     "duration": animationDuration
@@ -348,7 +386,7 @@ class Translator {
                                     "method": annoMethod,
                                     "target": [focus[0]],
                                     "style": {
-                                        "icon-url": "http://localhost:3001/icon/max.png"
+                                        "icon-url": "http://localhost:3000/icon/max.png"
                                     }
                                     // "animation": {
                                     //     "duration": animationDuration
@@ -362,7 +400,7 @@ class Translator {
                                     "method": annoMethod,
                                     "target": [focus[0]],
                                     "style": {
-                                        "icon-url": "http://localhost:3001/icon/outlier.png"
+                                        "icon-url": "http://localhost:3000/icon/outlier.png"
                                     }
                                     // "animation": {
                                     //     "duration": animationDuration
@@ -619,6 +657,62 @@ class Translator {
     }
 
     /**
+     * @description Get action specification for piechart
+     * @param {Object} schema Data schema specification.
+     * @param {Object} breakdown Breakdown field in fact specification.
+     * @param {Object} measure Measure field in fact specification.
+     * @param {Object} facttype Type field in fact specification.
+     * @returns {Array} encodingspec Encoding specification in actions specification,
+     */
+     getPieChartSpec(schema, breakdown, measure, facttype) {
+        let breakdownSchema = schema.filter(s => s.field === breakdown[0].field)
+        let measureNum = measure.length;
+        let breakdownNum = breakdown.length;
+        let encodingspec = [];
+        //let animationDuration = 1000;
+
+        //the first element in breakdown => encodingcolor（categorical）
+        if(breakdownNum > 0 && breakdownSchema[0].type === FieldType.CATEGORICAL){
+            let encodingColor = {
+                "add": "encoding",
+                "channel": "color",
+                "field": breakdown[0].field,
+                // "animation": {
+                //     "duration": animationDuration
+                // }
+            }
+            encodingspec.push(encodingColor);
+            if (measureNum > 0 || facttype !== FactType.Categorization){
+                let measureSchema = schema.filter(s => s.field === measure[0].field);
+                if(measureSchema[0].type !== FieldType.NUMERICAL){
+                    console.log("VerticalBarChart wrong measure type")
+                    return;
+                }
+                //the first element in measure => encodingtheta（numeriacl）
+                let encodingTheta = {
+                    "add": "encoding",
+                    "channel": "theta",
+                    "field": measure[0].field,
+                    // "animation": {
+                    //     "duration": animationDuration
+                    // }
+                }
+                encodingspec.push(encodingTheta)
+
+            }
+            else if(measureNum === 0) {
+                console.log("PieChart measure lacks")
+                return encodingspec;
+            }
+            return encodingspec;
+        }
+        else{
+            console.log("PieChart breakdown lacks")
+            return;
+        }
+    }
+
+    /**
      * @description Rules of Fact-to-Actions translation
      */
     fact2visRules = [
@@ -713,12 +807,20 @@ class Translator {
         //proportion
         {
             "fact": FactType.Proportion,
-            "chart": MarkType.UNIT,
+            "chart": MarkType.ARC,
             "measureLen": 0,
             "breakdownType": [FieldType.CATEGORICAL],
             "needFocus": true,
-            "annotationType": [AnnotationType.FILL]
+            "annotationType": [AnnotationType.FADE, AnnotationType.CONTOUR]
         },
+        // {
+        //     "fact": FactType.Proportion,
+        //     "chart": MarkType.UNIT,
+        //     "measureLen": 0,
+        //     "breakdownType": [FieldType.CATEGORICAL],
+        //     "needFocus": true,
+        //     "annotationType": [AnnotationType.FILL]
+        // },
         //value
         {
             "fact": FactType.Value,
