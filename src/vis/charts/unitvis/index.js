@@ -30,7 +30,7 @@ class Unitvis extends Chart {
             width: 600,
             height: 600
         }
-        
+
 
         d3.select(this.container())
             .append("svg")
@@ -40,48 +40,50 @@ class Unitvis extends Chart {
 
         d3.select("svg")
             .append("g")
-            .attr("id","chartBackGrnd")
+            .attr("id", "chartBackGrnd")
             .append("rect")
             .attr("width", chartbackgroundsize.width)
-            .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
+            .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
             .attr("transform", "translate(" + 20 + "," + margin.top + ")");
-            
+
 
         this._svg = d3.select("svg")
-                    .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-        if(background.Background_Image){
+        if (background.Background_Image) {
             d3.select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
         }
 
-        if(background.Background_Color){
+        if (background.Background_Color) {
             d3.select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
         }
-        
-        if(this.style()['background-color']){
-            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
-        } 
-        else if (this.style()['background-image']){
+
+        if (this.style()['background-color']) {
+            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'])
+        }
+        else if (this.style()['background-image']) {
+
             let defs = this._svg.append('svg:defs');
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
-                .attr("patternUnits", "userSpaceOnUse")
+                .attr("width", 1)
+                .attr("height", 1)
+                .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
+                .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
-                d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+            d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
         }
         else {
             d3.select("#chartBackGrnd").attr("fill-opacity", 0)
-        }   
+        }
 
-        
+        this.radiusMultiplier = 1.1
+
         this.data()
         this.initvis()
 
@@ -117,7 +119,7 @@ class Unitvis extends Chart {
         let svg = this.svg();
         let width = this.width(),
             height = this.height();
-        
+
 
         const processedData = this.processedData()
 
@@ -133,11 +135,9 @@ class Unitvis extends Chart {
         let maxSet = Math.ceil(processedData.length / setNumber);
         let maxRow = Math.floor(Math.sqrt(maxSet));
         let maxColumn = Math.ceil(maxSet / maxRow);
-        let radius = Math.min(((vwidth - margin.left - margin.right) / (maxColumn * (setLength + 1) - 1)), 6);
-
+        let radius = this.radiusMultiplier * Math.min(((vwidth - margin.left - margin.right) / (maxColumn * (setLength + 1) - 1)), 6);
         let row = Math.floor(Math.sqrt(processedData.length));
         let column = Math.ceil(processedData.length / row); // row 3 col 4
-
         let initX = vwidth / 1.9 - column * radius;
         let initY = vwidth / 2 - row * radius;
 
@@ -162,23 +162,7 @@ class Unitvis extends Chart {
             .attr("chartWidth", width)
             .attr("chartHeight", height);
 
-        if(this.markStyle()["background-image"]){
-            let config = {
-                "texture_size" : 300
-            }    
 
-            let defs = svg.append('svg:defs');
-            defs.append("svg:pattern")
-                .attr("id", "texture_background")
-                .attr("width", config.texture_size)
-                .attr("height", config.texture_size)
-                .attr("patternUnits", "userSpaceOnUse")
-                .append("svg:image")
-                .attr("xlink:href", this.markStyle()["background-image"])
-                .attr("x", 0)
-                .attr("y", 0);
-        }
-        
 
         content.append("g")
             .attr("class", "circleGroup")
@@ -187,15 +171,37 @@ class Unitvis extends Chart {
             .enter().append("circle")
             .attr("class", "mark")
             .attr("r", d => d.radius())
-            .attr("stroke", this.markStyle()["stroke-color"]?? "#FFF")
-            .attr("stroke-width", this.markStyle()["stroke-width"]?? 0)
-            .attr("stroke-opacity", this.markStyle()["stroke-opacity"]?? 1)
-            .attr("fill", this.markStyle()["background-image"]? "url(#texture_background)" : this.markStyle()["fill"]?  this.markStyle()["fill"] : d => d.color())
-            .attr("opacity", this.markStyle()["fill-opacity"]?? 1)
+            .attr("stroke", this.markStyle()["stroke-color"] ?? "#FFF")
+            .attr("stroke-width", this.markStyle()["stroke-width"] ?? 0)
+            .attr("stroke-opacity", this.markStyle()["stroke-opacity"] ?? 1)
+            .attr("fill", (d, i) => {
+                if (this.markStyle()['background-image']) {
+
+                    let defs = content.append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("width", 2 * d.radius())
+                        .attr("height", 2 * d.radius())
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } else if (this.markStyle()['fill']) {
+                    return this.markStyle()['fill']
+                }
+                else {
+                    return d.color()
+                }
+            })
+            .attr("opacity", this.markStyle()["fill-opacity"] ?? 1)
             .attr("cx", d => d.x())
             .attr("cy", d => d.y());
 
-        
+
 
     }
 
@@ -204,7 +210,7 @@ class Unitvis extends Chart {
      *      * 
      * @return {void}
     */
-    
+
     // Draw X axis
     encodeX() {
         let svg = this.svg();
@@ -267,12 +273,12 @@ class Unitvis extends Chart {
             let ratio
             if (column > 4) { averageradius = Math.sqrt(nodesmaxcount) / 3; ratio = 1.5; }
             else { averageradius = Math.sqrt(nodesmaxcount) / 2; ratio = 1.8; }
-            let radiusa = maxR / Math.sqrt(averageradius) * ratio;
+            let radiusa = this.radiusMultiplier * maxR / Math.sqrt(averageradius) * ratio;
             let rowTotalWidth;
 
-            rowTotalWidth=2.1*maxR*(column)
+            rowTotalWidth = 2.1 * maxR * (column)
 
-            function textSizef(fontSize,fontFamily,text){
+            function textSizef(fontSize, fontFamily, text) {
                 var span = document.createElement("span");
                 var result = {};
                 result.width = span.offsetWidth;
@@ -282,21 +288,21 @@ class Unitvis extends Chart {
                 span.style.fontFamily = fontFamily;
                 span.style.display = "inline-block";
                 document.body.appendChild(span);
-                if(typeof span.textContent != "undefined"){
-                  span.textContent = text;
-                }else{
-                  span.innerText = text;
+                if (typeof span.textContent != "undefined") {
+                    span.textContent = text;
+                } else {
+                    span.innerText = text;
                 }
                 result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
                 result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
                 return result;
-              }
+            }
 
 
-            let strlen = yValueFreq.map(d => textSizef(textSize,'Arial',d['key']).width)
+            let strlen = yValueFreq.map(d => textSizef(textSize, 'Arial', d['key']).width)
             let strmax = d3.max(strlen)
-            
-            let Minleftpadding =  2*maxR +2*textSize+textSizef(textSize,'Arial',yField).height+strmax
+
+            let Minleftpadding = 2 * maxR + 2 * textSize + textSizef(textSize, 'Arial', yField).height + strmax
             rowTotalWidth = d3.min([rowTotalWidth, width * 0.8])
 
             let centernodex = xValueFreq.map(function (d, i) {
@@ -307,18 +313,18 @@ class Unitvis extends Chart {
                     return (width - radiusa) / 2
                 }
                 else {
-                    
+
                     if (0.9 * width - rowTotalWidth - 2 * Minleftpadding > 0) {
-                        let rowTotalWidth1=0.9 * width - 2 * Minleftpadding 
-                        let leftpadding = (1 * width - rowTotalWidth1  - 2 * Minleftpadding) / 2 + Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column))
-                        
+                        let rowTotalWidth1 = 0.9 * width - 2 * Minleftpadding
+                        let leftpadding = (1 * width - rowTotalWidth1 - 2 * Minleftpadding) / 2 + Minleftpadding
+                        let rightpadding = (column <= 6) ? 0.5 * leftpadding : d3.min([2 * maxR, 0.5 * leftpadding + maxR])
+                        return leftpadding + (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))
+
                     }
-                    else if (0.9 * width - rowTotalWidth  - 2 * Minleftpadding <=0) {
-                        let leftpadding = 1*Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column)) 
+                    else if (0.9 * width - rowTotalWidth - 2 * Minleftpadding <= 0) {
+                        let leftpadding = 1 * Minleftpadding
+                        let rightpadding = (column <= 6) ? 0.5 * leftpadding : d3.min([2 * maxR, 0.5 * leftpadding + maxR])
+                        return leftpadding + (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))
                     }
                 }
                 return null;
@@ -389,7 +395,7 @@ class Unitvis extends Chart {
                     this.units[f.id].visible("1")
                     this.units[index].radius(f.radius)
                     this.units[f.id].color(f.color)
-                    this.units[f.id].unitgroup('size',sizeField)
+                    this.units[f.id].unitgroup('size', sizeField)
                 }
                 else {
                     this.units[index].visible("0")
@@ -400,10 +406,10 @@ class Unitvis extends Chart {
 
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
-            .transition()
-            .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
+                .transition()
+                .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
 
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
@@ -418,7 +424,7 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
 
             })
@@ -436,7 +442,7 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
             })
 
@@ -452,7 +458,7 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 0)
                 .transition()
                 // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 1)
 
 
@@ -467,11 +473,358 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 0)
                 .transition()
                 // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 1)
-    }
-        // situation 2:
-        else {   
+        }
+        // situation 2
+        else if (this.x && this.size) {
+
+            let xField = this.x;
+
+            let sizeField = this.size;
+
+            let xValueFreq = d3.nest().key(function (d) { return d[xField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
+
+
+            xValueFreq.sort(function (x, y) {
+                return d3.ascending(x['key'], y['key']);
+            })
+
+            let xValue = xValueFreq.map(d => d['key']);
+
+            let categories = xValueFreq
+
+            let row = 1
+            let column = xValueFreq.length
+
+            let maxR = d3.min([0.8 * height / (row + 1) / 2, 0.8 * width / (column + 1) / 2])
+
+
+            let nodesmaxcount = d3.max(xValueFreq, function (d) { return d.value; })
+
+
+            let averageradius;
+            if (column > 4)
+                averageradius = Math.sqrt(nodesmaxcount) / 3;
+            else
+                averageradius = Math.sqrt(nodesmaxcount) / 2;
+
+            let ratio = 2;
+            let radiusa = this.radiusMultiplier * ratio * maxR / Math.sqrt(averageradius);
+
+            let rowTotalWidth;
+            if (categories.length % 2 === 0) {
+                rowTotalWidth = 2.5 * maxR * column;//2.4
+            } else {
+                rowTotalWidth = 2.5 * maxR * (column + 1);
+            }
+
+            rowTotalWidth = d3.min([rowTotalWidth, width * 0.9])
+
+
+            let centernodex = xValueFreq.map(function (d, i) {
+                if (column === 1) {
+                    if (xValueFreq.length === 2) {//
+                        return i === 0 ? radiusa : 3.1 * maxR + radiusa
+                    }
+                    return (width - radiusa) / 2
+                }
+                else {
+                    rowTotalWidth = d3.min([rowTotalWidth, width])
+                    let paddingMaxR = 3.3;
+                    let leftPadding = (width - (rowTotalWidth - paddingMaxR * maxR)) / 2;
+                    return leftPadding + (rowTotalWidth - paddingMaxR * maxR) / (column - 1) * (Math.floor(i % column));
+                }
+            })
+
+            let centernodey = xValueFreq.map(function (d, i) {
+                let startPoint = ((height - 3.6 * maxR - 5 * radiusa) / (row - 1) <= 3 * maxR ? 1.8 * maxR : (height - 3 * maxR * (row - 1) - 5 * radiusa) / 1.4);
+                return startPoint + d3.min([(height - 3.6 * maxR) / (row - 1), 3 * maxR]) * (Math.floor(i / column));
+            })
+
+            let unitnew = [];
+            let nodesvalue1 = [];
+
+            unitnew = this.units.map(function (d, i) {
+                nodesvalue1[i] = d[sizeField]
+                return {
+                    id: d.id(),
+                    distribution: d[xField],
+                    category: xValue.indexOf(d[xField]),
+                    radius: 0,
+                    value: d[sizeField]
+                }
+            })
+            
+
+            let unitExtent = d3.extent(this.units, d => d[sizeField]); //d3.extent(focusextent1.concat(focusextent2))
+            let size = d3.scaleLinear()
+                .domain([unitExtent[0], unitExtent[1]])
+                .range([radiusa / 100, radiusa]);
+
+            for (let index in unitnew) {
+                unitnew[index].radius = Math.sqrt(size(unitnew[index].value))
+            }
+
+            let simulation = d3.forceSimulation(unitnew)
+                .force('charge', d3.forceManyBody().strength(0.01))
+                .force('x', d3.forceX().x(function (d) {
+                    return centernodex[d.category]
+                }))
+                .force('y', d3.forceY().y(function (d) {
+                    return centernodey[d.category];
+                }))
+                .force('collision', d3.forceCollide().strength(1).radius(d => d.radius + 0.15))
+                .stop()
+
+            simulation.tick(200);
+
+            for (let index in this.units) {
+
+                let f = unitnew.find(item => item.id == index) //eslint-disable-line
+                if (f) {
+                    this.units[f.id].x(f.x);
+                    this.units[f.id].y(f.y);
+                    this.units[f.id].visible("1")
+                    this.units[index].radius(f.radius)
+                    this.units[f.id].color(f.color)
+                    this.units[f.id].unitgroup('size', sizeField)
+
+                }
+                else {
+                    this.units[index].visible("0")
+                }
+
+                this.units[index].opacity("1")
+            }
+
+            // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
+            svg.select(".content").selectAll("text")
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
+
+            xValueFreq.forEach((bar, iBar) => {
+                svg.select(".content").append("text")
+                    .attr("fill", COLOR.TEXT)
+                    .text(xValue[iBar])
+                    .attr("x", centernodex[iBar])
+                    .attr("y", centernodey[0] + 2 * radiusa + 1 * maxR)
+                    .attr("font-size", 14)
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
+                    // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
+                    .attr("fill-opacity", 0)
+                    .transition()
+                    // .delay(this.delay + this.duration/2)
+                    .duration(this.duration / 2)
+                    .attr("fill-opacity", 1)
+            })
+
+            svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
+                .text(xField)
+                .attr("x", width / 2)
+                .attr("y", Math.min(centernodey[0] + 2 * radiusa + 2 * maxR, height))
+                .attr("font-size", 14)
+                .attr('text-anchor', 'middle')
+                .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay + this.duration/2)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 1)
+        }
+        else if (this.y && !this.size) {
+
+
+            let margin = {
+                left: width / 20,
+                right: width / 20
+            }
+
+
+            let textSize;
+            let xField = this.x;
+            let yField = this.y;
+
+            let xValueFreq = d3.nest().key(function (d) { return d[xField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
+
+            let yValueFreq = d3.nest().key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
+
+
+            let xbar = xValueFreq.length;
+            let length = Math.ceil(30 / xbar) < 5 ? Math.ceil(30 / xbar) : 5
+            if (xbar >= 8) { textSize = 10; }
+            else { textSize = 14; }
+
+            let ybar = yValueFreq.length;
+
+
+
+            xValueFreq.sort(function (x, y) {
+                return d3.ascending(x['key'], y['key']);
+            })
+
+            yValueFreq.sort(function (x, y) {
+                return d3.descending(x['key'], y['key']);
+            })
+
+            let xValue = xValueFreq.map(d => d['key']);
+            let yValue = yValueFreq.map(d => d['key']);
+
+            let unit = [];
+            let ymax = {}
+
+            let visibleUnits = this.units.filter(d => d.visible() === "1");
+
+            for (let i = 0; i < xbar; i++) {
+                let xunit = [];
+                let barUnits = visibleUnits.filter(d => d[xField] === xValue[i]);
+                for (let j = 0; j < ybar; j++) {
+                    let yuint = barUnits.filter(d => d[yField] === yValue[j]);
+                    if (!ymax[yValue[j]]) { ymax[yValue[j]] = yuint.length }
+                    if (yuint.length > ymax[yValue[j]]) {
+                        ymax[yValue[j]] = yuint.length
+                    }
+                    xunit.push({ "x": xValue[i], "y": yValue[j], "data": yuint })
+                }
+                unit.push(xunit);
+            }
+
+            let xmaxCount = 0
+            for (const value of Object.values(ymax)) {
+                xmaxCount += Math.ceil(value / length);
+            }
+
+
+            let wradius = ((width - margin.left - margin.right) / ((length + 1) * (xbar - 1) + length)) / 2.2;
+            let hradius = d3.min([(height * 0.9 - 2 * textSize) / (xmaxCount) / 2, (height * 0.9 - 2 * textSize) / ybar / (Math.ceil(length) + 1) / 2]);
+            // let radius = Math.min(wradius, hradius);
+            let radius = this.radiusMultiplier* Math.min(Math.min(wradius, hradius), 6);
+            let textpadding = 10
+
+            let s = (0.9 * width - 2 * (xbar) * length * radius) / (radius) / (xbar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (xbar) * length * radius) / (radius) / (xbar + 3) / 2)
+            let padding = (0.9 * width - xbar * length * 2 * radius - (xbar - 1) * s * 2 * radius) / 2
+            let baseX
+
+            if (xbar === 1) {
+                baseX = (width - length * radius * 2.2) / 2
+                }
+            else if (xbar >=2) {
+                baseX = d3.range(padding , width - padding, (width - 2 * padding - (2 * length) * radius) / (xbar - 1));
+                }
+                
+         
+            let topPadding = d3.max([(height - xmaxCount * radius * 2 - ybar * radius * 2 - 2 * textpadding) / 2, 0.025 * height])
+            let baseY = [topPadding]
+
+            let y = baseY[0]
+            for (let i = 0; i < ybar; i++) {
+                y += ymax[yValue[i]] / length * 2 * radius + 10
+                baseY.push(y)
+            }
+
+
+            // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
+            svg.select(".content").selectAll("text")
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
+
+
+
+            for (let i = 0; i < xbar; i++) {
+                svg.select(".content")
+                    .append("text")
+                    .attr("fill", COLOR.TEXT)
+                    .text(xValue[i])
+                    .attr("x", baseX[i] + (length - 1) * radius)
+                    // .attr("x", baseX[iBar] + radius*6)
+                    .attr("y", baseY[baseY.length - 1] + textpadding)
+                    .attr("font-size", textSize)
+                    .attr("text-anchor", "middle")
+                    // .attr("transform", "translate(" + baseX[i] - radius + length * radius + "," + baseY[baseY.length - 1] + radius + textSize + ") rotate(-45)")
+                    .attr("fill-opacity", 0)
+                    .transition()
+                    // .delay(this.delay + this.duration/2)
+                    .duration(this.duration / 2)
+                    .attr("fill-opacity", 1)
+
+                let xbar = unit[i]
+                for (let j = 0; j < ybar; j++) {
+                    svg.select(".content")
+                        .append("text")
+                        .attr("fill", COLOR.TEXT)
+                        .text(yValue[j])
+                        .attr("x", baseX[0] - radius - 2 * textpadding)
+                        // .attr("x", baseX[iBar] + radius*6)
+                        .attr("y", baseY[j] + radius * 2)
+                        .attr("font-size", textSize)
+                        .attr("text-anchor", "end")
+                        // .attr("transform", "translate(" + baseY[0] + radius + textSize - radius + length * radius + "," + baseY[j] + radius * 3 + radius + textSize + ") rotate(-45)")
+                        // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
+                        .attr("fill-opacity", 0)
+                        .transition()
+                        // .delay(this.delay + this.duration/2)
+                        .duration(this.duration / 2)
+                        .attr("fill-opacity", 1)
+
+                    let x = baseX[i]
+                    let y = baseY[j]
+
+                    let yset = xbar[j]
+                    if (yset) {
+                        yset['data'].forEach((d, i) => {
+                            let row = Math.floor(i / length);
+                            let col = i % length;
+                            d.x(x + 2 * radius * col);
+                            d.y(y + 2 * radius * row);
+                            d.radius(radius);
+                            d.opacity(1);
+                            d.unitgroup('y', yField);
+
+                        })
+                    }
+                }
+
+
+                svg.select(".content")
+                    .append("text")
+                    .attr("fill", COLOR.TEXT)
+                    .text(xField)
+                    .attr("x", width / 2)
+                    .attr("y", Math.min(baseY[baseY.length - 1] + 3 * textSize, height))
+                    .attr("font-size", textSize)
+                    .attr('text-anchor', 'middle')
+                    .attr("fill-opacity", 0)
+                    .transition()
+                    // .delay(this.delay + this.duration/2)
+                    .duration(this.duration)
+                    .attr("fill-opacity", 1)
+
+
+                svg.select(".content")
+                    .append("text")
+                    .attr("fill", COLOR.TEXT)
+                    .text(yField)
+                    .attr("x", baseX[0] - radius - 2 * textpadding - 3.5 * textSize)
+                    .attr("y", height / 2)
+                    .attr("font-size", textSize)
+                    .attr('text-anchor', 'middle')
+                    .attr("transform", `rotate(-90, ${baseX[0] - radius - 2 * textpadding - 3.5 * textSize}, ${height / 2})`)
+                    .attr('text-anchor', 'middle')
+                    .attr("fill-opacity", 0)
+                    .transition()
+                    // .delay(this.delay + this.duration/2)
+                    .duration(this.duration)
+                    .attr("fill-opacity", 1)
+            }
+        }
+
+        // situation 3:
+        else {
 
             let breakdownField = this.x;
 
@@ -496,14 +849,12 @@ class Unitvis extends Chart {
             let hradius = height * 0.8 / Math.ceil(maxCount / length) / 2;
 
             // let radius = Math.min(wradius, hradius);
-            let radius = Math.min(Math.min(wradius, hradius),6);
-            let s=(0.9*width-2*(bar)*length*radius)/(radius)/(bar+3)/2<1?0.2:Math.floor((0.9*width-2*(bar)*length*radius)/(radius)/(bar+3)/2)         
-
-            let padding = (0.9* width -bar*length*2*radius-(bar-1)*s*2*radius ) / 2
-            let baseX = d3.range(padding + radius, width-padding-(2*length-1)*radius+1, (width-2*padding-(2*length)*radius)/(bar-1));
+            let radius = this.radiusMultiplier* Math.min(Math.min(wradius, hradius), 6);
+            let s = (0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
+            let padding = (0.9 * width - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
+            let baseX = d3.range(padding , width - padding, (width - 2 * padding - (2 * length) * radius) / (bar - 1));
             let baseY = (height - Math.ceil(maxCount / length) * 2 * radius) / 2 + Math.ceil(maxCount / length) * 2 * radius - radius;
             let visibleUnits = this.units.filter(d => d.visible() === "1");
-
 
             let units = [];
             for (let i = 0; i < bar; i++) {
@@ -515,7 +866,7 @@ class Unitvis extends Chart {
             svg.select(".content").selectAll("text")
                 .transition()
                 // .delay(this.delay)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 0)
 
 
@@ -524,24 +875,23 @@ class Unitvis extends Chart {
                     .append("text")
                     .attr("fill", COLOR.TEXT)
                     .text(breakdownValue[iBar])
-                    .attr("x", baseX[iBar] + (length - 1) * radius)
+                    .attr("x", baseX[iBar]  + (length/2 - 1) * radius)
                     // .attr("x", baseX[iBar] + radius*6)
                     .attr("y", baseY + radius + textSize)
                     .attr("font-size", textSize)
                     .attr("text-anchor", "middle")
-                    .attr("transform", "translate(" + baseX[iBar] - radius + length * radius + "," + baseY + radius + textSize + ") rotate(-45)")
+                    // .attr("transform", "translate(" + baseX[iBar] - radius + length * radius + "," + baseY + radius + textSize + ") rotate(-45)")
                     // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
-                    
 
                 bar.forEach((d, i) => {
                     let row = Math.floor(i / length);
                     let col = i % length;
-                    d.x(baseX[iBar] + 2 * radius * col);
+                    d.x(baseX[iBar] - (length/2 - 2* col) *radius);
                     d.y(baseY - 2 * radius * row);
                     d.radius(radius);
                     d.opacity(1);
@@ -558,11 +908,41 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
-                });
-            }   
+            });
         }
+
+        svg.select(".content").selectAll("defs").transition().duration(this.duration / 2).remove()
+
+        svg.select(".content").selectAll("circle")
+            .transition()
+            .duration(this.duration / 2)
+            .attr("fill", (d, i) => {
+                if (this.markStyle()['background-image']) {
+                    let defs = this.svg().select(".content").append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("width", 2 * d.radius())
+                        .attr("height", 2 * d.radius())
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } else if (this.markStyle()['fill']) {
+                    return this.markStyle()['fill']
+                }
+                else {
+                    return d.color()
+                }
+            })
+
+
+    }
 
     /**
      * @description Using Y-axis to encode a data field
@@ -638,25 +1018,25 @@ class Unitvis extends Chart {
             }
 
 
-            let wradius = ((width - margin.left - margin.right) / ((length +1) * (xbar - 1) + length)) / 2.2;
-            let hradius = d3.min([(height * 0.9-2*textSize) / (xmaxCount )/ 2,(height * 0.9-2*textSize) / ybar/(Math.ceil( length)+1)/ 2]);
+            let wradius = ((width - margin.left - margin.right) / ((length + 1) * (xbar - 1) + length)) / 2.2;
+            let hradius = d3.min([(height * 0.9 - 2 * textSize) / (xmaxCount) / 2, (height * 0.9 - 2 * textSize) / ybar / (Math.ceil(length) + 1) / 2]);
             // let radius = Math.min(wradius, hradius);
-            let radius = Math.min(Math.min(wradius, hradius),6);
+            let radius = this.radiusMultiplier* Math.min(Math.min(wradius, hradius), 6);
             let textpadding = 10
-            let baseX = xValueFreq.map(function (d, i) {
-                if (xbar === 1) {
-                    
-                    return (width - length * radius * 2.2) / 2
-                }
-                else if (xbar >= 2) {
-                    let s=(0.9*width-2*(xbar)*length*radius)/(radius)/(xbar+3)/2<1?0.2:Math.floor((0.9*width-2*(xbar)*length*radius)/(radius)/(xbar+3)/2)         
-                    let leftPadding = (1* width -xbar*length*2*radius-(xbar-1)*s*2*radius ) / 2+1*margin.left
-                    return leftPadding + (width-2*leftPadding)/(xbar-1)*i;
-                }
-            return null;
-            })
 
-            let topPadding = d3.max([(height - xmaxCount * radius * 2 - ybar * radius * 2 - 2 * textpadding) / 2,0.025*height])
+            let s = (0.9 * width - 2 * (xbar) * length * radius) / (radius) / (xbar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (xbar) * length * radius) / (radius) / (xbar + 3) / 2)
+            let padding = (0.9 * width - xbar * length * 2 * radius - (xbar - 1) * s * 2 * radius) / 2
+            let baseX
+
+            if (xbar === 1) {
+                baseX = (width - length * radius * 2.2) / 2
+                }
+            else if (xbar >=2) {
+                baseX = d3.range(padding , width - padding, (width - 2 * padding - (2 * length) * radius) / (xbar - 1));
+                }
+                
+         
+            let topPadding = d3.max([(height - xmaxCount * radius * 2 - ybar * radius * 2 - 2 * textpadding) / 2, 0.025 * height])
             let baseY = [topPadding]
 
             let y = baseY[0]
@@ -664,14 +1044,14 @@ class Unitvis extends Chart {
                 y += ymax[yValue[i]] / length * 2 * radius + 10
                 baseY.push(y)
             }
-            
+
 
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
-            .transition()
-            // .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
 
 
 
@@ -685,13 +1065,13 @@ class Unitvis extends Chart {
                     .attr("y", baseY[baseY.length - 1] + textpadding)
                     .attr("font-size", textSize)
                     .attr("text-anchor", "middle")
-                    .attr("transform", "translate(" + baseX[i] - radius + length * radius + "," + baseY[baseY.length - 1] + radius + textSize + ") rotate(-45)")
+                    // .attr("transform", "translate(" + baseX[i] - radius + length * radius + "," + baseY[baseY.length - 1] + radius + textSize + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
-    
+
                 let xbar = unit[i]
                 for (let j = 0; j < ybar; j++) {
                     svg.select(".content")
@@ -703,14 +1083,14 @@ class Unitvis extends Chart {
                         .attr("y", baseY[j] + radius * 2)
                         .attr("font-size", textSize)
                         .attr("text-anchor", "end")
-                        .attr("transform", "translate(" + baseY[0] + radius + textSize - radius + length * radius + "," + baseY[j] + radius * 3 + radius + textSize + ") rotate(-45)")
+                        // .attr("transform", "translate(" + baseY[0] + radius + textSize - radius + length * radius + "," + baseY[j] + radius * 3 + radius + textSize + ") rotate(-45)")
                         // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
                         .attr("fill-opacity", 0)
                         .transition()
                         // .delay(this.delay + this.duration/2)
-                        .duration(this.duration/2)
+                        .duration(this.duration / 2)
                         .attr("fill-opacity", 1)
-    
+
                     let x = baseX[i]
                     let y = baseY[j]
 
@@ -763,8 +1143,7 @@ class Unitvis extends Chart {
             }
         }
         // situation 2:
-        else if (!this.x) {
-
+        else if (!this.x && !this.size) {
             let margin = {
                 left: width / 20,
                 right: width / 20
@@ -774,7 +1153,6 @@ class Unitvis extends Chart {
             let breakdownField = this.y;
 
             let databreakdown = d3.nest().key(function (d) { return d[breakdownField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
-
 
             let bar = databreakdown.length;
 
@@ -792,13 +1170,13 @@ class Unitvis extends Chart {
 
             let length = Math.ceil(30 / bar) < 5 ? Math.ceil(30 / bar) : 5
 
-            let wradius = d3.min([width - margin.left - margin.right,0.8*width])/ Math.ceil(maxCount / length) / 2;
-            let hradius = height * 0.8 /bar/(Math.ceil( length)+1)/ 2;
-            
-            let radius = 0.9*Math.min(wradius, hradius);
-            let s=(0.9*height-2*(bar)*length*radius)/(radius)/(bar+3)/2<1?0.2:Math.floor((0.9*height-2*(bar)*length*radius)/(radius)/(bar+3)/2)                 
-            let padding = (0.9* height -bar*length*2*radius-(bar-1)*s*2*radius ) / 2
-            let baseY = d3.range(padding , height-padding-(2*length-1)*radius+1,(height-padding-(2*length-1)*radius-padding)/(bar-1));
+            let wradius = d3.min([width - margin.left - margin.right, 0.8 * width]) / Math.ceil(maxCount / length) / 2;
+            let hradius = height * 0.8 / bar / (Math.ceil(length) + 1) / 2;
+
+            let radius = this.radiusMultiplier * 0.9 * Math.min(wradius, hradius);
+            let s = (0.9 * height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
+            let padding = (0.9 * height - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
+            let baseY = d3.range(padding, height - padding, (height - padding - (2 * length - 1) * radius - padding) / (bar - 1));
             let rowTotalWidth = d3.min([Math.ceil(maxCount / length) * 2 * radius, width * 0.8])
             let baseX = (0.9 * width - rowTotalWidth) / 2 + 4 * textSize + radius
 
@@ -813,12 +1191,11 @@ class Unitvis extends Chart {
 
 
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
-
             svg.select(".content").selectAll("text")
-            .transition()
-            // .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
 
             units.forEach((bar, iBar) => {
                 svg.select(".content")
@@ -827,7 +1204,7 @@ class Unitvis extends Chart {
                     .text(breakdownValue[iBar])
                     .attr("x", baseX - radius - 2 * textSize)
                     // .attr("x", baseX[iBar] + radius*6)
-                    .attr("y", baseY[iBar] + (length - 3) * radius)
+                    .attr("y", baseY[iBar] + (1.5*length - 1) * radius)
                     .attr("font-size", textSize)
                     .attr("text-anchor", "middle")
                     // .attr("transform", "translate("+baseX[iBar]-radius+length*radius+","+baseY+radius+textSize+") rotate(-45)")
@@ -835,14 +1212,14 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay)
-                    .duration(this.delay + this.duration/2)
+                    .duration(this.delay + this.duration / 2)
                     .attr("fill-opacity", 1)
 
                 bar.forEach((d, i) => {
                     let col = Math.floor(i / length);
                     let row = i % length;
                     d.x(baseX + 2 * radius * col);
-                    d.y(baseY[iBar] + 2 * radius * row);
+                    d.y(baseY[iBar] + (length/2 + 2 * row) * radius);
                     d.radius(radius);
                     d.opacity(1);
                     d.unitgroup('x', breakdownField);
@@ -859,13 +1236,175 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
 
             });
 
         }
         // situation 3:
+        else if (this.y && this.size) {
+            let textSize = 14;
+
+            let yField = this.y;
+
+            let sizeField = this.size;
+
+            let yValueFreq = d3.nest().key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
+
+
+            yValueFreq.sort(function (x, y) {
+                return d3.ascending(x['key'], y['key']);
+            })
+
+            let xValue = yValueFreq.map(d => d['key']);
+
+            let categories = yValueFreq
+
+            let row = 1
+            let column = yValueFreq.length
+
+            let maxR = d3.min([0.8 * height / (row + 1) / 2, 0.8 * width / (column + 1) / 2])
+
+
+            let nodesmaxcount = d3.max(yValueFreq, function (d) { return d.value; })
+
+
+            let averageradius;
+            if (column > 4)
+                averageradius = Math.sqrt(nodesmaxcount) / 3;
+            else
+                averageradius = Math.sqrt(nodesmaxcount) / 2;
+
+            let ratio = 2;
+            let radiusa = this.radiusMultiplier * ratio * maxR / Math.sqrt(averageradius);
+
+            let rowTotalWidth;
+            if (categories.length % 2 === 0) {
+                rowTotalWidth = 2.5 * maxR * column;//2.4
+            } else {
+                rowTotalWidth = 2.5 * maxR * (column + 1);
+            }
+
+            rowTotalWidth = d3.min([rowTotalWidth, width * 0.9])
+
+
+            let centernodey = yValueFreq.map(function (d, i) {
+                if (column === 1) {
+                    if (yValueFreq.length === 2) {//
+                        return i === 0 ? radiusa : 3.1 * maxR + radiusa
+                    }
+                    return (width - radiusa) / 2
+                }
+                else {
+                    rowTotalWidth = d3.min([rowTotalWidth, width])
+                    let paddingMaxR = 3.3;
+                    let leftPadding = (width - (rowTotalWidth - paddingMaxR * maxR)) / 2;
+                    return leftPadding + (rowTotalWidth - paddingMaxR * maxR) / (column - 1) * (Math.floor(i % column));
+                }
+            })
+
+
+            let centernodex = yValueFreq.map(function (d, i) {
+                let startPoint = ((height - 3.6 * maxR - 5 * radiusa) / (row - 1) <= 3 * maxR ? 1.8 * maxR : (height - 3 * maxR * (row - 1) - 5 * radiusa) / 1.4);
+                return startPoint + d3.min([(height - 3.6 * maxR) / (row - 1), 3 * maxR]) * (Math.floor(i / column));
+            })
+
+            let unitnew = [];
+            let nodesvalue1 = [];
+
+            unitnew = this.units.map(function (d, i) {
+                nodesvalue1[i] = d[sizeField]
+                return {
+                    id: d.id(),
+                    distribution: d[yField],
+                    category: xValue.indexOf(d[yField]),
+                    radius: 0,
+                    value: d[sizeField]
+                }
+            })
+            
+
+            let unitExtent = d3.extent(this.units, d => d[sizeField]); //d3.extent(focusextent1.concat(focusextent2))
+            let size = d3.scaleLinear()
+                .domain([unitExtent[0], unitExtent[1]])
+                .range([radiusa / 100, radiusa]);
+
+            for (let index in unitnew) {
+                unitnew[index].radius = Math.sqrt(size(unitnew[index].value))
+            }
+
+            let simulation = d3.forceSimulation(unitnew)
+                .force('charge', d3.forceManyBody().strength(0.01))
+                .force('x', d3.forceX().x(function (d) {
+                    return centernodex[d.category]
+                }))
+                .force('y', d3.forceY().y(function (d) {
+                    return centernodey[d.category];
+                }))
+                .force('collision', d3.forceCollide().strength(1).radius(d => d.radius + 0.15))
+                .stop()
+
+            simulation.tick(200);
+
+            for (let index in this.units) {
+
+                let f = unitnew.find(item => item.id == index) //eslint-disable-line
+                if (f) {
+                    this.units[f.id].x(f.x);
+                    this.units[f.id].y(f.y);
+                    this.units[f.id].visible("1")
+                    this.units[index].radius(f.radius)
+                    this.units[f.id].color(f.color)
+                    this.units[f.id].unitgroup('size', sizeField)
+
+                }
+                else {
+                    this.units[index].visible("0")
+                }
+
+                this.units[index].opacity("1")
+            }
+
+            // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
+            svg.select(".content").selectAll("text")
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
+
+            yValueFreq.forEach((bar, iBar) => {
+                svg.select(".content").append("text")
+                    .attr("fill", COLOR.TEXT)
+                    .text(xValue[iBar])
+                    .attr("x", centernodex[0] - 2 * radiusa - maxR)
+                    .attr("y", centernodey[iBar])
+                    .attr("font-size", 14)
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
+                    // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
+                    .attr("fill-opacity", 0)
+                    .transition()
+                    // .delay(this.delay + this.duration/2)
+                    .duration(this.duration / 2)
+                    .attr("fill-opacity", 1)
+            })
+            
+            svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
+                .text(yField)
+                .attr("x",Math.max(centernodex[0] - 2 * maxR - 5 * textSize, 0))
+                .attr("y", height / 2)
+                .attr("font-size", textSize)
+                .attr("transform", `rotate(-90, ${Math.max(centernodex[0] - 2 * maxR - 5 * textSize, 0)}, ${height / 2})`)
+                .attr('text-anchor', 'end')
+                .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay + this.duration/2)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 1)
+        }
+        // situation 4:
         else if (this.x && this.y && this.size) {
             let textSize = 14;
             let sizeField = this.units[0].unitgroup().size;
@@ -915,12 +1454,12 @@ class Unitvis extends Chart {
             let ratio
             if (column > 4) { averageradius = Math.sqrt(nodesmaxcount) / 3; ratio = 1.5; }
             else { averageradius = Math.sqrt(nodesmaxcount) / 2; ratio = 1.8; }
-            let radiusa = maxR / Math.sqrt(averageradius) * ratio;
+            let radiusa = this.radiusMultiplier * maxR / Math.sqrt(averageradius) * ratio;
             let rowTotalWidth;
 
-            rowTotalWidth=2.1*maxR*(column)
+            rowTotalWidth = 2.1 * maxR * (column)
 
-            function textSizef(fontSize,fontFamily,text){
+            function textSizef(fontSize, fontFamily, text) {
                 var span = document.createElement("span");
                 var result = {};
                 result.width = span.offsetWidth;
@@ -930,21 +1469,21 @@ class Unitvis extends Chart {
                 span.style.fontFamily = fontFamily;
                 span.style.display = "inline-block";
                 document.body.appendChild(span);
-                if(typeof span.textContent != "undefined"){
-                  span.textContent = text;
-                }else{
-                  span.innerText = text;
+                if (typeof span.textContent != "undefined") {
+                    span.textContent = text;
+                } else {
+                    span.innerText = text;
                 }
                 result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
                 result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
                 return result;
-              }
+            }
 
 
-            let strlen = yValueFreq.map(d => textSizef(textSize,'Arial',d['key']).width)
+            let strlen = yValueFreq.map(d => textSizef(textSize, 'Arial', d['key']).width)
             let strmax = d3.max(strlen)
-            
-            let Minleftpadding =  2*maxR +2*textSize+textSizef(textSize,'Arial',yField).height+strmax
+
+            let Minleftpadding = 2 * maxR + 2 * textSize + textSizef(textSize, 'Arial', yField).height + strmax
             rowTotalWidth = d3.min([rowTotalWidth, width * 0.8])
 
             let centernodex = xValueFreq.map(function (d, i) {
@@ -956,16 +1495,16 @@ class Unitvis extends Chart {
                 }
                 else {
                     if (0.9 * width - rowTotalWidth - 2 * Minleftpadding > 0) {
-                        let rowTotalWidth1=0.9 * width - 2 * Minleftpadding 
-                        let leftpadding = (1 * width - rowTotalWidth1  - 2 * Minleftpadding) / 2 + Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column))
-                        
+                        let rowTotalWidth1 = 0.9 * width - 2 * Minleftpadding
+                        let leftpadding = (1 * width - rowTotalWidth1 - 2 * Minleftpadding) / 2 + Minleftpadding
+                        let rightpadding = (column <= 6) ? 0.5 * leftpadding : d3.min([2 * maxR, 0.5 * leftpadding + maxR])
+                        return leftpadding + (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))
+
                     }
-                    else if (0.9 * width - rowTotalWidth  - 2 * Minleftpadding <=0) {
-                        let leftpadding = 1*Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column)) 
+                    else if (0.9 * width - rowTotalWidth - 2 * Minleftpadding <= 0) {
+                        let leftpadding = 1 * Minleftpadding
+                        let rightpadding = (column <= 6) ? 0.5 * leftpadding : d3.min([2 * maxR, 0.5 * leftpadding + maxR])
+                        return leftpadding + (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))
                     }
                     return null;
                 }
@@ -1036,7 +1575,7 @@ class Unitvis extends Chart {
                     this.units[f.id].visible("1")
                     this.units[index].radius(f.radius)
                     this.units[f.id].color(f.color)
-                    this.units[f.id].unitgroup('size',sizeField)
+                    this.units[f.id].unitgroup('size', sizeField)
                 }
                 else {
                     this.units[index].visible("0")
@@ -1047,10 +1586,10 @@ class Unitvis extends Chart {
 
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
-            .transition()
-            // .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
 
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
@@ -1065,7 +1604,7 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
 
             })
@@ -1083,7 +1622,7 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
             })
 
@@ -1098,7 +1637,7 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 0)
                 .transition()
                 // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 1)
 
             svg.select(".content").append("text")
@@ -1112,9 +1651,38 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 0)
                 .transition()
                 // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 1)
-    }
+        }
+
+        svg.select(".content").selectAll("defs").transition().duration(this.duration / 2).remove()
+
+        svg.select(".content").selectAll("circle")
+            .transition()
+            .duration(this.duration / 2)
+            .attr("fill", (d, i) => {
+                if (this.markStyle()['background-image']) {
+                    let defs = this.svg().select(".content").append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("width", 2 * d.radius())
+                        .attr("height", 2 * d.radius())
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } else if (this.markStyle()['fill']) {
+                    return this.markStyle()['fill']
+                }
+                else {
+                    return d.color()
+                }
+            })
+
     }
 
     /**
@@ -1145,6 +1713,7 @@ class Unitvis extends Chart {
                 })
             })
         }
+
     }
 
     /**
@@ -1210,12 +1779,12 @@ class Unitvis extends Chart {
             let ratio
             if (column > 4) { averageradius = Math.sqrt(nodesmaxcount) / 3; ratio = 1.5; }
             else { averageradius = Math.sqrt(nodesmaxcount) / 2; ratio = 1.8; }
-            let radiusa = maxR / Math.sqrt(averageradius) * ratio;
+            let radiusa = 2 * this.radiusMultiplier * maxR / Math.sqrt(averageradius) * ratio;
             let rowTotalWidth;
 
-            rowTotalWidth=2.1*maxR*(column)
+            rowTotalWidth = 2.1 * maxR * (column)
 
-            function textSizef(fontSize,fontFamily,text){
+            function textSizef(fontSize, fontFamily, text) {
                 var span = document.createElement("span");
                 var result = {};
                 result.width = span.offsetWidth;
@@ -1225,21 +1794,21 @@ class Unitvis extends Chart {
                 span.style.fontFamily = fontFamily;
                 span.style.display = "inline-block";
                 document.body.appendChild(span);
-                if(typeof span.textContent != "undefined"){
-                  span.textContent = text;
-                }else{
-                  span.innerText = text;
+                if (typeof span.textContent != "undefined") {
+                    span.textContent = text;
+                } else {
+                    span.innerText = text;
                 }
                 result.width = parseFloat(window.getComputedStyle(span).width) - result.width;
                 result.height = parseFloat(window.getComputedStyle(span).height) - result.height;
                 return result;
-              }
+            }
 
 
-            let strlen = yValueFreq.map(d => textSizef(textSize,'Arial',d['key']).width)
+            let strlen = yValueFreq.map(d => textSizef(textSize, 'Arial', d['key']).width)
             let strmax = d3.max(strlen)
-            
-            let Minleftpadding =  2*maxR +2*textSize+textSizef(textSize,'Arial',yField).height+strmax
+
+            let Minleftpadding = 2 * maxR + 2 * textSize + textSizef(textSize, 'Arial', yField).height + strmax
             rowTotalWidth = d3.min([rowTotalWidth, width * 0.8])
 
             let centernodex = xValueFreq.map(function (d, i) {
@@ -1251,15 +1820,15 @@ class Unitvis extends Chart {
                 }
                 else {
                     if (0.9 * width - rowTotalWidth - 2 * Minleftpadding > 0) {
-                        let rowTotalWidth1=0.9 * width - 2 * Minleftpadding 
-                        let leftpadding = (1 * width - rowTotalWidth1  - 2 * Minleftpadding) / 2 + Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column))
+                        let rowTotalWidth1 = 0.9 * width - 2 * Minleftpadding
+                        let leftpadding = (1 * width - rowTotalWidth1 - 2 * Minleftpadding) / 2 + Minleftpadding
+                        let rightpadding = (column <= 6) ? 0.5 * leftpadding : d3.min([2 * maxR, 0.5 * leftpadding + maxR])
+                        return leftpadding + (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))
                     }
-                    else if (0.9 * width - rowTotalWidth  - 2 * Minleftpadding <=0) {
-                        let leftpadding = 1*Minleftpadding
-                        let rightpadding=(column<=6)?0.5* leftpadding:d3.min([2*maxR,0.5*leftpadding+maxR])
-                        return leftpadding + (width-leftpadding -rightpadding) / (column - 1) * (Math.floor(i % column))                        
+                    else if (0.9 * width - rowTotalWidth - 2 * Minleftpadding <= 0) {
+                        let leftpadding = 1 * Minleftpadding
+                        let rightpadding = (column <= 6) ? 0.5 * leftpadding : d3.min([2 * maxR, 0.5 * leftpadding + maxR])
+                        return leftpadding + (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))
                     }
                     return null;
                 }
@@ -1330,7 +1899,7 @@ class Unitvis extends Chart {
                     this.units[f.id].visible("1")
                     this.units[index].radius(f.radius)
                     this.units[f.id].color(f.color)
-                    this.units[f.id].unitgroup('size',sizeField)
+                    this.units[f.id].unitgroup('size', sizeField)
                 }
                 else {
                     this.units[index].visible("0")
@@ -1341,10 +1910,10 @@ class Unitvis extends Chart {
 
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
-            .transition()
-            // .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
 
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content")
@@ -1355,11 +1924,11 @@ class Unitvis extends Chart {
                     .attr("y", centernodey[centernodey.length - 1] + 2 * maxR)
                     .attr("font-size", textSize * 0.8)
                     .attr("text-anchor", "middle")
-                    .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
+                    // .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
 
             })
@@ -1373,11 +1942,11 @@ class Unitvis extends Chart {
                     .attr("y", centernodey[iBar])
                     .attr("font-size", textSize * 0.8)
                     .attr("text-anchor", "end")
-                    .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
+                    // .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
             })
 
@@ -1392,7 +1961,7 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 0)
                 .transition()
                 // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 1)
 
 
@@ -1406,9 +1975,9 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 0)
                 .transition()
                 // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 1)
-    }
+        }
         // situation 2
         else if (this.x && this.size) {
             let xField = this.units[0].unitgroup().x;
@@ -1441,8 +2010,8 @@ class Unitvis extends Chart {
             else
                 averageradius = Math.sqrt(nodesmaxcount) / 2;
 
-            let ratio = 1.8;
-            let radiusa = maxR / Math.sqrt(averageradius) * ratio;
+            let ratio = 2;
+            let radiusa = this.radiusMultiplier * ratio * maxR / Math.sqrt(averageradius);
 
             let rowTotalWidth;
             if (categories.length % 2 === 0) {
@@ -1519,7 +2088,7 @@ class Unitvis extends Chart {
                     this.units[f.id].visible("1")
                     this.units[index].radius(f.radius)
                     this.units[f.id].color(f.color)
-                    this.units[f.id].unitgroup('size',sizeField)
+                    this.units[f.id].unitgroup('size', sizeField)
 
                 }
                 else {
@@ -1528,13 +2097,13 @@ class Unitvis extends Chart {
 
                 this.units[index].opacity("1")
             }
-            
+
             // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
             svg.select(".content").selectAll("text")
-            .transition()
-            // .delay(this.delay)
-            .duration(this.duration/2)
-            .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
 
             xValueFreq.forEach((bar, iBar) => {
                 svg.select(".content").append("text")
@@ -1549,7 +2118,7 @@ class Unitvis extends Chart {
                     .attr("fill-opacity", 0)
                     .transition()
                     // .delay(this.delay + this.duration/2)
-                    .duration(this.duration/2)
+                    .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
             })
 
@@ -1563,9 +2132,172 @@ class Unitvis extends Chart {
                 .attr("fill-opacity", 0)
                 .transition()
                 // .delay(this.delay + this.duration/2)
-                .duration(this.duration/2)
+                .duration(this.duration / 2)
                 .attr("fill-opacity", 1)
         }
+        else if (this.y && this.size) {
+            let textSize = 14;
+
+            let yField = this.y;
+
+            let sizeField = this.size;
+
+            let yValueFreq = d3.nest().key(function (d) { return d[yField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
+
+
+            yValueFreq.sort(function (x, y) {
+                return d3.ascending(x['key'], y['key']);
+            })
+
+            let xValue = yValueFreq.map(d => d['key']);
+
+            let categories = yValueFreq
+
+            let row = 1
+            let column = yValueFreq.length
+
+            let maxR = d3.min([0.8 * height / (row + 1) / 2, 0.8 * width / (column + 1) / 2])
+
+
+            let nodesmaxcount = d3.max(yValueFreq, function (d) { return d.value; })
+
+
+            let averageradius;
+            if (column > 4)
+                averageradius = Math.sqrt(nodesmaxcount) / 3;
+            else
+                averageradius = Math.sqrt(nodesmaxcount) / 2;
+
+            let ratio = 2;
+            let radiusa = this.radiusMultiplier * ratio * maxR / Math.sqrt(averageradius);
+
+            let rowTotalWidth;
+            if (categories.length % 2 === 0) {
+                rowTotalWidth = 2.5 * maxR * column;//2.4
+            } else {
+                rowTotalWidth = 2.5 * maxR * (column + 1);
+            }
+
+            rowTotalWidth = d3.min([rowTotalWidth, width * 0.9])
+
+
+            let centernodey = yValueFreq.map(function (d, i) {
+                if (column === 1) {
+                    if (yValueFreq.length === 2) {//
+                        return i === 0 ? radiusa : 3.1 * maxR + radiusa
+                    }
+                    return (width - radiusa) / 2
+                }
+                else {
+                    rowTotalWidth = d3.min([rowTotalWidth, width])
+                    let paddingMaxR = 3.3;
+                    let leftPadding = (width - (rowTotalWidth - paddingMaxR * maxR)) / 2;
+                    return leftPadding + (rowTotalWidth - paddingMaxR * maxR) / (column - 1) * (Math.floor(i % column));
+                }
+            })
+
+
+            let centernodex = yValueFreq.map(function (d, i) {
+                let startPoint = ((height - 3.6 * maxR - 5 * radiusa) / (row - 1) <= 3 * maxR ? 1.8 * maxR : (height - 3 * maxR * (row - 1) - 5 * radiusa) / 1.4);
+                return startPoint + d3.min([(height - 3.6 * maxR) / (row - 1), 3 * maxR]) * (Math.floor(i / column));
+            })
+
+            let unitnew = [];
+            let nodesvalue1 = [];
+
+            unitnew = this.units.map(function (d, i) {
+                nodesvalue1[i] = d[sizeField]
+                return {
+                    id: d.id(),
+                    distribution: d[yField],
+                    category: xValue.indexOf(d[yField]),
+                    radius: 0,
+                    value: d[sizeField]
+                }
+            })
+            
+
+            let unitExtent = d3.extent(this.units, d => d[sizeField]); //d3.extent(focusextent1.concat(focusextent2))
+            let size = d3.scaleLinear()
+                .domain([unitExtent[0], unitExtent[1]])
+                .range([radiusa / 100, radiusa]);
+
+            for (let index in unitnew) {
+                unitnew[index].radius = Math.sqrt(size(unitnew[index].value))
+            }
+
+            let simulation = d3.forceSimulation(unitnew)
+                .force('charge', d3.forceManyBody().strength(0.01))
+                .force('x', d3.forceX().x(function (d) {
+                    return centernodex[d.category]
+                }))
+                .force('y', d3.forceY().y(function (d) {
+                    return centernodey[d.category];
+                }))
+                .force('collision', d3.forceCollide().strength(1).radius(d => d.radius + 0.15))
+                .stop()
+
+            simulation.tick(200);
+
+            for (let index in this.units) {
+
+                let f = unitnew.find(item => item.id == index) //eslint-disable-line
+                if (f) {
+                    this.units[f.id].x(f.x);
+                    this.units[f.id].y(f.y);
+                    this.units[f.id].visible("1")
+                    this.units[index].radius(f.radius)
+                    this.units[f.id].color(f.color)
+                    this.units[f.id].unitgroup('size', sizeField)
+
+                }
+                else {
+                    this.units[index].visible("0")
+                }
+
+                this.units[index].opacity("1")
+            }
+
+            // setTimeout(()=>{svg.select(".content").selectAll("text").remove()},5000);
+            svg.select(".content").selectAll("text")
+                .transition()
+                // .delay(this.delay)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 0)
+
+            yValueFreq.forEach((bar, iBar) => {
+                svg.select(".content").append("text")
+                    .attr("fill", COLOR.TEXT)
+                    .text(xValue[iBar])
+                    .attr("x", centernodex[0] - 2 * radiusa - maxR)
+                    .attr("y", centernodey[iBar])
+                    .attr("font-size", 14)
+                    .attr("text-anchor", "middle")
+                    .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
+                    // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
+                    .attr("fill-opacity", 0)
+                    .transition()
+                    // .delay(this.delay + this.duration/2)
+                    .duration(this.duration / 2)
+                    .attr("fill-opacity", 1)
+            })
+
+
+            svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
+                .text(yField)
+                .attr("x",Math.max(centernodex[0] - 2 * maxR - 5 * textSize, 0))
+                .attr("y", height / 2)
+                .attr("font-size", textSize)
+                .attr("transform", `rotate(-90, ${Math.max(centernodex[0] - 2 * maxR - 5 * textSize, 0)}, ${height / 2})`)
+                .attr('text-anchor', 'end')
+                .attr("fill-opacity", 0)
+                .transition()
+                // .delay(this.delay + this.duration/2)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 1)
+        }
+
         // situation 3
         else {
             let units = this.units.filter(d => d.visible() === "1");
@@ -1588,7 +2320,7 @@ class Unitvis extends Chart {
                     value: d[sizeField]
                 }
             });
-
+            
             let focusextent1 = d3.extent(units, d => d[sizeField]);
             let nodesScale = d3.scaleLinear()
                 .domain([focusextent1[0], focusextent1[1]])
@@ -1600,7 +2332,7 @@ class Unitvis extends Chart {
 
 
             for (let index in nodesradius) {
-                nodesradius[index].radius = Math.sqrt(nodesScale(nodesradius[index].value));
+                nodesradius[index].radius = 0.8 * this.radiusMultiplier * Math.sqrt(nodesScale(nodesradius[index].value));
             }
 
             let simulation = d3.forceSimulation(nodesradius)
@@ -1618,7 +2350,7 @@ class Unitvis extends Chart {
                     units[f.id].y(f.y);
                     units[f.id].visible("1")
                     units[f.id].radius(f.radius)
-                    units[f.id].unitgroup('size',sizeField)
+                    units[f.id].unitgroup('size', sizeField)
 
                 }
                 else {
@@ -1629,6 +2361,35 @@ class Unitvis extends Chart {
             }
 
         }
+
+        svg.select(".content").selectAll("defs").transition().duration(this.duration / 2).remove()
+
+        svg.select(".content").selectAll("circle")
+            .transition()
+            .duration(this.duration / 2)
+            .attr("fill", (d, i) => {
+                if (this.markStyle()['background-image']) {
+                    let defs = this.svg().select(".content").append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("width", 2 * d.radius())
+                        .attr("height", 2 * d.radius())
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } else if (this.markStyle()['fill']) {
+                    return this.markStyle()['fill']
+                }
+                else {
+                    return d.color()
+                }
+            })
+
 
     }
 
@@ -1711,7 +2472,7 @@ class Unitvis extends Chart {
                     .attr("cx", d => d.x())
                     .attr("cy", d => d.y())
                     .attr("r", d => d.radius())
-                    // .style("opacity", d => d.opacity());
+                // .style("opacity", d => d.opacity());
             }
 
 
@@ -1789,7 +2550,7 @@ class Unitvis extends Chart {
                     .attr("cx", d => d.x())
                     .attr("cy", d => d.y())
                     .attr("r", d => d.radius())
-                    // .style("opacity", d => d.opacity());
+                // .style("opacity", d => d.opacity());
             }
 
         }
@@ -1821,7 +2582,7 @@ class Unitvis extends Chart {
         if (this.size) { this.encodeSize(); changesize = true }
 
         if (this.color) { this.encodeColor(); changecolor = true }
-        
+
         if (changecolor) {
             this.svg().select(".content")
                 .selectAll("circle")
@@ -1849,7 +2610,7 @@ class Unitvis extends Chart {
                 .attr("cx", d => d.x())
                 .attr("cy", d => d.y())
                 .attr("r", d => d.radius())
-                // .style("opacity", d => d.opacity());
+            // .style("opacity", d => d.opacity());
         }
 
     }

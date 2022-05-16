@@ -308,25 +308,25 @@ class Title extends Titler {
 
                     d3.selectAll('#textContent tspan')
                         .transition()
-                        .duration(animation.duration/2)
+                        .duration(animation.duration)
                         .attr("fill-opacity", 1)
                         
                     d3.select("#titleBorder")
                         .attr("stroke-opacity", 0)
                         .transition()
-                        .duration(animation.duration/2)
+                        .duration(animation.duration)
                         .attr("stroke-opacity", 1);
 
                     d3.select("#titleBackGrnd")
                         .attr("fill-opacity", 0)
                         .transition()
-                        .duration(animation.duration/2)
+                        .duration(animation.duration)
                         .attr("fill-opacity", 1);
 
                     d3.select("#divideLine")
                         .attr("stroke-opacity", 0)
                         .transition()
-                        .duration(animation.duration/2)
+                        .duration(animation.duration)
                         .attr("stroke-opacity", 1)
                         .remove();
 

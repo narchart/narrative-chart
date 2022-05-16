@@ -315,7 +315,7 @@ Adding graphical and textural annotations.
 | Regression | stroke-width; color |
 | Symbol | icon-url; size |
 | Texture | background-image; |
-| Tooltip | |
+| Tooltip | font-size; font-family; font-color; font-weight; font-style; tooltip-color |
 
 ##### Arrow
 

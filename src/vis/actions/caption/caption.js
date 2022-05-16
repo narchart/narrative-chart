@@ -194,7 +194,7 @@ class Caption extends Captioner {
                     textE.selectAll("tspan")
                         .attr("fill-opacity", 0)
                         .transition()
-                        .duration(animation.duration / 2)
+                        .duration(animation.duration)
                         .attr("fill-opacity", 1)
 
                     break;

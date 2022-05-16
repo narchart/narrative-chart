@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import Annotator from './annotator';
 import { PieChart } from '../../charts';
+import { Unitvis } from '../../charts';
+
 
 /**
  * @description An annotator for filling texture.
@@ -27,6 +29,7 @@ class Texture extends Annotator {
                 this.parentNode.appendChild(this);
             });
         };
+
         var config = {
             "texture_size" : 300
         }
@@ -41,6 +44,7 @@ class Texture extends Annotator {
             .attr("x", 0)
             .attr("y", 0);
 
+            
         const uid = Date.now().toString() + Math.random().toString(36).substring(2);
         let focus_elements = svg.selectAll(".mark")
         .filter(function (d) {
@@ -94,7 +98,41 @@ class Texture extends Annotator {
 
             focus_elements.style("fill", "url(#texture_background)"); 
 
-        } else {
+        } else if (chart instanceof Unitvis){
+            svg.selectAll(".mark")
+            .filter(function(d) {
+                if (target.length === 0) {
+                    return true
+                }
+                for (const item of target) {
+                    if (d[item.field] === item.value) {
+                        continue
+                    } else {
+                        return false
+                    }
+                }
+                return true
+            })
+            .transition()
+            .duration('duration' in animation ? animation['duration']: 0)
+            .attr("fill", (d, i) => {
+                    let defs = svg.append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", style["background-image"])
+                        .attr("width", 2 * d.radius())
+                        .attr("height", 2 * d.radius())
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } 
+            )
+        }
+        else {
             svg.selectAll(".mark")
             .filter(function(d) {
                 if (target.length === 0) {
@@ -114,7 +152,6 @@ class Texture extends Annotator {
             .style("fill", "url(#texture_background)")
 
             focus_elements.nodes().forEach(one_element => {
-                console.log(one_element);
                 if(chart instanceof PieChart){
                     let data_temp = one_element.__data__;
                     let data_x = data_temp.centroidX();
