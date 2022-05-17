@@ -46,32 +46,33 @@ class Scatterplot extends Chart {
             .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
             .attr("transform", "translate(" + 20 + "," + margin.top + ")");
 
-        if(background.Background_Image){
-                d3.select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
-            }
-    
-        if(background.Background_Color){
-                d3.select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
-            }
-    
         this._svg = d3.select("svg")
             .append("g")
-            .attr("transform", "translate(" + (margin.left + 10) + "," + margin.top + ")");
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        if (background.Background_Image) {
+            d3.select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
+        }
+
+        if (background.Background_Color) {
+            d3.select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
+        }
 
         if (this.style()['background-color']) {
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'])
         }
         else if (this.style()['background-image']) {
+
             let defs = this._svg.append('svg:defs');
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130 ? 480 : chartbackgroundsize.height)
-                .attr("patternUnits", "userSpaceOnUse")
+                .attr("width", 1)
+                .attr("height", 1)
+                .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130 ? 480 : chartbackgroundsize.height)
+                .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
             d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
@@ -126,15 +127,9 @@ class Scatterplot extends Chart {
         let strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
         let strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
         let fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
-        let fill;       
-        if (this.markStyle()['background-image']){
-            fill = 'url(#point_image_background)';
-        } else {
-            fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : COLOR.DEFAULT;
-        }
 
         var config = {
-            "point_size" : 300
+            "point_size": 300
         }
         var defs = svg.append('svg:defs');
         defs.append("svg:pattern")
@@ -148,23 +143,44 @@ class Scatterplot extends Chart {
             .attr("y", 0);
 
         let content = svg.append("g")
-                .attr("class", "content")
-                .attr("chartWidth", width)
-                .attr("chartHeight", height);
-                content.append("g")
-                .attr("class", "circleGroup")
-                .selectAll("circle")
-                .data(this.points)
-                .enter().append("circle")
-                .attr("class", "mark")
-                .attr("stroke", stroke)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke-opacity", strokeOpacity)
-                .attr("fill-opacity", fillOpacity)
-                .attr("fill", fill)
-                .attr("cx", initX)
-                .attr("cy", initY)
-                .attr("opacity", 0)
+            .attr("class", "content")
+            .attr("chartWidth", width)
+            .attr("chartHeight", height);
+        content.append("g")
+            .attr("class", "circleGroup")
+            .selectAll("circle")
+            .data(this.points)
+            .enter().append("circle")
+            .attr("class", "mark")
+            .attr("stroke", stroke)
+            .attr("stroke-width", strokeWidth)
+            .attr("stroke-opacity", strokeOpacity)
+            .attr("fill-opacity", fillOpacity)
+            .attr("fill", (d, i) => {
+                if (this.markStyle()['background-image'] ) {
+                    let defs = content.append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("width", 2 * 7)
+                        .attr("height", 2 * 7)
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } else if (this.markStyle()['fill']) {
+                    return this.markStyle()['fill']
+                }
+                else {
+                    return d.color()
+                }
+            })
+            .attr("cx", initX)
+            .attr("cy", initY)
+            .attr("opacity", 0)
     }
 
     /**
@@ -209,7 +225,7 @@ class Scatterplot extends Chart {
             axis_X.selectAll(".axis_x .tick")
                 .append("line")
                 .attr("stroke", d => {
-                    if((d!==0)||(!this.y)) {return COLOR.DIVIDER;}
+                    if ((d !== 0) || (!this.y)) { return COLOR.DIVIDER; }
                 })
                 .attr("class", "gridline")
                 .attr("x1", 0)
@@ -224,7 +240,7 @@ class Scatterplot extends Chart {
                 .attr("y1", height)
                 .attr("x2", width)
                 .attr("y2", 0);
-            
+
             // specify color for axis elements
             // tick 
             axis_X.selectAll(".tick")
@@ -319,7 +335,7 @@ class Scatterplot extends Chart {
             axis_Y.append("g")
                 .attr("class", "axis_y")
                 .call(axisY);
-            
+
             // specify color for axis elements
             // tick 
             axis_Y.selectAll(".tick")
@@ -337,7 +353,7 @@ class Scatterplot extends Chart {
             axis_Y.selectAll(".axis_y .tick")
                 .append("line")
                 .attr("stroke", d => {
-                    if((d!==0)||(!this.x)) {return COLOR.DIVIDER;}
+                    if ((d !== 0) || (!this.x)) { return COLOR.DIVIDER; }
                 })
                 .attr("class", "gridline")
                 .attr("x1", 0)
@@ -437,6 +453,31 @@ class Scatterplot extends Chart {
             this.points.forEach((d) => {
                 d.size(scale(d[sizeEncoding]));
             })
+
+            d3.select(".content").selectAll("circle")
+                .data(this.points)
+                .attr("fill", (d, i) => {
+                    if (this.markStyle()['background-image']) {
+                        let defs = d3.select(".content").append('svg:defs');
+                        defs.append("svg:pattern")
+                            .attr("id", "mark-background-image-size" + i)
+                            .attr("width", 1)
+                            .attr("height", 1)
+                            .attr("patternUnits", "objectBoundingBox")
+                            .append("svg:image")
+                            .attr("xlink:href", this.markStyle()["background-image"])
+                            .attr("width", 2 * d.size())
+                            .attr("height", 2 * d.size())
+                            .attr("x", 0)
+                            .attr("y", 0);
+                        return "url(#mark-background-image-size" + i + ")"
+                    } else if (this.markStyle()['fill']) {
+                        return this.markStyle()['fill']
+                    }
+                    else {
+                        return d.color()
+                    }
+                })
         }
         else {
             let width = this.width();
@@ -541,12 +582,12 @@ class Scatterplot extends Chart {
     modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field;
-            
+
             let changeX = false;
             let changeY = false;
             let changecolor = false;
             let changesize = false;
-            
+
             switch (channel) {
                 case 'x':
                     changeX = true
