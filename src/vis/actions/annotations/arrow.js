@@ -46,18 +46,7 @@ class Arrow extends Annotator {
         }
 
         // arrow shape params
-        // const arrow_points = [
-        //     [0, 0],
-        //     [20, 5],
-        //     [15, 10],
-        //     [25, 20],
-        //     [20, 25],
-        //     [10, 15],
-        //     [5, 20],
-        //     [0, 0]
-        // ];
-
-        const arrow_points = [
+        let arrow_points = [
             [0, 0],
             [6, 20],
             [12, 14],
@@ -67,6 +56,9 @@ class Arrow extends Annotator {
             [20, 6],
             [0, 0]
         ];
+
+        let pie_arrow_points;
+
         // scale on x and y 
         let scale_x, scale_y;
         if ('width' in style && 'height' in style) {
@@ -85,7 +77,7 @@ class Arrow extends Annotator {
  
         focus_elements.nodes().forEach((one_element) => {
             // identify the position to place the arrow
-            let data_x, data_y, offset;
+            let data_x, data_y, offset, offset_x, offset_y, center_x, center_y;
             const nodeName = one_element.nodeName;
             if (nodeName === "circle") { // get center 
                 data_x = parseFloat(one_element.getAttribute("cx"));
@@ -97,22 +89,56 @@ class Arrow extends Annotator {
                 data_y = parseFloat(one_element.getAttribute("y"));
             } else { // currently only support piechart
                 if(chart instanceof PieChart){
+                    pie_arrow_points = arrow_points;
+
                     let data_temp = one_element.__data__;
                     data_x = data_temp.centroidX();
                     data_y = data_temp.centroidY();
+                    center_x = data_temp.coreX();
+                    center_y = data_temp.coreY();
+                    let outer_r = data_temp.radiusOuter();
+
+                    // scale
+                    pie_arrow_points = pie_arrow_points.map((point) => [scale_x * point[0], scale_y * point[1]]);
+                    
+                    // rotate
+                    const _rev45 = (45 * Math.PI / 180);
+                    const _tan = (center_x - data_x) / (center_y - data_y);
+
+                    let alpha = -Math.atan(_tan);
+
+                    if (data_x < center_x) {
+                        alpha = alpha > 0 ? alpha : alpha + Math.PI
+                    } else {
+                        alpha = alpha < 0 ? alpha : alpha + Math.PI;
+                    }
+                    alpha += _rev45;
+                    pie_arrow_points = pie_arrow_points.map((point) => [Math.cos(alpha) * point[0] - Math.sin(alpha) * point[1], Math.sin(alpha) * point[0] + Math.cos(alpha) * point[1]]);
+                    
+                    // translate
                     offset = 0;
-                }else{
+                    offset_x = (outer_r * 0.8) * (data_x > center_x ? 1 : -1) * Math.sin(Math.atan(Math.abs(_tan)));
+                    offset_y = (outer_r * 0.8) * (data_y > center_y ? 1 : -1) * Math.cos(Math.atan(Math.abs(_tan)));
+                    pie_arrow_points = pie_arrow_points.map((point) => [center_x + offset_x + point[0], center_y + offset_y + point[1]]);
+
+                } else{
                     return;
                 }
             }
 
             // move the arrow to the data point
-            const new_arrow_points = arrow_points.map((point) => [data_x + offset + scale_x*point[0], data_y + offset + scale_y* point[1]]);
+            let new_arrow_points;
+            if (chart instanceof PieChart) {
+                new_arrow_points = pie_arrow_points;
+            }
+            else new_arrow_points = arrow_points.map((point) => [data_x + offset + scale_x * point[0], data_y + offset + scale_y * point[1]]);
 
             // draw arrow
             if ("type" in animation && animation["type"] === "fly") {
                 const bbox = svg.node().getBBox();
                 const parentWidth = Number(svg.node().parentNode.getAttribute("width"));
+                const pieTranslate = svg.node().parentNode.getAttribute("width") ? svg.node().computedStyleMap().get('transform')[0].x.value : 0;
+                const arrow_x = chart instanceof PieChart ? center_x + offset - pieTranslate : data_x + offset;
 
                 svg.append("path")
                     .attr("class", "arrow")
@@ -124,10 +150,10 @@ class Arrow extends Annotator {
                             return COLOR.ANNOTATION;
                         }
                     })
-                    .attr("transform", `translate(${bbox.width-Math.abs(bbox.x)-(data_x+offset)+(parentWidth-bbox.width)/2}, 0)`) // (parentWidth-bbox.width)/2 for margin
+                    .attr("transform", `translate(${parentWidth - Math.abs(bbox.x) - arrow_x}, 0)`) // (parentWidth-bbox.width)/2 for margin
                     .transition()
                     .duration('duration' in animation ? animation['duration']: 0)
-                    .attr("transform", "translate(0, 0)")
+                    .attr("transform", "translate(0, 0)");
             } else if ("type" in animation && animation["type"] === "wipe") {
                 // ensure that clip-paths for different arrows won't affect one another. 
                 const uid = Date.now().toString() + Math.random().toString(36).substring(2);
@@ -146,7 +172,8 @@ class Arrow extends Annotator {
                 
                 const arrowBox = arrow.node().getBBox();
 
-                svg.append("defs")
+                if (!(chart instanceof PieChart)) {
+                    svg.append("defs")
                     .append("clipPath")
                     .attr("id", `clip_arrow_${uid}`)
                     .append("rect")
@@ -157,9 +184,72 @@ class Arrow extends Annotator {
                     .transition()
                     .duration('duration' in animation ? animation['duration']: 0)
                     .attr("x", arrowBox.x)
-                    .attr("y", arrowBox.y)
+                    .attr("y", arrowBox.y) 
                     .attr("height", arrowBox.height)
                     .attr("width", arrowBox.width);
+                } else {
+                    if (data_x > center_x) {
+                        if (data_y > center_y) {
+                            svg.append("defs")
+                                .append("clipPath")
+                                .attr("id", `clip_arrow_${uid}`)
+                                .append("rect")
+                                .attr("x", arrowBox.x+arrowBox.width)
+                                .attr("y", arrowBox.y+arrowBox.height)
+                                .attr("height", 0)
+                                .attr("width", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("x", arrowBox.x)
+                                .attr("y", arrowBox.y) 
+                                .attr("height", arrowBox.height)
+                                .attr("width", arrowBox.width);
+                        } else {
+                            svg.append("defs")
+                                .append("clipPath")
+                                .attr("id", `clip_arrow_${uid}`)
+                                .append("rect")
+                                .attr("x", arrowBox.x+arrowBox.width)
+                                .attr("y", arrowBox.y)
+                                .attr("height", 0)
+                                .attr("width", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("x", arrowBox.x)
+                                .attr("height", arrowBox.height)
+                                .attr("width", arrowBox.width);
+                        }
+                    } else {
+                        if (data_y > center_y) {
+                            svg.append("defs")
+                                .append("clipPath")
+                                .attr("id", `clip_arrow_${uid}`)
+                                .append("rect")
+                                .attr("x", arrowBox.x)
+                                .attr("y", arrowBox.y+arrowBox.height)
+                                .attr("height", 0)
+                                .attr("width", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("y", arrowBox.y) 
+                                .attr("height", arrowBox.height)
+                                .attr("width", arrowBox.width);
+                        } else {
+                            svg.append("defs")
+                                .append("clipPath")
+                                .attr("id", `clip_arrow_${uid}`)
+                                .append("rect")
+                                .attr("x", arrowBox.x)
+                                .attr("y", arrowBox.y)
+                                .attr("height", 0)
+                                .attr("width", 0)
+                                .transition()
+                                .duration('duration' in animation ? animation['duration']: 0)
+                                .attr("height", arrowBox.height)
+                                .attr("width", arrowBox.width);
+                        }
+                    }
+                }
             } else {
                 svg.append("path")
                     .attr("class", "arrow")
