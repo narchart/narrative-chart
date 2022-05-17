@@ -28,13 +28,15 @@ class LineChart extends Chart {
             width: 600,
             height: 600
         }
-        
-        d3.select(this.container())
+        let container = this.container()
+
+        d3.select(container)
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
             .attr("height", this.height() + margin.top + margin.bottom)
 
-        d3.select("svg")
+        d3.select(container)
+            .select("svg")
             .append("g")
             .attr("id","chartBackGrnd")
             .append("rect")
@@ -43,23 +45,24 @@ class LineChart extends Chart {
             .attr("transform", "translate(" + 20 + "," + margin.top + ")");
             
 
-        this._svg = d3.select("svg")
+        this._svg = d3.select(container)
+                    .select("svg")
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
         if(background.Background_Image){
-                d3.select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
+                d3.select(container).select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
             }
     
         if(background.Background_Color){
-                d3.select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
+                d3.select(container).select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
             }
                     
         if(this.style()['background-color']){
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
         } 
         else if (this.style()['background-image']){
-            let defs = this._svg.append('svg:defs');
+            let defs = d3.select(container).select("svg").append('svg:defs');
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
                 .attr("width", chartbackgroundsize.width)
