@@ -143,58 +143,38 @@ class PieChart extends Chart {
         let strokeOpacity = this.markStyle()['stroke-opacity'] || this.markStyle()['stroke-opacity'] ===0? this.markStyle()['stroke-opacity'] : 1;
 
         if(this.style()["mask-image"]&& !this.markStyle()["background-image"] ){
-            let margin = this.margin()
-            let chartmaskgroundsize = {
-                width: 600,
-                height: 600
-            }
             let defs = this._svg.append('svg:defs');
-            let innerRadius = this.markStyle()['inner-radius'] ? this.markStyle()['inner-radius'] : 3;
             let outerRadius = this.markStyle()['outer-radius'] ? this.markStyle()['outer-radius'] : width/3;
 
             defs.append("svg:pattern")
                 .attr("id", "chart-mask-image")
-                .attr("width",chartmaskgroundsize.width)
-                .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
+                .attr("width",outerRadius*2)
+                .attr("height", outerRadius*2)
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["mask-image"])
-                .attr("width", chartmaskgroundsize.width)
-                .attr("height",margin.top === 130? 480: chartmaskgroundsize.height)
+                .attr("calss","maskBackground")
+                .attr("width", outerRadius*2)
+                .attr("height",outerRadius*2)
                 .attr("x", 0)
                 .attr("y", 0);
 
-            content.append("circle")
-                .attr("cx", (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  )
-                .attr("cy", chartbackgroundsize.height / 2 )
-                .attr("r", outerRadius+3)
-                .attr("fill", "url(#chart-mask-image)")
-
-            content.append("circle")
-                .attr("cx", (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  )
-                .attr("cy", chartbackgroundsize.height / 2 )
-                .attr("r", innerRadius-3)
-                .attr("fill", COLOR.BACKGROUND)
         }
         if(this.markStyle()["background-image"]){
-            let margin = this.margin()
-            let chartmaskgroundsize = {
-                width: 600,
-                height: 600
-            }
 
             this.arcs.forEach((d,i)=>{
                 let defs = this._svg.append('svg:defs');
                 defs.append("svg:pattern")
                     .attr("id", `mark-background-image${i}`)
-                    .attr("width", chartmaskgroundsize.width)
-                    .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
+                    .attr("class","mark-background-pattern")
+                    .attr("width", 200)
+                    .attr("height", 200)
                     .attr("patternUnits", "userSpaceOnUse")
                     .append("svg:image")
                     .attr("xlink:href", this.markStyle()["background-image"])
                     .attr("class","markBackground")
-                    .attr("width", chartmaskgroundsize.width)
-                    .attr("height", margin.top === 130? 480: chartmaskgroundsize.height)
+                    .attr("width", 200)
+                    .attr("height", 200)
                     .attr("x", 0)
                     .attr("y", 0);
             })
@@ -212,25 +192,6 @@ class PieChart extends Chart {
             .padAngle(5)
             .padRadius(3)
 
-        if(this.style()["mask-image"] && !this.markStyle()["background-image"]){
-            let arcs_temp = content.selectAll(".maskBack")
-                .data(this.arcs)
-                .enter()
-                .append("g")
-                .attr("class","maskBack")
-                .attr("transform", "translate(" + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  + "," + chartbackgroundsize.height / 2 + ")");
-            
-            let arcFun_temp = d3.arc()
-                
-            arcs_temp.append("path")
-                .attr("class","markTemp")
-                .attr("fill", "none")
-                .attr("d", (d, i) => arcFun_temp(d))
-                .attr("opacity", 1)
-                .attr("stroke",COLOR.BACKGROUND)
-                .attr("stroke-width","6px")
-                .attr("stroke-opacity",1)
-        }
         
         arcs.append("path")
             .attr("class","mark")
@@ -241,14 +202,6 @@ class PieChart extends Chart {
             .attr("stroke-width",strokeWidth)
             .attr("stroke-opacity",strokeOpacity)
 
-        //init text-label
-        // arcs.append("text")        
-        //     .attr('class','arcText')
-        //     .attr('text-anchor', 'middle')
-        //     .attr("font-size", "16px")
-        //     .attr("font-weight", "500")
-        //     .attr("fill", COLOR.TEXT)
-        //     .attr("opacity", 1)
         }
     /**
      * @description Draw Arcs for pie chart with theta encoding.
@@ -280,8 +233,10 @@ class PieChart extends Chart {
             let pieData = pie(processedData);
             
             this.dataTemp=[]
-            let mask_temp=[]
+            let thetaDelta=outerRadius;
             this.arcs.forEach((d,i)=>{
+                let thateDelta_temp= (pieData[i].endAngle - pieData[i].startAngle)*outerRadius
+                if(thateDelta_temp>thetaDelta) thetaDelta= thateDelta_temp
                 d.angleEnd(pieData[i].endAngle);
                 d.angleStart(pieData[i].startAngle);
                 d.radiusInner(innerRadius);
@@ -293,13 +248,7 @@ class PieChart extends Chart {
                     outerRadius: d.radiusOuter(),
                     color: COLOR.DEFAULT,                   
                     }
-                mask_temp[i]={
-                    startAngle: d.angleStart(),
-                    endAngle: d.angleEnd(),
-                    innerRadius: d.radiusInner()-3,
-                    outerRadius: d.radiusOuter()+3,
-                    color: COLOR.DEFAULT,                   
-                    }
+        
                 let midangle = Math.atan2(arcFun.centroid(this.dataTemp[i])[1] , arcFun.centroid(this.dataTemp[i])[0]);
                 let xlable = Math.cos(midangle) * textRadius;
                 let ylable = Math.sin(midangle) * textRadius
@@ -307,51 +256,43 @@ class PieChart extends Chart {
                 let sign_y= ylable > 0 ? 1 : -0.3;
                 let x = xlable + 2 * sign_x  + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2;
                 let y = ylable + 15 * sign_y + chartbackgroundsize.height / 2;
+                let coreX = (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2
+                let coreY = chartbackgroundsize.height / 2
                 d.centroidX(arcFun.centroid(this.dataTemp[i])[0] + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2)
                 d.centroidY(arcFun.centroid(this.dataTemp[i])[1] + chartbackgroundsize.height / 2)
+                d.coreX(coreX)
+                d.coreY(coreY)
                 d.textX(x);
                 d.textY(y);
                 let percent = Number(d[thetaEncoding]) / d3.sum(pieData, function (x) {
                     return x.value;
                 }) * 100;
-                let text_temp = d[colorEncoding]?(d[colorEncoding] + ":" + percent.toFixed(1) + '%') : (percent.toFixed(1) + '%');
+                let text_temp = d[colorEncoding]?(d[colorEncoding] + ": " + percent.toFixed(1) + '%') : (percent.toFixed(1) + '%');
                 d.text(text_temp)
             })
 
             if(this.style()["mask-image"] && !this.markStyle()["background-image"]){
-                let arcFun_temp = d3.arc().cornerRadius(cornerRadius)
-                d3.selectAll(".markTemp")
-                .attr("d", (d, i) => arcFun_temp(mask_temp[i]))
+                d3.selectAll("#chart-mask-image")
+                .attr("x",outerRadius)
+                .attr("y",outerRadius)
+                
             }
             d3.selectAll(".mark")
                 .attr("d", (d, i) => arcFun(this.dataTemp[i]))
             
             if(this.markStyle()["background-image"]){
-                d3.selectAll("pattern")
-                .attr("x",(d,i)=>arcFun.centroid(this.dataTemp[i])[0]+300)
-                .attr("y",(d,i)=>arcFun.centroid(this.dataTemp[i])[1]+300)
+                d3.selectAll(".mark-background-pattern")
+                .attr("x",(d,i)=>arcFun.centroid(this.dataTemp[i])[0]+thetaDelta/2)
+                .attr("y",(d,i)=>arcFun.centroid(this.dataTemp[i])[1]+thetaDelta/2)
+                .attr("width", thetaDelta)
+                .attr("height",thetaDelta)
+
+                d3.selectAll(".markBackground")
+                .attr("width", thetaDelta)
+                .attr("height",thetaDelta)
                 
             }
-            
-            // text-label
-            // d3.selectAll(".arcText")
-            //     .attr('transform',(d, i)=> {
-            //         let midangle = Math.atan2(arcFun.centroid(this.dataTemp[i])[1] , arcFun.centroid(this.dataTemp[i])[0])
-            //         let xlable = Math.cos(midangle) * textRadius
-            //         let sign= xlable > 0 ? 1 :-1
-            //         let x=xlable + 5 * sign
-            //         let y = Math.sin(midangle)*textRadius
-            //         return 'translate(' + x + ', ' + y + ')';
-            //     })
-            //     .text((d,i) =>{
-            //         let percent = Number(this.arcs[i][thetaEncoding]) / d3.sum(pieData, function (d) {
-            //             return d.value;
-            //         }) * 100;
-            //         let text_temp = this.arcs[i][colorEncoding] + ":" + percent.toFixed(1) + '%';
-            //         this.arcs[i].text(text_temp)
-            //         // return  percent.toFixed(1) + '%';
-            //         return text_temp;
-            //     });
+
         }else{
             let circleAll={startAngle:0,endAngle:2*Math.PI, innerRadius: innerRadius, outerRadius: outerRadius}
             d3.select(".mark")
@@ -367,7 +308,7 @@ class PieChart extends Chart {
      */
      encodeColor(animation = {}) {
 
-        let fill = this.markStyle()["fill"] ? this.markStyle()["fill"] : COLOR.DEFAULT;
+        let fill = this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT);
         let fillOpacity= (this.markStyle()['fill-opacity']||this.markStyle()['fill-opacity']===0) ? this.markStyle()['fill-opacity'] : 1;
 
         if(this.color) {
@@ -417,10 +358,6 @@ class PieChart extends Chart {
                     .selectAll(".mark")
                     .attr("fill",(d,i)=>d.color())
                     .attr("opacity",(d)=>d.opacity())
-                // this.svg().select('.content')
-                //     .selectAll(".arcText")
-                //     .attr("fill",(d,i)=>this.arcs[i].textColor())
-                //     .attr("opacity",1)
             }
         }
     }
@@ -455,10 +392,6 @@ class PieChart extends Chart {
                     .selectAll(".mark")
                     .attr("fill",(d,i)=>d.color())
                     .attr("opacity",(d)=>d.opacity())
-                // this.svg().select('.content')
-                //     .selectAll(".arcText")
-                //     .attr("fill",(d,i)=>this.arcs[i].textColor())
-                //     .attr("opacity",1)
             }
         }
     }
@@ -492,10 +425,6 @@ class PieChart extends Chart {
                 .selectAll(".mark")
                 .attr("fill",(d,i)=>d.color())
                 .attr("opacity",(d)=>d.opacity())
-            // this.svg().select('.content')
-            //     .selectAll(".arcText")
-            //     .attr("fill",(d,i)=>this.arcs[i].textColor())
-            //     .attr("opacity",1)
         }
     }
 

@@ -16,6 +16,8 @@ class Arc extends Mark {
 
         this._centroidX = 0;
         this._centroidY = 0;
+        this._coreX = 0;
+        this._coreY = 0;
 
         //text
         this._text = "";
@@ -81,6 +83,20 @@ class Arc extends Mark {
             return this._centroidY;
         }
         this._centroidY = value;
+    }
+
+    coreX(value){
+        if(!value){
+            return this._coreX;
+        }
+        this._coreX = value;
+    }
+    
+    coreY(value){
+        if(!value){
+            return this._coreY;
+        }
+        this._coreY = value;
     }
 
     text(value){

@@ -56,9 +56,8 @@
                     "stroke": "blue",
                     "stroke-width":2,
                     "stroke-opacity":0,
-                    "fill":"#FC4B4B",
                     "fill-opacity":1,
-                    "background-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
+                    "background-image": "http://localhost:3000/texture/egg.png"
                 }
             },
             "style": {
@@ -70,11 +69,8 @@
             "channel": "theta",
             "field":"Sales"
         },
-        {
-            "add": "encoding",
-            "channel": "color",
-            "field":"Brand"
-        },
+
+      
         {
             "add": "annotation",
             "method": "label",
@@ -96,28 +92,14 @@
             }
             ],
             "style": {
-              "icon-url": "http://localhost:3000/icon/rank-1.png"
+              "icon-url": "http://localhost:3000/icon/rank-1.png",
+              "size":"(20,20)"
             },
             "animation": {
                 "type": "fly",
                 "duration": 2000
               }
-        },
-        {
-            "add": "annotation",
-            "method": "texture",
-            "target": [{
-                "field": "Brand",
-                "value": "BMW"
-            }
-            ],
-            "style": {
-                "background-image": "http://localhost:3000/texture/stripe.png"
-              },
-            "animation": {
-                "type": "fade",
-                "duration": 2000
-              }
         }
+        
     ]
 }
