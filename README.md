@@ -311,7 +311,7 @@ Adding graphical and textural annotations.
 | Fill | color |
 | Glow | color |
 | Label | font-size; font-family; font-color; font-weight; font-style |
-| Reference | |
+| Reference | stroke-width; color |
 | Regression | stroke-width; color |
 | Symbol | icon-url; width; height |
 | Texture | background-image; |
