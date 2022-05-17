@@ -45,8 +45,8 @@ class Symbol extends Annotator {
 
             // identify the position
             let data_x, data_y, data_r, offset_y;
-            const width_icon = parseFloat(style["size"].split(/[(]|[)]|,/)[1]) || 20;
-            const height_icon = parseFloat(style["size"].split(/[(]|[)]|,/)[2]) || 20;
+            const width_icon = style["width"] || 20;
+            const height_icon = style["width"] || style["height"] || 20;
             const nodeName = focus_element.nodeName;
             if (nodeName === "circle") { // get center
                 data_x = parseFloat(focus_element.getAttribute("cx"));

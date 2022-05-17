@@ -313,7 +313,7 @@ Adding graphical and textural annotations.
 | Label | font-size; font-family; font-color; font-weight; font-style |
 | Reference | |
 | Regression | stroke-width; color |
-| Symbol | icon-url; size |
+| Symbol | icon-url; width; height |
 | Texture | background-image; |
 | Tooltip | font-size; font-family; font-color; font-weight; font-style; tooltip-color |
 
