@@ -34,6 +34,7 @@ class LineChart extends Chart {
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
             .attr("height", this.height() + margin.top + margin.bottom)
+            .style("background-color", COLOR.BACKGROUND)
 
         d3.select(container)
             .select("svg")
