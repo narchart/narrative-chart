@@ -86,9 +86,7 @@
           "stroke-color": "green",
           "stroke-width": 0,
           "stroke-opacity": 0.4,
-          "fill-opacity": 1,
-          "fill": "#FF7602",
-          "background-image": "http://localhost:3000/icon/car2.jpg"
+          "fill-opacity": 1
         }
       },
       "style": {
