@@ -66,13 +66,13 @@ class LineChart extends Chart {
             let defs = d3.select(container).select("svg").append('svg:defs');
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
-                .attr("patternUnits", "userSpaceOnUse")
+                .attr("width", 1)
+                .attr("height", 1)
+                .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130? 480: chartbackgroundsize.height)
+                .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
                 d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
@@ -322,9 +322,8 @@ class LineChart extends Chart {
             .attr("d" , line(processedData));   
             
         /* draw points */
-        let points = content.append("g")
+        content.append("g")
             .attr("class", "circleGroup")
-            .attr("fill",  dotFill)
             .attr("stroke", dotStroke)
             .attr("stroke-width", dotStrokeWidth)
             .attr("opacity", dotOpacity)
@@ -336,12 +335,27 @@ class LineChart extends Chart {
             .attr("cx", d => {
                 return xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2;
             })
-            .attr("cy", d => yScale(d[yEncoding]));
-        
+            .attr("cy", d => yScale(d[yEncoding]))
+            .attr("fill", (d, i) => {
+                if (this.markStyle()['background-image']) {
 
-        if (this.markStyle()['background-image']){
-            points.style("fill", "url(#point_image_background)")
-        }
+                    let defs = content.append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("width", 2 * dotRadius)
+                        .attr("height", 2 * dotRadius)
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } else {
+                    return dotFill;
+                }
+            });
     }
 
     /**
