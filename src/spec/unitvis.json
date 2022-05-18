@@ -47,7 +47,7 @@
     "actions": [
         {
             "add": "config",
-            "mode": "light"
+            "mode": "light" 
         },
         {
             "select": [
@@ -93,11 +93,7 @@
                 }
             ],
             "filter": [
-                {
-                    "field": "Weight",
-                    "op": "less",
-                    "value": 4000
-                }
+                
             ]
         },
         {
@@ -105,67 +101,24 @@
             "mark": {
                 "type": "unit",
                 "style": {
-                    "stroke-color": "black",
-                    "stroke-width": 2,
-                    "fill": "pink",
-                    "stroke-opacity": 0,
-                    "fill-opacity": 1
+                    "stroke-color": "blue",
+                    "stroke-opacity": 1,
+                    "stroke-width": 0,
+                    "fill-opacity": 1,
+                    "background-image": "http://localhost:3000/icon/car2.jpg"
+
+                    
                 }
-            }
-        },
-        {
+            },
+            "style": {}  
+        },{
             "add": "encoding",
             "channel": "x",
-            "field": "Year",
-            "animation": {
-                "duration": 1000
-            }
-        },
-        {
-            "add": "encoding",
-            "channel": "size",
-            "field": "Horsepower",
-            "animation": {
-                "duration": 1000
-            }
-        },
-        {
-            "add": "title",
-            "text": "This is title This is title This is title This is title This is title This is title ",
-            "style": {
-                "position": "top-left",
-                "font-size": 20,
-                "background-color": "lightblue",
-                "border-color": "black",
-                "border-width": 2,
-                "top-padding": 2
-            }
-        },
-        {
-            "add": "caption",
-            "text": " This is caption This is caption This is caption This is caption This is caption This is caption",
-            "style": {
-                "position": "top-left",
-                "font-size": 18
-            }
-        },
-        {
-            "add": "annotation",
-            "method": "tooltip",
-            "target": [
-                {
-                    "field": "dataid",
-                    "value": "300"
-                }
-            ],
-            "style": {
-                "text": "hhhh",
-                "font-color": "black"
-            },
-            "animation": {
-                "type": "fade",
+            "field": "Origin",
+            "animation":{
                 "duration": 1000
             }
         }
+        
     ]
 }
