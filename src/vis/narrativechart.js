@@ -3,10 +3,14 @@ import Fact from './fact';
 import Visualization from './visualization';
 import Parser from './parser';
 
+/**
+ * @description main class for narrative chart
+ * 
+ * @class
+ */
 class NarrativeChart {
     constructor() {
         this._container = document.createElement("div");
-        this._paragraph = document.createElement("p");
         this._loader = new DataLoader();
         this._fact = new Fact();
         this._vis = new Visualization();
@@ -20,13 +24,6 @@ class NarrativeChart {
             return this._container;
         }
         this._container = value;
-    }
-
-    paragraph(value) {
-        if (!value) {
-            return this._paragraph;
-        }
-        this._paragraph = value;
     }
 
     load(spec) {

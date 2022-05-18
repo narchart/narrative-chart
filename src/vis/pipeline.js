@@ -1,5 +1,10 @@
 import { AddAnnotation } from './actions';
 
+/**
+ * @description A pipeline to excute actions
+ * 
+ * @class
+ */
 class Pipeline {
     constructor() {
         this._actions = []
@@ -14,6 +19,11 @@ class Pipeline {
         return this._actions;
     }
 
+    /**
+     * @description Operate visualization with a sequence of actions.
+     * @param {Visualization} visualization object
+     * @returns {void}
+     */
     operate(vis) {
         let delayTime = 0;
         this.actions().forEach(action => {
@@ -32,6 +42,11 @@ class Pipeline {
         });
     }
 
+    /**
+     * @description Stop animation.
+     * @param {void}
+     * @returns {void}
+     */
     stop() {
         for (var i = 0; i < this._timeouts.length; i++) {
             clearTimeout(this._timeouts[i]);

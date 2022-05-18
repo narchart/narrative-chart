@@ -7,7 +7,7 @@ import { getTitle } from "./sentencer/index"
 import getCaption from "./sentencer/index"
 
 /**
- * @description A translator for parsing visuaization specifications (https://github.com/sdq/narrative-charts#visualization-specification)
+ * @description A translator for parsing visuaization specifications
  * 
  * @class
  */

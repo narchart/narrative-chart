@@ -1,13 +1,13 @@
-# Narrative Charts
+# Narrative Chart
 
-- [Narrative Charts](#narrative-charts)
+- [Narrative Chart](#narrative-chart)
   - [Introduction](#introduction)
-    - [What is Narrative Charts?](#what-is-narrative-charts)
+    - [What is Narrative Chart?](#what-is-narrative-chart)
     - [Differences from other visualization libraries?](#differences-from-other-visualization-libraries)
     - [Features](#features)
   - [Getting Started](#getting-started)
     - [Installation](#installation)
-    - [Import narrative-chart](#import-narrative-chart)
+    - [Import Narrative Chart](#import-narrative-chart)
     - [Usage](#usage)
   - [Visualization Specification](#visualization-specification)
     - [Properties for data](#properties-for-data)
@@ -50,13 +50,13 @@
 
 ## Introduction
 
-### What is Narrative Charts?
+### What is Narrative Chart?
 
-**Narrative Charts** is an open-source visualization library for authoring narrative visualization and data storytelling with a high-level domain-specific language (DSL). The library is implemented in JavaScript and compatible with most modern web browsers.
+**Narrative Chart** is an open-source visualization library for authoring narrative visualization and data storytelling with a high-level domain-specific language (DSL). The library is implemented in JavaScript and compatible with most modern web browsers.
 
 ### Differences from other visualization libraries?
 
-There are several mature visualization libraries for the web, such as D3.js, Vega, and ECharts. Users can easily author interactive visualizations for data presentation or data analysis. However, these libraries are all developed for general purposes. Using these tools, users still need to write a hundred lines of code to generate a narrative visualization with expressive annotations, animations, and captions. **Narrative Charts** can make this easier.
+There are several mature visualization libraries for the web, such as D3.js, Vega, and ECharts. Users can easily author interactive visualizations for data presentation or data analysis. However, these libraries are all developed for general purposes. Using these tools, users still need to write a hundred lines of code to generate a narrative visualization with expressive annotations, animations, and captions. **Narrative Chart** can make this easier.
 
 ### Features
 
@@ -75,19 +75,19 @@ There are several mature visualization libraries for the web, such as D3.js, Veg
 Use npm/yarn to install the libraries
 
 ```
-npm install narrative-chart
+npm install narchart
 ```
 
 or
 
 ```
-yarn add narrative-chart
+yarn add narchart
 ```
 
-### Import narrative-chart
+### Import Narrative Chart
 
 ```
-import {NarrativeChart} from "narrative-chart";
+import {NarrativeChart} from "narchart";
 ```
 
 ### Usage
@@ -669,7 +669,7 @@ Adding a group of actions.
 
 ### Animations
 
-Narrative Charts supports animated transitions between actions by specifying "duration", which represents per-action duration in milliseconds.
+Narrative Chart supports animated transitions between actions by specifying "duration", which represents per-action duration in milliseconds.
 
 
 

@@ -97,7 +97,7 @@ export default class Playground extends React.Component {
             props => {
               return <div style={{ height: "100%" }}>
                 <div className="header">
-                  Narrative Charts
+                  Narrative Chart
                   {specselector}
                   <button style={{ marginLeft: '20px' }} onClick={this.updateChart}>update</button>
 

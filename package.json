@@ -1,7 +1,7 @@
 {
-  "name": "narrative-charts",
-  "version": "0.0.1",
-  "description": "data visualization",
+  "name": "narchart",
+  "version": "0.1.0",
+  "description": "Narrative Chart",
   "main": "lib/index.js",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",

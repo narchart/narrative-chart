@@ -1,5 +1,10 @@
 import * as d3 from 'd3';
 
+/**
+ * @description The parent class for charts
+ * 
+ * @class
+ */
 class Chart {
     constructor() {
         this._container = document.createElement("div");

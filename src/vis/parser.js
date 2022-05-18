@@ -3,7 +3,7 @@ import Translator from './translator';
 import { Configure, AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddTitle, AddCaption, AddImage} from './actions';
 
 /**
- * @description A parser for parsing visuaization specifications (https://github.com/sdq/narrative-charts#visualization-specification)
+ * @description A parser for parsing visuaization specifications
  * 
  * @class
  */
