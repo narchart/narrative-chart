@@ -297,10 +297,19 @@ class PieChart extends Chart {
             }
 
         }else{
-            let circleAll={startAngle:0,endAngle:2*Math.PI, innerRadius: innerRadius, outerRadius: outerRadius}
-            d3.select(".mark")
-                .attr("d", arcFun(circleAll)) 
-            
+            d3.selectAll('.content').append("circle")
+            .attr("class","nothetaCircle")
+            .attr("cx", (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  )
+            .attr("cy", chartbackgroundsize.height / 2 )
+            .attr("r",outerRadius)
+            .attr("fill", this.markStyle()["background-image"] ? `url(#mark-background-image${0})`:(this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT)))
+
+            d3.selectAll('.content').append("circle")
+                .attr("class","nothetaCircle")
+                .attr("cx", (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  )
+                .attr("cy", chartbackgroundsize.height / 2 )
+                .attr("r", innerRadius)
+                .attr("fill", COLOR.BACKGROUND)            
         }
     }
 
@@ -423,11 +432,24 @@ class PieChart extends Chart {
                 break;
         }
 
-        if(changeTheta||changeColor){
+        if(changeColor){
+            this.svg().select('.content')
+                .selectAll(".nothetaCircle")
+                .remove()
             this.svg().select('.content')
                 .selectAll(".mark")
                 .attr("fill",(d,i)=>d.color())
                 .attr("opacity",(d)=>d.opacity())
+        }
+        if(changeTheta){
+            this.svg().select('.content')
+                .selectAll(".nothetaCircle")
+                .remove()
+            this.svg().selectAll('.content')
+                .selectAll(".mark")
+                .remove()
+            this.encodeTheta();
+                
         }
     }
 
