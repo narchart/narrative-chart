@@ -303,7 +303,7 @@ Adding graphical and textural annotations.
 | Annotation | Style |
 |:--|:--|
 | Arrow | height; width; color |
-| Circle | |
+| Circle | color; width; height |
 | Contour | stroke-width; color |
 | Desaturate | \ |
 | Distribution | \ |

@@ -108,6 +108,21 @@
           "field": "Miles per Gallon"
         }
       ]
+    },
+    {
+      "add": "annotation",
+      "method": "circle",
+      "target": [
+        {
+          "field": "Name",
+          "value": "datsun 280-zx"
+        }
+      ],
+      "style": {
+        "color": "green",
+        "height": 10,
+        "width": 10
+      }    
     }
     
   ]

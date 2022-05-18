@@ -39,18 +39,18 @@ class Circle extends Annotator {
                 }
                 return true
             })
-
-        const padding = 5;
-
+            
+        const  defaultR = 15;
         selected.nodes().forEach(item => {
             if (item.nodeName === "circle") {
-                let circleR = Number(item.getAttribute("r")) + padding,
+                let radiusX = style["width"] || defaultR,
+                    radiusY = style["height"] || defaultR,
                     circleX = item.getAttribute("cx"),
                     circleY = item.getAttribute("cy");
 
                 let arc = d3.arc()
-                    .innerRadius(circleR * 0.9)
-                    .outerRadius(circleR);
+                    .innerRadius(radiusX * 0.9)
+                    .outerRadius(radiusX);
                 let circle_data = {
                     "x": parseFloat(circleX),
                     "y": parseFloat(circleY),
@@ -60,7 +60,7 @@ class Circle extends Annotator {
 
                 switch (animationType) {
                     case "fade":
-                        svg.append("circle")
+                        svg.append("ellipse")
                             .attr("fill", "none")
                             .attr("stroke", function (d) {
                                 if ('color' in style) {
@@ -70,10 +70,11 @@ class Circle extends Annotator {
                                 }
                             })
                             .attr("stroke-width", 2)
-                            .attr("x", circleX)
-                            .attr("y", circleY)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
-                            .attr("r", circleR)
+                            .attr("cx", circleX)
+                            .attr("cy", circleY)
+                            // .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("rx", radiusX)
+                            .attr("ry", radiusY)
                             .attr("opacity", 0)
                             .transition()
                             .duration('duration' in animation ? animation['duration'] : 0)
@@ -100,7 +101,7 @@ class Circle extends Annotator {
                             .attr("x", circleX)
                             .attr("y", circleY)
                             .attr("transform", "translate(" + circleX + "," + circleY + ")")
-                            .attr("r", circleR)
+                            .attr("r", radiusX)
                             .datum(circle_data)
                             .attr("d", arc)
                             .transition()
@@ -117,7 +118,7 @@ class Circle extends Annotator {
 
                     case "fly":
                         const chartWidth = chart.width() - chart.margin().top;
-                        svg.append("circle")
+                        svg.append("ellipse")
                             .attr("fill", "none")
                             .attr("stroke", function (d) {
                                 if ('color' in style) {
@@ -127,18 +128,19 @@ class Circle extends Annotator {
                                 }
                             })
                             .attr("stroke-width", 2)
-                            .attr("x", circleX)
-                            .attr("y", circleY)
-                            .attr("r", circleR)
-                            .attr("transform", "translate(" + chartWidth + "," + circleY + ")")
+                            .attr("cx", circleX)
+                            .attr("cy", circleY)
+                            .attr("rx", radiusX)
+                            .attr("ry", radiusY)
+                            .attr("transform", "translate(" + (chartWidth - circleX)  + ",0)")
                             .attr("x", 600)
                             .transition()
                             .duration('duration' in animation ? animation['duration'] : 0)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("transform", "translate(0,0")
                         break;
 
                     default:
-                        svg.append("circle")
+                        svg.append("ellipse")
                             .attr("fill", "none")
                             .attr("stroke", function (d) {
                                 if ('color' in style) {
@@ -148,22 +150,23 @@ class Circle extends Annotator {
                                 }
                             })
                             .attr("stroke-width", 2)
-                            .attr("x", circleX)
-                            .attr("y", circleY)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
-                            .attr("r", circleR)
+                            .attr("cx", circleX)
+                            .attr("cy", circleY)
+                            .attr("rx", radiusX)
+                            .attr("ry", radiusY)
                         break;
                 }
 
             } else if (item.nodeName === "rect") {
-                let circleY = item.getAttribute("y"),
+                let radiusX = style["width"] || defaultR,
+                    radiusY = style["height"] || defaultR,
                     width = item.getAttribute("width"),
                     circleX = Number(item.getAttribute("x")) + width / 2,
-                    circleR = width / 2 + padding;
+                    circleY = item.getAttribute("y");
 
                 let arc = d3.arc()
-                    .innerRadius(circleR * 0.9)
-                    .outerRadius(circleR);
+                    .innerRadius(radiusX * 0.9)
+                    .outerRadius(radiusX);
                 let circle_data = {
                     "x": parseFloat(circleX),
                     "y": parseFloat(circleY),
@@ -172,7 +175,7 @@ class Circle extends Annotator {
                 };
                 switch (animationType) {
                     case "fade":
-                        svg.append("circle")
+                        svg.append("ellipse")
                             .attr("fill", "none")
                             .attr("stroke", function (d) {
                                 if ('color' in style) {
@@ -182,10 +185,11 @@ class Circle extends Annotator {
                                 }
                             })
                             .attr("stroke-width", 2)
-                            .attr("x", circleX)
-                            .attr("y", circleY)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
-                            .attr("r", circleR)
+                            .attr("cx", circleX)
+                            .attr("cy", circleY)
+                            // .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("rx", radiusX)
+                            .attr("ry", radiusY)
                             .attr("opacity", 0)
                             .transition()
                             .duration('duration' in animation ? animation['duration'] : 0)
@@ -205,7 +209,7 @@ class Circle extends Annotator {
                             .attr("x", circleX)
                             .attr("y", circleY)
                             .attr("transform", "translate(" + circleX + "," + circleY + ")")
-                            .attr("r", circleR)
+                            .attr("r", radiusX)
                             .datum(circle_data)
                             .attr("d", arc)
                             .transition()
@@ -222,7 +226,7 @@ class Circle extends Annotator {
 
                     case "fly":
                         const chartWidth = chart.width() - chart.margin().top;
-                        svg.append("circle")
+                        svg.append("ellipse")
                             .attr("fill", "none")
                             .attr("stroke", function (d) {
                                 if ('color' in style) {
@@ -232,18 +236,19 @@ class Circle extends Annotator {
                                 }
                             })
                             .attr("stroke-width", 2)
-                            .attr("x", circleX)
-                            .attr("y", circleY)
-                            .attr("r", circleR)
-                            .attr("transform", "translate(" + chartWidth + "," + circleY + ")")
+                            .attr("cx", circleX)
+                            .attr("cy", circleY)
+                            .attr("rx", radiusX)
+                            .attr("ry", radiusY)
+                            .attr("transform", "translate(" + (chartWidth - circleX)  + ",0)")
                             .attr("x", 600)
                             .transition()
                             .duration('duration' in animation ? animation['duration'] : 0)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("transform", "translate(0,0")
                         break;
-                        
+
                     default:
-                        svg.append("circle")
+                        svg.append("ellipse")
                             .attr("fill", "none")
                             .attr("stroke", function (d) {
                                 if ('color' in style) {
@@ -253,10 +258,11 @@ class Circle extends Annotator {
                                 }
                             })
                             .attr("stroke-width", 2)
-                            .attr("x", circleX)
-                            .attr("y", circleY)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
-                            .attr("r", circleR)
+                            .attr("cx", circleX)
+                            .attr("cy", circleY)
+                            // .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("rx", radiusX)
+                            .attr("ry", radiusY)
                         break;
                 }
             }

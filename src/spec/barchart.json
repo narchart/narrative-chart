@@ -75,11 +75,7 @@
           "channel": "y",
           "field": "Sales"
         }
-      ],
-      "animation": {
-        "sync": false,
-        "duration": 2000
-      }
+      ]
     },
     {
       "add": "annotation",
@@ -96,10 +92,6 @@
           "font-color": "red",
           "font-weight": 300,
           "font-style": "italic"
-      },
-      "animation": {
-        "type": "fly",
-        "duration": 2000
       }
     },
     {
@@ -114,6 +106,21 @@
       "style": {
         "icon-url": "http://localhost:3000/icon/rank-1.png",
         "width": 20
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "circle",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Hyundai"
+        }
+      ],
+      "style": {
+        "width": 30,
+        "height": 20,
+        "color": "red"
       }
     }
   ]
