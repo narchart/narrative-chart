@@ -154,10 +154,12 @@ Initializing the basic configuration of the chart.
 
 ```
 {
-  "add": "config",
+    "add": "config",
 	"mode": light/dark, // (default: light)
 	"emotion": none/calm/exciting/positive/negative/serious/playful/trustworthy/disturbing, // (default: none)
-  "background-image": image-url // (optional)
+    "background-image": image-url // (optional)
+    "width": 640, // (optional)
+    "height": 640 // (optional)
 }
 ```
 

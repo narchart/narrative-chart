@@ -25,8 +25,8 @@ class Title extends Titler {
      maketitle(vis, style, animation) {
         
         let bannerarea = {
-            width : 640,
-            height: 130
+            width : vis.width(),
+            height: (13/64)*vis.height()
         }
 
 

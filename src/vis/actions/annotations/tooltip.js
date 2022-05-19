@@ -278,18 +278,18 @@ class Tooltip extends Annotator {
 
                 case 'fly':
 
-                    tooltipRect.attr("x", 640)
+                    tooltipRect.attr("x", chart.width())
                         .transition()
                         .duration(animation['duration'] ?? 0)
                         .attr("x", data_x - rectWidth / 2);
 
                     d3.selectAll("#tooltipstextContent tspan")
-                        .attr("x", 640 - (data_x - rectWidth / 2))
+                        .attr("x", chart.width() - (data_x - rectWidth / 2))
                         .transition()
                         .duration(animation['duration'] ?? 0)
                         .attr("x", 0)
 
-                    tooltipTriangle.attr("transform", "translate(" + 640 + "," + (data_y + offset_y) + ")rotate(180)")
+                    tooltipTriangle.attr("transform", "translate(" + chart.width() + "," + (data_y + offset_y) + ")rotate(180)")
                         .transition()
                         .duration(animation['duration'] ?? 0)
                         .attr("transform", "translate(" + data_x + "," + (data_y + offset_y) + ")rotate(180)")
