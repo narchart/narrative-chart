@@ -106,6 +106,8 @@ class Regression extends Annotator {
         }
 
         const s_width = style['stroke-width'] ?? 2;
+        const s_dasharray = style["stroke-dasharray"] ? style["stroke-dasharray"] : "8, 4";
+        const s_linecap = style["stroke-linecap"] ? style["stroke-linecap"] : "butt";
 
         // step 4: draw regression line
         if ("type" in animation && animation["type"] === "wipe") {
@@ -116,7 +118,8 @@ class Regression extends Annotator {
                 .attr("y1", y1)
                 .attr("y2", y1)
                 .attr("stroke-width", s_width)
-                .attr("stroke-dasharray", `${Math.min(s_width * 4, 300)} ${Math.min(s_width*2, 150)}`)
+                .attr("stroke-linecap", s_linecap)
+                .attr("stroke-dasharray", s_dasharray)
                 .attr("stroke", () => {
                     if ("color" in style) {
                         return style["color"];
@@ -136,7 +139,8 @@ class Regression extends Annotator {
                 .attr("y1", y1)
                 .attr("y2", y2)
                 .attr("stroke-width", s_width)
-                .attr("stroke-dasharray", `${Math.min(s_width * 4, 300)} ${Math.min(s_width*2, 150)}`)
+                .attr("stroke-linecap", s_linecap)
+                .attr("stroke-dasharray", s_dasharray)
                 .attr("stroke", () => {
                     if ("color" in style) {
                         return style["color"];
