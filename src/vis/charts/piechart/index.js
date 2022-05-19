@@ -221,6 +221,9 @@ class PieChart extends Chart {
         let outerRadius = this.markStyle()['outer-radius'] ? this.markStyle()['outer-radius'] : width/3;
         let textRadius = this.markStyle()['text-radius'] ? this.markStyle()['text-radius'] : width/3+50;
         let cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
+        let stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : "none";
+        let strokeWidth = this.markStyle()['stroke-width'] || this.markStyle()['stroke-width']===0 ? this.markStyle()['stroke-width'] : 1;
+        let strokeOpacity = this.markStyle()['stroke-opacity'] || this.markStyle()['stroke-opacity'] ===0? this.markStyle()['stroke-opacity'] : 1;
 
         let arcFun = d3.arc()
             .padAngle(5)
@@ -251,7 +254,7 @@ class PieChart extends Chart {
                     outerRadius: d.radiusOuter(),
                     color: COLOR.DEFAULT,                   
                     }
-        
+
                 let midangle = Math.atan2(arcFun.centroid(this.dataTemp[i])[1] , arcFun.centroid(this.dataTemp[i])[0]);
                 let xlable = Math.cos(midangle) * textRadius;
                 let ylable = Math.sin(midangle) * textRadius
@@ -280,6 +283,8 @@ class PieChart extends Chart {
                 .attr("y",outerRadius)
                 
             }
+
+            d3.selectAll("#nothetaCircle").remove()
             d3.selectAll(".mark")
                 .attr("d", (d, i) => arcFun(this.dataTemp[i]))
             
@@ -297,19 +302,15 @@ class PieChart extends Chart {
             }
 
         }else{
-            d3.selectAll('.content').append("circle")
-            .attr("class","nothetaCircle")
-            .attr("cx", (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  )
-            .attr("cy", chartbackgroundsize.height / 2 )
-            .attr("r",outerRadius)
-            .attr("fill", this.markStyle()["background-image"] ? `url(#mark-background-image${0})`:(this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT)))
-
-            d3.selectAll('.content').append("circle")
-                .attr("class","nothetaCircle")
-                .attr("cx", (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2  )
-                .attr("cy", chartbackgroundsize.height / 2 )
-                .attr("r", innerRadius)
-                .attr("fill", COLOR.BACKGROUND)            
+            let circleAll={startAngle:0,endAngle:2*Math.PI, innerRadius: innerRadius, outerRadius: outerRadius}
+            d3.select('.content').select("g").append("path")
+                .attr("class","mark")
+                .attr("id","nothetaCircle")
+                .attr("fill", this.markStyle()["background-image"] ? `url(#mark-background-image${0})`:(this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT)))
+                .attr("d", arcFun(circleAll))
+                .attr("stroke",stroke)
+                .attr("stroke-width",strokeWidth)
+                .attr("stroke-opacity",strokeOpacity)
         }
     }
 
@@ -365,11 +366,22 @@ class PieChart extends Chart {
                     break;
             }
 
-            if(changeTheta||changeColor){
+            if(changeTheta){
+                this.encodeTheta();
+                // this.encodeColor();
                 this.svg().select('.content')
                     .selectAll(".mark")
                     .attr("fill",(d,i)=>d.color())
                     .attr("opacity",(d)=>d.opacity())
+            }
+            if(changeColor){
+                this.encodeColor();
+                // this.encodeTheta();
+                this.svg().select('.content')
+                    .selectAll(".mark")
+                    .attr("fill",(d,i)=>d.color())
+                    .attr("opacity",(d)=>d.opacity())
+                
             }
         }
     }
@@ -434,7 +446,7 @@ class PieChart extends Chart {
 
         if(changeColor){
             this.svg().select('.content')
-                .selectAll(".nothetaCircle")
+                .selectAll("#nothetaCircle")
                 .remove()
             this.svg().select('.content')
                 .selectAll(".mark")
@@ -443,7 +455,7 @@ class PieChart extends Chart {
         }
         if(changeTheta){
             this.svg().select('.content')
-                .selectAll(".nothetaCircle")
+                .selectAll("#nothetaCircle")
                 .remove()
             this.svg().selectAll('.content')
                 .selectAll(".mark")
