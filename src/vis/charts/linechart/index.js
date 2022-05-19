@@ -52,7 +52,7 @@ class LineChart extends Chart {
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
         
         if(background.Background_Image){
-                d3.select(container).select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover")
+            d3.select(container).select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover").style("background-repeat", "no-repeat")
             }
     
         if(background.Background_Color){
