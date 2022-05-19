@@ -39,8 +39,7 @@ class Circle extends Annotator {
                 }
                 return true
             })
-            
-        const  defaultR = 15;
+        const defaultR = 15;
         selected.nodes().forEach(item => {
             if (item.nodeName === "circle") {
                 let radiusX = style["width"] || defaultR,
@@ -49,8 +48,8 @@ class Circle extends Annotator {
                     circleY = item.getAttribute("cy");
 
                 let arc = d3.arc()
-                    .innerRadius(radiusX * 0.9)
-                    .outerRadius(radiusX);
+                    .innerRadius(9)
+                    .outerRadius(10);
                 let circle_data = {
                     "x": parseFloat(circleX),
                     "y": parseFloat(circleY),
@@ -97,11 +96,10 @@ class Circle extends Annotator {
                                     return COLOR.ANNOTATION
                                 }
                             })
-                            .attr("stroke-width", 1)
+                            .attr("stroke-width", 0.5)
                             .attr("x", circleX)
                             .attr("y", circleY)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
-                            .attr("r", radiusX)
+                            .attr("transform", "translate(" + circleX + "," + circleY + ") scale(" + (radiusX / 10) + "," + (radiusY / 10) + ")")
                             .datum(circle_data)
                             .attr("d", arc)
                             .transition()
@@ -132,7 +130,7 @@ class Circle extends Annotator {
                             .attr("cy", circleY)
                             .attr("rx", radiusX)
                             .attr("ry", radiusY)
-                            .attr("transform", "translate(" + (chartWidth - circleX)  + ",0)")
+                            .attr("transform", "translate(" + (chartWidth - circleX) + ",0)")
                             .attr("x", 600)
                             .transition()
                             .duration('duration' in animation ? animation['duration'] : 0)
@@ -165,8 +163,8 @@ class Circle extends Annotator {
                     circleY = item.getAttribute("y");
 
                 let arc = d3.arc()
-                    .innerRadius(radiusX * 0.9)
-                    .outerRadius(radiusX);
+                    .innerRadius(9)
+                    .outerRadius(10);
                 let circle_data = {
                     "x": parseFloat(circleX),
                     "y": parseFloat(circleY),
@@ -208,7 +206,7 @@ class Circle extends Annotator {
                             .attr("stroke-width", 1)
                             .attr("x", circleX)
                             .attr("y", circleY)
-                            .attr("transform", "translate(" + circleX + "," + circleY + ")")
+                            .attr("transform", "translate(" + circleX + "," + circleY + ") scale(" + (radiusX / 10) + "," + (radiusY / 10) + ")")
                             .attr("r", radiusX)
                             .datum(circle_data)
                             .attr("d", arc)
@@ -240,7 +238,7 @@ class Circle extends Annotator {
                             .attr("cy", circleY)
                             .attr("rx", radiusX)
                             .attr("ry", radiusY)
-                            .attr("transform", "translate(" + (chartWidth - circleX)  + ",0)")
+                            .attr("transform", "translate(" + (chartWidth - circleX) + ",0)")
                             .attr("x", 600)
                             .transition()
                             .duration('duration' in animation ? animation['duration'] : 0)
