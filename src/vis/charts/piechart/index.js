@@ -319,7 +319,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-     encodeColor(animation = {}) {
+    encodeColor(animation = {}) {
 
         let fill = this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT);
         let fillOpacity= (this.markStyle()['fill-opacity']||this.markStyle()['fill-opacity']===0) ? this.markStyle()['fill-opacity'] : 1;
@@ -383,6 +383,8 @@ class PieChart extends Chart {
                     .attr("opacity",(d)=>d.opacity())
                 
             }
+
+            this.animationWipe(animation);
         }
     }
 
@@ -391,7 +393,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-    modifyEncoding(channel, field) {
+    modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field;
             let changeTheta = false;
@@ -418,6 +420,7 @@ class PieChart extends Chart {
                     .attr("opacity",(d)=>d.opacity())
             }
         }
+        this.animationWipe(animation);
     }
 
     /**
@@ -425,7 +428,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-    removeEncoding(channel) {
+    removeEncoding(channel, animation = {}) {
         this[channel] = null;
         let changeTheta = false;
         let changeColor = false;
@@ -463,6 +466,54 @@ class PieChart extends Chart {
             this.encodeTheta();
                 
         }
+        this.animationWipe(animation);
+    } 
+
+    animationWipe(animation) {
+        if (!('duration' in animation) || animation['duration'] === 0 || this.svg().select(".content").selectAll("path").empty()) {
+            return;
+        }
+        const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+
+        const svg = this.svg();
+        const content = svg.select(".content");
+        content.attr("clip-path", `url(#${uid})`);
+        let outerRadius, cx, cy;
+        content.select("path")
+            .each(d => {
+                outerRadius = d._outerRadius;
+                cx = d._coreX;
+                cy = d._coreY;
+            })
+        let strokeWidth = this.markStyle()['stroke-width'] || this.markStyle()['stroke-width']===0 ? this.markStyle()['stroke-width'] : 1;
+
+        const arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(strokeWidth + outerRadius);
+        let circle_data = {
+                "x": cx,
+                "y": cy,
+                "startAngle": 0,
+                "endAngle": 2 * Math.PI
+            };
+  
+        content.append("defs")
+                .append("clipPath")
+                .attr("id", uid)
+                .append("path")
+                .attr("transform", "translate(" + cx + "," + cy + ")")
+                .datum(circle_data)
+                .attr("d", arc)
+                .transition()
+                .duration(animation['duration'])
+                .ease(d3.easeLinear)
+                .attrTween('d', function (d) {
+                    var i = d3.interpolate(d.startAngle, d.endAngle);
+                    return function (t) {
+                        d.endAngle = i(t);
+                        return arc(d);
+                    }
+                });
     }
 
 }
