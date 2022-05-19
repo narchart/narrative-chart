@@ -99,7 +99,21 @@
                 "type": "fly",
                 "duration": 2000
               }
-        }
+        },
+        {
+            "add": "annotation",
+            "method": "texture",
+            "target": [
+              {
+                "field": "Brand",
+                "value": "Ford"
+              }
+      
+            ],
+            "style": {
+              "background-image": "http://localhost:3000/texture/stripe.png"
+            }
+          }
         
     ]
 }

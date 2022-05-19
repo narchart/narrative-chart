@@ -121,6 +121,20 @@
         "height": 10,
         "width": 10
       }    
+    },
+    {
+      "add": "annotation",
+      "method": "texture",
+      "target": [
+        {
+          "field": "Name",
+          "value": "datsun 280-zx"
+        }
+
+      ],
+      "style": {
+        "background-image": "http://localhost:3000/icon/car1.jpg"
+      }
     }
     
   ]

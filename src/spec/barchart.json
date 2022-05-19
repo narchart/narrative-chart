@@ -122,6 +122,20 @@
         "height": 20,
         "color": "red"
       }
+    },
+    {
+      "add": "annotation",
+      "method": "texture",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Hyundai"
+        }
+
+      ],
+      "style": {
+        "background-image": "http://localhost:3000/texture/circle.png"
+      }
     }
   ]
 }

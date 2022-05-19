@@ -104,10 +104,7 @@
                     "stroke-color": "blue",
                     "stroke-opacity": 1,
                     "stroke-width": 0,
-                    "fill-opacity": 1,
-                    "background-image": "http://localhost:3000/icon/car2.jpg"
-
-                    
+                    "fill-opacity": 1    
                 }
             },
             "style": {}  
@@ -117,6 +114,18 @@
             "field": "Origin",
             "animation":{
                 "duration": 1000
+            }
+        },{
+            "add": "annotation",
+            "method": "texture",
+            "target": [
+                {
+                    "field": "Name",
+                    "value": "datsun 280-zx"
+                }
+            ],
+            "style": {
+              "background-image": "http://localhost:3000/icon/car1.jpg"
             }
         }
         

@@ -65,8 +65,7 @@
             "point-radius": "15",
             "point-fill": "blue",
             "point-stroke": "yellow",
-            "point-stroke-width": "2",
-            "background-image": "http://localhost:3000/icon/car2.jpg"
+            "point-stroke-width": "2"
           }
         }
       },
@@ -92,7 +91,7 @@
       },
       {
         "add": "annotation",
-        "method": "reference",
+        "method": "texture",
         "target": [
             {
                 "field": "Date",
@@ -100,13 +99,7 @@
             }
         ],
         "style": {
-          "stroke-width":2,
-          "color":"blue",
-          "stroke-dasharray": "2, 4"
-        },
-        "animation": {
-          "type": "wipe",
-          "duration": 2000
+          "background-image": "http://localhost:3000/icon/car1.jpg"
         }
       }
     ]
