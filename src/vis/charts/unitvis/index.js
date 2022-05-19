@@ -49,12 +49,11 @@ class Unitvis extends Chart {
             .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
             .attr("transform", "translate(" + 20 + "," + margin.top + ")");
 
-
-
         this._svg = d3.select(container)
             .select("svg")
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", margin.top === 130? "translate(" + (margin.left+10) + "," + margin.top + ")": "translate(" + margin.right + "," + margin.top + ")" );
+            
 
 
 
@@ -72,7 +71,7 @@ class Unitvis extends Chart {
         else if (this.style()['background-image']) {
 
 
-            let defs = d3.select(container).select("svg").append('svg:defs');
+        let defs = d3.select(container).select("svg").append('svg:defs');      
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
                 .attr("width", 1)
@@ -80,6 +79,7 @@ class Unitvis extends Chart {
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
+                .attr("preserveAspectRatio", "none") 
                 .attr("width", chartbackgroundsize.width)
                 .attr("height", margin.top === 130 ? 490 : chartbackgroundsize.height)
                 .attr("x", 0)
@@ -149,7 +149,7 @@ class Unitvis extends Chart {
      * @return {void}
     */
 
-    XYMapping(height, width, svg) {
+    XYLayout(height, width, svg) {
 
         let margin = {
             left: width / 20,
@@ -353,7 +353,7 @@ class Unitvis extends Chart {
      * @return {void}
     */
 
-    XSizeapping(height, width, svg) {
+    XSizeLayout(height, width, svg) {
 
         let xField = this.x;
 
@@ -526,7 +526,7 @@ class Unitvis extends Chart {
      * @return {void}
     */
 
-    YSizeapping(height, width, svg) {
+    YSizeLayout(height, width, svg) {
 
         let textSize = 14;
 
@@ -701,7 +701,7 @@ class Unitvis extends Chart {
      * @return {void}
     */
 
-    XYSizeMapping(height, width, svg) {
+    XYSizeLayout(height, width, svg) {
         let textSize = 14;
         let sizeField = this.size
         let yField = this.y
@@ -960,6 +960,7 @@ class Unitvis extends Chart {
                     .attr("patternUnits", "objectBoundingBox")
                     .append("svg:image")
                     .attr("xlink:href", this.markStyle()["background-image"])
+                    .attr("preserveAspectRatio", "none") 
                     .attr("width", 2 * d.radius())
                     .attr("height", 2 * d.radius())
                     .attr("x", 0)
@@ -1052,6 +1053,7 @@ class Unitvis extends Chart {
                         .attr("patternUnits", "objectBoundingBox")
                         .append("svg:image")
                         .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("preserveAspectRatio", "none") 
                         .attr("width", 2 * d.radius())
                         .attr("height", 2 * d.radius())
                         .attr("x", 0)
@@ -1091,15 +1093,15 @@ class Unitvis extends Chart {
         let textSize = 14;
         // situation 1:      
         if (this.x && this.y && this.size) {
-            this.XYSizeMapping(height, width, svg)
+            this.XYSizeLayout(height, width, svg)
         }
         // situation 2
         else if (this.x &&!this.y && this.size) {
-            this.XSizeapping(height, width, svg)
+            this.XSizeLayout(height, width, svg)
         }
         // situation 3
         else if (this.x && this.y && !this.size) {
-            this.XYMapping(height, width, svg)
+            this.XYLayout(height, width, svg)
         }
         // situation 4:
         else {
@@ -1202,15 +1204,15 @@ class Unitvis extends Chart {
             height = this.height();
         // situation 1:
         if (this.x && this.y && !this.size) {
-            this.XYMapping(height, width, svg)
+            this.XYLayout(height, width, svg)
         }
         // situation 2:
         else if (!this.x && this.y && this.size) {
-            this.YSizeapping(height, width, svg)
+            this.YSizeLayout(height, width, svg)
         }
         // situation 3:
         else if (this.x && this.y && this.size) {
-            this.XYSizeMapping(height, width, svg)
+            this.XYSizeLayout(height, width, svg)
         }
         // situation 4:
         else {
@@ -1319,7 +1321,6 @@ class Unitvis extends Chart {
 
 
         svg.select(".content").selectAll("defs").transition().duration(this.duration / 2).remove()
-
         this.AddMarkBackGrnd(svg)
     }
 
@@ -1367,15 +1368,15 @@ class Unitvis extends Chart {
             height = this.height();
         // situation 1
         if (this.x && this.y && this.size) {
-            this.XYSizeMapping(height, width, svg)
+            this.XYSizeLayout(height, width, svg)
         }
         // situation 2
         else if (this.x && !this.y && this.size) {
-            this.XSizeapping(height, width, svg)
+            this.XSizeLayout(height, width, svg)
         }
         // situation 3
         else if (!this.x && this.y && this.size) {
-            this.YSizeapping(height, width, svg)
+            this.YSizeLayout(height, width, svg)
         }
         // situation 4
         else {

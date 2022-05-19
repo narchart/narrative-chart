@@ -66,7 +66,7 @@ class Title extends Titler {
             top: 6 + (titleborderpadding.top)
         }
 
-        
+
         let svg = d3.select(vis.container()).select("svg")
 
         let words = style.text.split(" ").filter(d => d !== "");
@@ -96,16 +96,16 @@ class Title extends Titler {
         // 1. banner section background-image
         if (style["background-image"]){
             let defs = svg.append('svg:defs');
-            let config = {
-                "texture_size" : 300
-            }
+
             defs.append("svg:pattern")
                 .attr("id", "text-backgroundimage")
-                .attr("width", config.texture_size)
-                .attr("height", config.texture_size)
-                .attr("patternUnits", "userSpaceOnUse")
+                .attr("width", 1)
+                .attr("height", 1)
+                .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", style["background-image"])
+                .attr("width", bannerarea.width)
+                .attr("height", bannerarea.height)
                 .attr("x", 0)
                 .attr("y", 0);
             backgroundimage = "url(#text-backgroundimage)"

@@ -283,8 +283,7 @@ class Tooltip extends Annotator {
                         .duration(animation['duration'] ?? 0)
                         .attr("x", data_x - rectWidth / 2);
 
-
-                    d3.select("#tooltipstextContent tspan")
+                    d3.selectAll("#tooltipstextContent tspan")
                         .attr("x", 640 - (data_x - rectWidth / 2))
                         .transition()
                         .duration(animation['duration'] ?? 0)
