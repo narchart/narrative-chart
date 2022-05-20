@@ -753,7 +753,6 @@ class BarChart extends Chart {
                     this.svg().selectAll(".axis_y").remove();
                     this.encodeY();
                     if('duration' in animation){
-                        animation['duration'] = animation['duration']
                         this.animationGrow(animation)
                     }
                     else{
