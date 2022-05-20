@@ -94,7 +94,7 @@ class PieChart extends Chart {
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
-                .attr("preserveAspectRatio","none")
+                .attr("preserveAspectRatio", "xMidYMid slice") 
                 .attr("width", chartbackgroundsize.width)
                 .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("x", 0)

@@ -105,7 +105,7 @@ class Title {
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", style["background-image"])
-                .attr("preserveAspectRatio", "none") 
+                .attr("preserveAspectRatio", "xMidYMid slice") 
                 .attr("width", bannerarea.width)
                 .attr("height", bannerarea.height)
                 .attr("x", 0)

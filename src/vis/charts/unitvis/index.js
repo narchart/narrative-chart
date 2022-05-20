@@ -84,7 +84,7 @@ class Unitvis extends Chart {
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
-                .attr("preserveAspectRatio", "none") 
+                .attr("preserveAspectRatio", "xMidYMid slice") 
                 .attr("width", chartbackgroundsize.width)
                 .attr("height", margin.top === 130*this.scaleratio ? 490*this.scaleratio : chartbackgroundsize.height)
                 .attr("x", 0)
