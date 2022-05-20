@@ -29,7 +29,6 @@ class PieChart extends Chart {
         this.Hscaleratio = this.height()/640
         this.Wscaleratio = this.width()/640
 
-
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
@@ -68,7 +67,7 @@ class PieChart extends Chart {
             .attr("height", margin.top === 130*this.Hscaleratio? 490*this.Hscaleratio: chartbackgroundsize.height)
             .attr("transform", "translate(" + (20*this.Wscaleratio) + "," + margin.top + ")");
 
-        let top_temp= margin.top>40 ? (margin.top-40) : margin.top
+        let top_temp= margin.top>40*this.Wscaleratio ? (margin.top-40*this.Wscaleratio) : margin.top
         this._svg = d3.select(container)
                     .select("svg")
                     .append("g")
@@ -95,6 +94,7 @@ class PieChart extends Chart {
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
+                .attr("preserveAspectRatio","none")
                 .attr("width", chartbackgroundsize.width)
                 .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("x", 0)
@@ -113,17 +113,16 @@ class PieChart extends Chart {
      */
     data() {
         let processedData = this.processedData();
-            processedData.forEach((d, i) => {
-                let arc = new Arc();
-                arc.id(i);
-                arc.data(d);
-                arc.angleStart(0);
-                arc.angleEnd(0);
-                arc.radiusInner(0);
-                arc.radiusOuter(0);
-                this.arcs.push(arc);
-            })
-
+        processedData.forEach((d, i) => {
+            let arc = new Arc();
+            arc.id(i);
+            arc.data(d);
+            arc.angleStart(0);
+            arc.angleEnd(0);
+            arc.radiusInner(0);
+            arc.radiusOuter(0);
+            this.arcs.push(arc);
+        })
         return this;
     }
    
@@ -135,8 +134,8 @@ class PieChart extends Chart {
     initvis() {
         let svg = this.svg();
         let chartbackgroundsize = {
-            width: 600,
-            height: 600
+            width: 600*this.Wscaleratio,
+            height: 600*this.Hscaleratio
         }
         let width = this.width(),
             height = this.height();
@@ -161,6 +160,7 @@ class PieChart extends Chart {
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["mask-image"])
+                .attr("preserveAspectRatio","none")
                 .attr("calss","maskBackground")
                 .attr("width", outerRadius*2)
                 .attr("height",outerRadius*2)
@@ -180,13 +180,13 @@ class PieChart extends Chart {
                     .attr("patternUnits", "userSpaceOnUse")
                     .append("svg:image")
                     .attr("xlink:href", this.markStyle()["background-image"])
+                    .attr("preserveAspectRatio","none")
                     .attr("class","markBackground")
                     .attr("width", 200)
                     .attr("height", 200)
                     .attr("x", 0)
                     .attr("y", 0);
             })
-            
         }
         // init arcs
         let arcs = content.selectAll("g")
@@ -197,8 +197,8 @@ class PieChart extends Chart {
 
         
         let arcFun = d3.arc()
-            .padAngle(5)
-            .padRadius(3)
+            .padAngle(5*Math.min(this.Wscaleratio,this.Hscaleratio))
+            .padRadius(3*Math.min(this.Wscaleratio,this.Hscaleratio))
 
         
         arcs.append("path")
@@ -219,26 +219,22 @@ class PieChart extends Chart {
     encodeTheta(animation = {}) {
         let width = this.width();
         let chartbackgroundsize = {
-            width: 600,
-            height: 600
+            width: 600*this.Wscaleratio,
+            height: 600*this.Hscaleratio
         }
         let innerRadius = this.markStyle()['inner-radius'] ? this.markStyle()['inner-radius'] : 3;
         let outerRadius = this.markStyle()['outer-radius'] ? this.markStyle()['outer-radius'] : width/3;
         let textRadius = this.markStyle()['text-radius'] ? this.markStyle()['text-radius'] : width/3+50;
         let cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
-        let stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : "none";
-        let strokeWidth = this.markStyle()['stroke-width'] || this.markStyle()['stroke-width']===0 ? this.markStyle()['stroke-width'] : 1;
-        let strokeOpacity = this.markStyle()['stroke-opacity'] || this.markStyle()['stroke-opacity'] ===0? this.markStyle()['stroke-opacity'] : 1;
 
         let arcFun = d3.arc()
-            .padAngle(5)
-            .padRadius(3)
+            .padAngle(5*Math.min(this.Wscaleratio,this.Hscaleratio))
+            .padRadius(3*Math.min(this.Wscaleratio,this.Hscaleratio))
             .cornerRadius(cornerRadius)
-
+        const processedData = this.processedData();
+        const thetaEncoding = this.theta,
+            colorEncoding = this.color;
         if(this.theta){
-            const processedData = this.processedData();
-            const thetaEncoding = this.theta,
-                colorEncoding = this.color;
             let pie = d3.pie()
                 .value(d => d[thetaEncoding]);
             let pieData = pie(processedData);
@@ -253,8 +249,8 @@ class PieChart extends Chart {
                 d.radiusInner(innerRadius);
                 d.radiusOuter(outerRadius);
                 this.dataTemp[i]={
-                    startAngle: d.angleStart(),
-                    endAngle: d.angleEnd(),
+                    startAngle: pieData[i].startAngle,
+                    endAngle: pieData[i].endAngle,
                     innerRadius: d.radiusInner(),
                     outerRadius: d.radiusOuter(),
                     color: COLOR.DEFAULT,                   
@@ -283,39 +279,66 @@ class PieChart extends Chart {
             })
 
             if(this.style()["mask-image"] && !this.markStyle()["background-image"]){
-                d3.selectAll("#chart-mask-image")
+                this.svg().selectAll("#chart-mask-image")
                 .attr("x",outerRadius)
                 .attr("y",outerRadius)
                 
             }
-
-            d3.selectAll("#nothetaCircle").remove()
-            d3.selectAll(".mark")
+            this.svg().selectAll(".mark")
                 .attr("d", (d, i) => arcFun(this.dataTemp[i]))
             
             if(this.markStyle()["background-image"]){
-                d3.selectAll(".mark-background-pattern")
+               this.svg().selectAll(".mark-background-pattern")
                 .attr("x",(d,i)=>arcFun.centroid(this.dataTemp[i])[0]+thetaDelta/2)
                 .attr("y",(d,i)=>arcFun.centroid(this.dataTemp[i])[1]+thetaDelta/2)
                 .attr("width", thetaDelta)
                 .attr("height",thetaDelta)
 
-                d3.selectAll(".markBackground")
+               this.svg().selectAll(".markBackground")
                 .attr("width", thetaDelta)
                 .attr("height",thetaDelta)
-                
             }
 
         }else{
-            let circleAll={startAngle:0,endAngle:2*Math.PI, innerRadius: innerRadius, outerRadius: outerRadius}
-            d3.select('.content').select("g").append("path")
-                .attr("class","mark")
-                .attr("id","nothetaCircle")
-                .attr("fill", this.markStyle()["background-image"] ? `url(#mark-background-image${0})`:(this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT)))
-                .attr("d", arcFun(circleAll))
-                .attr("stroke",stroke)
-                .attr("stroke-width",strokeWidth)
-                .attr("stroke-opacity",strokeOpacity)
+            let arcCount = this.arcs.length;
+            let avgTheta = (2 * Math.PI )/arcCount
+            let notheta_dataTemp=[]
+            this.arcs.forEach((d,i)=>{
+                // let thateDelta_temp= (pieData[i].endAngle - pieData[i].startAngle)*outerRadius
+                // if(thateDelta_temp>thetaDelta) thetaDelta= thateDelta_temp
+                d.angleEnd((i+1)*avgTheta);
+                d.angleStart(i*avgTheta);
+                d.radiusInner(innerRadius);
+                d.radiusOuter(outerRadius);
+                notheta_dataTemp[i]={
+                    startAngle: i*avgTheta,
+                    endAngle: (i+1)*avgTheta,
+                    innerRadius: d.radiusInner(),
+                    outerRadius: d.radiusOuter(),
+                    color: COLOR.DEFAULT,                   
+                    }
+
+                let midangle = Math.atan2(arcFun.centroid(notheta_dataTemp[i])[1] , arcFun.centroid(notheta_dataTemp[i])[0]);
+                let xlable = Math.cos(midangle) * textRadius;
+                let ylable = Math.sin(midangle) * textRadius
+                let sign_x= xlable > 0 ? 1 : -1;
+                let sign_y= ylable > 0 ? 1 : -0.3;
+                let x = xlable + 2 * sign_x  + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2;
+                let y = ylable + 15 * sign_y + chartbackgroundsize.height / 2;
+                let coreX = (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2
+                let coreY = chartbackgroundsize.height / 2
+                d.centroidX(arcFun.centroid(notheta_dataTemp[i])[0] + (chartbackgroundsize.width-this.margin().left-this.margin().right) / 2)
+                d.centroidY(arcFun.centroid(notheta_dataTemp[i])[1] + chartbackgroundsize.height / 2)
+                d.coreX(coreX)
+                d.coreY(coreY)
+                d.textX(x);
+                d.textY(y);
+                d.text(colorEncoding ? processedData[i][colorEncoding] : "")
+            })
+
+            this.svg().selectAll(".mark")
+                .attr("d", (d,i)=>arcFun(notheta_dataTemp[i]))
+            
         }
     }
 
@@ -372,7 +395,7 @@ class PieChart extends Chart {
             }
 
             if(changeTheta){
-                this.encodeTheta();
+                // this.encodeTheta();
                 // this.encodeColor();
                 this.svg().select('.content')
                     .selectAll(".mark")
@@ -380,7 +403,7 @@ class PieChart extends Chart {
                     .attr("opacity",(d)=>d.opacity())
             }
             if(changeColor){
-                this.encodeColor();
+                // this.encodeColor();
                 // this.encodeTheta();
                 this.svg().select('.content')
                     .selectAll(".mark")
@@ -454,22 +477,12 @@ class PieChart extends Chart {
 
         if(changeColor){
             this.svg().select('.content')
-                .selectAll("#nothetaCircle")
-                .remove()
-            this.svg().select('.content')
                 .selectAll(".mark")
                 .attr("fill",(d,i)=>d.color())
                 .attr("opacity",(d)=>d.opacity())
         }
         if(changeTheta){
-            this.svg().select('.content')
-                .selectAll("#nothetaCircle")
-                .remove()
-            this.svg().selectAll('.content')
-                .selectAll(".mark")
-                .remove()
             this.encodeTheta();
-                
         }
         this.animationWipe(animation);
     } 
