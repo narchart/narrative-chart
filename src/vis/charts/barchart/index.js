@@ -750,71 +750,17 @@ class BarChart extends Chart {
                     })
                     break;
                 case 'y':
-                    new Promise((resolve, reject) => {
+                    this.svg().selectAll(".axis_y").remove();
+                    this.encodeY();
+                    if('duration' in animation){
+                        animation['duration'] = animation['duration']
+                        this.animationGrow(animation)
+                    }
+                    else{
                         this.content.selectAll(".mark")
-                                .transition()
-                                .duration('duration' in animation ? animation['duration']/2 : 0)
-                                .style('opacity', 0)
-                                .on("end", resolve)
-                    })
-                    .then(()=>{
-                        this.svg().selectAll(".rects").remove();
-                        this.svg().selectAll(".axis_y").remove();
-                    })
-                    .then(()=>{
-                        this.encodeY();
-                        this.content.append("g")
-                            .attr("class", "rects")
-                            .selectAll("rect")
-                            .data(this.bardata)
-                            .enter().append("rect")
-                            .attr("class", "mark")
-                            .attr("x", d => this.xScale(d[this.x]))
-                            .attr("y", this.height())
-                            .attr("width", this.xScale.bandwidth())
-                            .attr("height", 0)
-                            .attr("fill", (d,i) => {
-                                if(this.markStyle()['fill']) {
-                                    return this.fill
-                                } else if(this.markStyle()['background-image']) {
-                                    let margin = this.margin()
-                                    let chartBackgroundSize = {
-                                        width: 600*this.Wscaleratio,
-                                        height: 600*this.Hscaleratio
-                                    }
-                                    let defs = this.svg().append('svg:defs');
-                                    defs.append("svg:pattern")
-                                        .attr("id", "chart-background-image-" + i)
-                                        .attr("width", chartBackgroundSize.width)
-                                        .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartBackgroundSize.height)
-                                        .attr("patternUnits", "userSpaceOnUse")
-                                        .append("svg:image")
-                                        .attr("xlink:href", this.markStyle()["background-image"])
-                                        .attr("width", chartBackgroundSize.width)
-                                        .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartBackgroundSize.height)
-                                        .attr("x", this.xScale(d[this.x]))
-                                        .attr("y", 0);
-                                    return "url(#chart-background-image-" + i + ")"
-                                } else {
-                                    return this.fill
-                                }
-                            })
-                            .attr("rx", this.cornerRadius)
-                            .attr("ry", this.cornerRadius)
-                            .attr("fill-opacity", this.fillOpacity)
-                            .attr("stroke", this.stroke)
-                            .attr("stroke-width", this.strokeWidth)
-                            .attr("stroke-opacity", this.strokeOpacity);;
-                        if('duration' in animation){
-                            animation['duration'] = animation['duration']/2
-                            this.animationGrow(animation)
-                        }
-                        else{
-                            this.content.selectAll(".mark")
-                                    .attr("y", d => this.yScale(d[this.y]))
-                                    .attr("height", d => this.height() - this.yScale(d[this.y]))
-                        }
-                    })
+                                .attr("y", d => this.yScale(d[this.y]))
+                                .attr("height", d => this.height() - this.yScale(d[this.y]))
+                    }
                     break;
                 case 'color':
                     this.encodeColor(animation)
@@ -908,6 +854,7 @@ class BarChart extends Chart {
                 .domain(processedData.map(d => d[this.x]))
 
         this.content.selectAll(".mark")
+                .data(this.bardata)
                 .transition()
                 //.duration(barduration)
                 .duration(d => {duration = d[this.y] * unitduration; return duration})

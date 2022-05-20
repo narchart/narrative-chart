@@ -415,7 +415,6 @@ class Translator {
                 }
             }
         }
-        console.log(actionspecs)
         return actionspecs;
     }
 
