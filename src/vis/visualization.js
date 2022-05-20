@@ -1,17 +1,19 @@
 import MarkType from './visualization/marktype';
-import Size from './visualization/size';
 
+/**
+ * @description A visuaization class
+ * 
+ * @class
+ */
 class Visualization {
     constructor() {
         this._container = "";
         this._data = [];
         this._processedData = [];
-        this._size = Size.LARGE;
         this._width = 0;
         this._height = 0;
         this._mark = MarkType.POINT;
         this._chart = {};
-        this._caption = "";
         this._pipeline = null;
     }
 
@@ -20,13 +22,6 @@ class Visualization {
             return this._container;
         }
         this._container = value;
-    }
-
-    size(value) {
-        if (!value) {
-            return this._size;
-        }
-        this._size = value;
     }
 
     width(value) {
@@ -63,13 +58,6 @@ class Visualization {
             return this._chart;
         }
         this._chart = value;
-    }
-
-    caption(value) {
-        if (!value) {
-            return this._caption;
-        }
-        this._caption = value;
     }
 
     pipeline(value) {

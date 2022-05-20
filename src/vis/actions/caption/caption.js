@@ -1,15 +1,13 @@
-import Captioner from './captioner';
 import * as d3 from 'd3';
 import Color from '../../visualization/color';
 
 const COLOR = new Color();
 /**
- * @description An captioner for adding caption with fade animation
+ * @description A class for adding caption with fade animation
  * 
  * @class
- * @extends Captioner
  */
-class Caption extends Captioner {
+class Caption {
     /**
      * @description Add the caption at the bottom of chart
      * 

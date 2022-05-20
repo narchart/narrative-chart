@@ -1,5 +1,4 @@
 import DataLoader from './dataloader';
-import Fact from './fact';
 import Visualization from './visualization';
 import Parser from './parser';
 
@@ -12,7 +11,6 @@ class NarrativeChart {
     constructor() {
         this._container = document.createElement("div");
         this._loader = new DataLoader();
-        this._fact = new Fact();
         this._vis = new Visualization();
         this._spec = {};
         this._shouldShowCaption = false;
@@ -28,13 +26,6 @@ class NarrativeChart {
 
     load(spec) {
         this._spec = spec;
-    }
-
-    shouldShowCaption(value) {
-        if (!value) {
-            return this._shouldShowCaption;
-        }
-        this._shouldShowCaption = value;
     }
 
     generate() {

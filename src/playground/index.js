@@ -1,7 +1,6 @@
 import React from 'react';
 import Chart from './Chart';
 import EditPannel from './EditPannel';
-import './font.css';
 import './playground.css';
 
 import {
@@ -74,7 +73,6 @@ export default class Playground extends React.Component {
       <option value="linechart">linechart</option>
       <option value="barchart">barchart</option>
       <option value="piechart">piechart</option>
-      <option value="test">test</option>
       <option value="unitvis">unitvis</option>
     </select>
 

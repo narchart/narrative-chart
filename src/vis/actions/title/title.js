@@ -1,16 +1,14 @@
-import Titler from './titler'
 import * as d3 from 'd3';
 import Color from '../../visualization/color';
 
 const COLOR = new Color();
 
 /**
- * @description An titler for adding title 
+ * @description A class for adding title 
  * 
  * @class
- * @extends Titler
  */
-class Title extends Titler {
+class Title {
     /**
      * @description Add the caption at the bottom of chart
      * 

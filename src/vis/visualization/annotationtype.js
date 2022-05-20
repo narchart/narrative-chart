@@ -1,6 +1,5 @@
 export default {
     ARROW: 'arrow',
-    COLOREDAREA: 'coloredarea',
     CIRCLE: 'circle',
     CONTOUR: 'contour',
     DESATURATE: 'desaturate',
