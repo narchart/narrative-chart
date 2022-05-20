@@ -23,10 +23,13 @@ class Title extends Titler {
      */
 
      maketitle(vis, style, animation) {
+
+        let Wscaleratio = vis.width() / 640
+        let Hscaleratio = vis.height() / 640
         
         let bannerarea = {
             width : vis.width(),
-            height: (13/64)*vis.height()
+            height: 130 * Math.min(Wscaleratio,Hscaleratio)
         }
 
 
@@ -36,29 +39,29 @@ class Title extends Titler {
         }
 
         let titleborderarea= {
-            width : 600 + titleborderpadding.left*2
+            width : Wscaleratio * (600 + titleborderpadding.left*2)
         }
 
 
         let titlebordermargin = {
-            left: 20,
-            top: 10
+            left: Wscaleratio * 20,
+            top: Hscaleratio * 10
         }
 
 
         let titlbackgroundearea= {
-            width : 600 + titleborderpadding.left*2
+            width : Wscaleratio * (600 + titleborderpadding.left*2)
         }
 
         let titlebackgroundmargin= {
-            left: 20,
-            top: 10
+            left: Wscaleratio * 20,
+            top: Hscaleratio * 10
         }
 
         let titleposition = {
-            left: 30, 
+            left: Wscaleratio * 30, 
             center: "50%", 
-            right: 610
+            right: Wscaleratio * 610
         }
 
         let titletransform = {
@@ -84,7 +87,7 @@ class Title extends Titler {
             .text(words[0]);
         
         
-        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), 595-titleborderpadding.left*2);
+        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), Wscaleratio* (595-titleborderpadding.left*2));
 
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         const maxRow = textsize > 16 ? 2: 3;
@@ -104,13 +107,13 @@ class Title extends Titler {
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", style["background-image"])
+                .attr("preserveAspectRatio", "none") 
                 .attr("width", bannerarea.width)
                 .attr("height", bannerarea.height)
                 .attr("x", 0)
                 .attr("y", 0);
             backgroundimage = "url(#text-backgroundimage)"
             
-        
             svg.append("g")
                 .attr("id","textBack")
                 .append("rect")

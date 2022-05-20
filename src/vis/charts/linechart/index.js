@@ -21,12 +21,16 @@ class LineChart extends Chart {
      */
     visualize() {
         let margin = this.margin()
+
+        this.Hscaleratio = this.height()/640
+        this.Wscaleratio = this.width()/640
+
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
         let chartbackgroundsize = {
-            width: 600,
-            height: 600
+            width: 600*this.Wscaleratio,
+            height: 600*this.Hscaleratio
         }
         let container = this.container()
 
@@ -42,8 +46,8 @@ class LineChart extends Chart {
             .attr("id","chartBackGrnd")
             .append("rect")
             .attr("width", chartbackgroundsize.width)
-            .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
-            .attr("transform", "translate(" + 20 + "," + margin.top + ")");
+            .attr("height", margin.top === 130*this.Hscaleratio? 490*this.Hscaleratio: chartbackgroundsize.height)
+            .attr("transform", "translate(" + (20*this.Wscaleratio) + "," + margin.top + ")");
             
 
         this._svg = d3.select(container)
@@ -72,7 +76,7 @@ class LineChart extends Chart {
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130? 490: chartbackgroundsize.height)
+                .attr("height", margin.top === 130*this.Hscaleratio? 490*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
                 d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")

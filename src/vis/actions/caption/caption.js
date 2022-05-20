@@ -23,6 +23,8 @@ class Caption extends Captioner {
 
     makecaption(vis, style, animation) {
 
+        let Wscaleratio = vis.width() / 640
+        let Hscaleratio = vis.height() / 640
 
         let svg = d3.select(vis.container()).select("svg")
 
@@ -33,14 +35,15 @@ class Caption extends Captioner {
         let textcolor = style['font-color'] ? style['font-color'] : COLOR.TEXT
 
         let captionbackgroundmargin = {
-            left: 50,
-            top: 75
+            left: Wscaleratio * 50,
+            top: Hscaleratio * 75
         }
 
 
         let captionbackgroundearea = {
-            width: 610
+            width: Wscaleratio * 610
         }
+
 
 
         let virtualE = svg.append("text")
@@ -53,7 +56,7 @@ class Caption extends Captioner {
         let textE = svg.append("text")
             .attr("id", "captionContent")
             .attr("dominant-baseline", "central")
-            .attr("transform", "translate(" + 0 + "," + 65 + ")")
+            .attr("transform", "translate(" + 0 + "," + (Hscaleratio * 65) + ")")
             .attr("font-family", style['font-family'] ?? 'Arial-Regular')
             .attr("font-weight", style['font-weight'] ?? "normal")
             .attr("font-style", style['font-style'] ?? "normal")
@@ -63,7 +66,7 @@ class Caption extends Captioner {
         let position
         switch (style.position) {
             case 'top-left':
-                position = 30
+                position = Wscaleratio*30
                 textE.attr("text-anchor", "start")
                 break;
             case 'top-center':
@@ -71,17 +74,17 @@ class Caption extends Captioner {
                 textE.attr("text-anchor", "middle")
                 break;
             case 'top-right':
-                position = 610
+                position = Wscaleratio*610
                 textE.attr("text-anchor", "end")
                 break;
             default:
-                position = 40
+                position = Wscaleratio*40
                 textE.attr("text-anchor", "start")
         }
 
 
 
-        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), 590);
+        let maxWidth = Math.max(virtualE.node().getComputedTextLength(), Wscaleratio*590);
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         let line = '';
         let rowCount = 0;

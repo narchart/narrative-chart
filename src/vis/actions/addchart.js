@@ -31,18 +31,32 @@ class AddChart extends Action {
         chart.markStyle(this._mark_style);
         chart.animation(this._animation);
         chart.style(this._style);
+
+        let Hscaleratio 
+        let Wscaleratio 
+
+        if (vis._mark === "unit"){
+            Hscaleratio = Math.min(vis._height/640, vis._width/640)
+            Wscaleratio = Math.min(vis._height/640, vis._width/640)
+        }else{
+            Hscaleratio = vis._height/640
+            Wscaleratio = vis._width/640
+        }
+
+        
         chart.margin(this._leave_space ? 
             {
-                "top": 130,
-                "right": 20,
-                "bottom": 50,
-                "left": 60
+                "top": 130 * Hscaleratio,
+                "right": 20 * Wscaleratio,
+                "bottom": 50 * Hscaleratio,
+                "left": 60 * Wscaleratio
             }:{
-                "top": 20,
-                "right": 10,
-                "bottom": 50,
-                "left": 50
+                "top": 20 * Hscaleratio,
+                "right": 10 * Wscaleratio,
+                "bottom": 50 * Hscaleratio,
+                "left": 50 * Wscaleratio
             })
+            
         chart.data(vis._data);
         chart.processedData(vis._processedData)
         chart.container(vis._container);
