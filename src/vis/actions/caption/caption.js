@@ -28,7 +28,7 @@ class Caption {
 
         let words = style.text.split(" ").filter(d => d !== "");
 
-        let textsize = style['font-size'] ? style['font-size'] : 16
+        let textsize = style['font-size'] ? style['font-size'] : 16* Math.min(Wscaleratio,Hscaleratio)
 
         let textcolor = style['font-color'] ? style['font-color'] : COLOR.TEXT
 
@@ -86,7 +86,7 @@ class Caption {
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         let line = '';
         let rowCount = 0;
-        const maxRow = textsize > 14 ? 2 : 3;
+        const maxRow = textsize > 14* Math.min(Wscaleratio,Hscaleratio) ? 2 : 3;
 
         for (let n = 0; n < words.length; n++) {
             let testLine = line + ' ' + words[n];

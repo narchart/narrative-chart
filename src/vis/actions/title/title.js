@@ -72,7 +72,7 @@ class Title {
 
         let words = style.text.split(" ").filter(d => d !== "");
 
-        let textsize = style['font-size']?? 20
+        let textsize = style['font-size']?? 20* Math.min(Wscaleratio,Hscaleratio)
 
         let textcolor = style['font-color']?? COLOR.TITLE
         
@@ -88,7 +88,7 @@ class Title {
         let maxWidth = Math.max(virtualE.node().getComputedTextLength(), Wscaleratio* (595-titleborderpadding.left*2));
 
         const lineHeight = virtualE.node().getBBox().height * 0.9;
-        const maxRow = textsize > 16 ? 2: 3;
+        const maxRow = textsize > 16 * Math.min(Wscaleratio,Hscaleratio) ? 2: 3;
     
         let backgroundimage 
         let backgroundcolor 

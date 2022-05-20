@@ -1185,12 +1185,16 @@ class Unitvis extends Chart {
                     d.opacity(1);
                     d.unitgroup('x', breakdownField);
                 })
-
+            });
+                let xstrlen = breakdownValue.map(d => this.textSizef(textSize, 'Arial', d).height)
+                let xstrmax = d3.max(xstrlen)
+                
+    
                 svg.select(".content").append("text")
                     .attr("fill", COLOR.TEXT)
                     .text(breakdownField)
                     .attr("x", databreakdown.length % 2 === 0 ? baseX[Math.floor(databreakdown.length / 2) - 1] : baseX[Math.floor(databreakdown.length / 2)])
-                    .attr("y", Math.min(baseY + 50, height))
+                    .attr("y", Math.min(baseY + radius + textSize + 1.2*xstrmax, height))
                     .attr("font-size", textSize)
                     .attr('text-anchor', 'middle')
                     .attr("fill-opacity", 0)
@@ -1198,7 +1202,7 @@ class Unitvis extends Chart {
                     .delay(this.duration ? this.duration / 2 : 0)
                     .duration(this.duration / 2)
                     .attr("fill-opacity", 1)
-            });
+            
         }
 
         svg.select(".content").selectAll("defs").transition().duration(this.duration / 2).remove()
