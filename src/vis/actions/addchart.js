@@ -48,12 +48,12 @@ class AddChart extends Action {
             {
                 "top": 130 * Hscaleratio,
                 "right": 20 * Wscaleratio,
-                "bottom": 50 * Hscaleratio,
+                "bottom": 30 * Hscaleratio,
                 "left": 60 * Wscaleratio
             }:{
                 "top": 20 * Hscaleratio,
                 "right": 10 * Wscaleratio,
-                "bottom": 50 * Hscaleratio,
+                "bottom": 30 * Hscaleratio,
                 "left": 50 * Wscaleratio
             })
             

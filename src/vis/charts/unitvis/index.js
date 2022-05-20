@@ -25,13 +25,7 @@ class Unitvis extends Chart {
         let margin = this.margin()
 
         this.scaleratio = Math.min(this.width(),this.height()) / 640
-        
-        // // Make sure the chart is a square
-        // this.width(Math.min(this.width(),this.height()) - margin.left - margin.right);
-        // this.height(Math.min(this.width(),this.height()) - margin.top - margin.bottom);
-        // this.units = []
-
-        
+                
         let chartbackgroundsize = {
             width: 600 * this.scaleratio  ,
             height: 600 * this.scaleratio
@@ -49,7 +43,6 @@ class Unitvis extends Chart {
         this.width(Math.min(this.width(),this.height()) - margin.left - margin.right);
         this.height(Math.min(this.width(),this.height()) - margin.top - margin.bottom);
         this.units = []
-
 
         d3.select(container)
             .select("svg")
@@ -505,7 +498,7 @@ class Unitvis extends Chart {
                 .text(xValue[iBar])
                 .attr("x", centernodex[iBar])
                 .attr("y", centernodey[0] + 2 * radiusa + 1 * maxR)
-                .attr("font-size", 14)
+                .attr("font-size", textSize)
                 .attr("text-anchor", "middle")
                 // .attr("transform", "translate(" + centernodex[iBar] + "," + centernodey + ") rotate(-45)")
                 // .attr("transform", `rotate(-45, ${baseX[iBar] - radius + length * radius}, ${baseY + radius + textSize})`)
@@ -524,7 +517,7 @@ class Unitvis extends Chart {
             .text(xField)
             .attr("x", column % 2 === 0 ? centernodex[Math.floor(column / 2) - 1] : centernodex[Math.floor(column / 2)])
             .attr("y", centernodey[0] + 2 * radiusa + 1 * maxR + 1.2*xstrmax)
-            .attr("font-size", 14)
+            .attr("font-size", textSize)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
             .transition()
@@ -683,7 +676,7 @@ class Unitvis extends Chart {
                 .text(yValue[iBar])
                 .attr("x", centernodex - 2 * radiusa - maxR)
                 .attr("y", centernodey[iBar])
-                .attr("font-size", 14)
+                .attr("font-size", textSize)
                 .attr("text-anchor", "middle")
                 .attr("fill-opacity", 0)
                 .transition()
@@ -720,7 +713,7 @@ class Unitvis extends Chart {
     */
 
     XYSizeLayout(height, width, svg) {
-        let textSize = 14;
+        let textSize = 14*this.scaleratio;
         let sizeField = this.size
         let yField = this.y
         let xField = this.x
@@ -807,15 +800,15 @@ class Unitvis extends Chart {
 
         let columnTotalHeight;
         if (row % 2 === 0) {
-            columnTotalHeight = 2 * maxR * row;//2.4
+            columnTotalHeight = 2.5 * maxR * row;//2.4
         } else {
-            columnTotalHeight = 2 * maxR * (row + 1);
+            columnTotalHeight = 2.5 * maxR * (row + 1);
         }
 
         let centernodey = yValueFreq.map(function (d, i) {
             if (row > 2) {
                 columnTotalHeight = d3.min([columnTotalHeight, height])
-                let topPadding = (0.8 * height - columnTotalHeight) / 2 + 2 * maxR;
+                let topPadding = (height - columnTotalHeight) / 2 + 2 * maxR;
                 return topPadding + d3.min([(height - 6 * maxR) / (row - 1), 4 * maxR]) * (i);
             }
             else {
@@ -1112,7 +1105,7 @@ class Unitvis extends Chart {
             left: width / 20,
             right: width / 20
         }
-        let textSize = 14;
+        let textSize = 14*this.scaleratio;
         // situation 1:      
         if (this.x && this.y && this.size) {
             this.XYSizeLayout(height, width, svg)
@@ -1148,7 +1141,7 @@ class Unitvis extends Chart {
             let length = Math.ceil(30 / bar) < 4 ? Math.ceil(30 / bar) : 4
 
             let wradius = ((width - margin.left - margin.right) / ((length + 2) * (bar - 1) + length)) / 2;
-            let hradius = height * 0.8 / Math.ceil(maxCount / length) / 2;
+            let hradius = height* 0.8 / Math.ceil(maxCount / length) / 2;
 
             let radius = this.radiusMultiplier * Math.min(Math.min(wradius, hradius), 6);
             let s = (0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
@@ -1265,13 +1258,15 @@ class Unitvis extends Chart {
 
             let length = Math.ceil(30 / bar) < 5 ? Math.ceil(30 / bar) : 5
 
-            let wradius = d3.min([width - margin.left - margin.right, 0.8 * width]) / Math.ceil(maxCount / length) / 2;
-            let hradius = height * 0.8 / bar / (Math.ceil(length) + 1) / 2;
+            let wradius = d3.min([width - margin.left - margin.right, width]) / Math.ceil(maxCount / length) / 2;
+            let hradius = height / bar / (Math.ceil(length) + 1) / 2;
 
-            let radius = this.radiusMultiplier * 0.9 * Math.min(wradius, hradius);
-            let s = (0.9 * height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
-            let padding = (0.9 * height - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
+            let radius = this.radiusMultiplier * 0.8 * Math.min(wradius, hradius);
+            let s = (height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
+            let padding = (height - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
+            
             let baseY = d3.range(padding, height - padding, (height - padding - (2 * length - 1) * radius - padding) / (bar - 1));
+            
 
             let yField = this.y;
 
