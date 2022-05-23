@@ -727,7 +727,7 @@ class BarChart extends Chart {
                     this.svg().selectAll(".axis_y").remove();
                     this.encodeY();
                     if('duration' in animation){
-                        this.animationGrow(animation)
+                        this.animationGrowTogether(animation)
                     }
                     else{
                         this.content.selectAll(".mark")
@@ -837,6 +837,24 @@ class BarChart extends Chart {
                 //.delay((d, i) => {return (i*barduration)})
                 .delay(d => {return transDelay(d[this.x])})
                 //.delay((d, i) => {if(i===0){delay = 0}else{delay = delay + durationlist[i-1];};return delay})
+   }
+
+   /**
+     * @description Adding grow(together) animation to the chart
+     * 
+     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
+     * 
+     * @return {void}
+    */
+    animationGrowTogether(animation){
+        this.content.selectAll(".mark")
+                .data(this.bardata)
+                .transition()
+                //.duration(barduration)
+                .duration(animation['duration'])
+                .ease(d3.easeLinear)
+                .attr("y", d => this.yScale(d[this.y]))
+                .attr("height", d => this.height() - this.yScale(d[this.y]))
    }
 
 }
