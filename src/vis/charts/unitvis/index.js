@@ -55,10 +55,10 @@ class Unitvis extends Chart {
             .attr("height", margin.top === 130*this.scaleratio ? 490*this.scaleratio : chartbackgroundsize.height)
             .attr("transform", "translate(" + (20*this.scaleratio) + "," + margin.top + ")");
 
-        this._svg = d3.select(container)
+            this._svg = d3.select(container)
             .select("svg")
             .append("g")
-            .attr("transform", margin.top === 130*this.scaleratio? "translate(" + (margin.left+10*this.scaleratio) + "," + margin.top + ")": "translate(" + 10*this.scaleratio + "," + 40*this.scaleratio + ")" );
+            .attr("transform", margin.top === 130*this.scaleratio? "translate(" + (margin.left+10*this.scaleratio) + "," + margin.top + ")": "translate(" + 10*this.scaleratio + "," + margin.top + ")" );
 
             
 
