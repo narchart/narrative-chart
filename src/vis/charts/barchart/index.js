@@ -42,31 +42,54 @@ class BarChart extends Chart {
         this.stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
         this.strokeWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 0;
         this.strokeOpacity = this.markStyle()['stroke-opacity'] ? this.markStyle()['stroke-opacity'] : 1;
-        this.fill = this.markStyle()['fill'] ? this.markStyle()['fill'] : (this.style()["mask-image"]? "url(#chart-mask-image)" : COLOR.DEFAULT);
         this.fillOpacity = this.markStyle()['fill-opacity'] ? this.markStyle()['fill-opacity'] : 1;
 
         this.drawBackground();
 
         let svg = this.svg();
 
-        if(this.style()["mask-image"]) {
+        if(this.markStyle()["fill"]) {
+            this.fill = this.markStyle()["fill"]
+        }else if(this.markStyle()["background-image"]) {
             let margin = this.margin()
-            let chartmaskgroundsize = {
+            let chartbackgroundsize = {
                 width: 600*this.Wscaleratio,
-                height: 600*this.Hscaleratio
+                height: Math.max(600*this.Wscaleratio, 600*this.Hscaleratio)
+            }
+            let defs = svg.append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "chart-background-image")
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.markStyle()["background-image"])
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("x", 0)
+                .attr("y", 0);
+            this.fill = "url(#chart-background-image)"
+        }else if(this.style()["mask-image"]) {
+            let margin = this.margin()
+            let chartmasksize = {
+                width: 600*this.Wscaleratio,
+                height: Math.max(600*this.Wscaleratio, 600*this.Hscaleratio)
             }
             let defs = svg.append('svg:defs');
             defs.append("svg:pattern")
                 .attr("id", "chart-mask-image")
-                .attr("width", chartmaskgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmaskgroundsize.height)
+                .attr("width", chartmasksize.width)
+                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["mask-image"])
-                .attr("width", chartmaskgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmaskgroundsize.height)
+                .attr("width", chartmasksize.width)
+                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
                 .attr("x", 0)
                 .attr("y", 0);
+            this.fill = "url(#chart-mask-image)"
+        }else {
+            this.fill = COLOR.DEFAULT
         }
 
         this.axis = svg.append("g")
@@ -626,32 +649,7 @@ class BarChart extends Chart {
                     .attr("y", this.height())
                     .attr("width", this.xScale.bandwidth())
                     .attr("height", 0)
-                    .attr("fill", (d,i) => {
-                        if(this.markStyle()['fill']) {
-                            return this.fill
-                        } else if(this.markStyle()['background-image']) {
-                            let margin = this.margin()
-                            let chartBackgroundSize = {
-                                width: 600*this.Wscaleratio,
-                                height: 600*this.Hscaleratio
-                            }
-                            let defs = this.svg().append('svg:defs');
-                            defs.append("svg:pattern")
-                                .attr("id", "chart-background-image-" + i)
-                                .attr("width", chartBackgroundSize.width)
-                                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartBackgroundSize.height)
-                                .attr("patternUnits", "userSpaceOnUse")
-                                .append("svg:image")
-                                .attr("xlink:href", this.markStyle()["background-image"])
-                                .attr("width", chartBackgroundSize.width)
-                                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartBackgroundSize.height)
-                                .attr("x", this.xScale(d[this.x]))
-                                .attr("y", 0);
-                            return "url(#chart-background-image-" + i + ")"
-                        } else {
-                            return this.fill
-                        }
-                    })
+                    .attr("fill", this.fill)
                     .attr("rx", this.cornerRadius)
                     .attr("ry", this.cornerRadius)
                     .attr("fill-opacity", this.fillOpacity)
@@ -707,32 +705,7 @@ class BarChart extends Chart {
                             .attr("y", this.height())
                             .attr("width", this.xScale.bandwidth())
                             .attr("height", 0)
-                            .attr("fill", (d,i) => {
-                                if(this.markStyle()['fill']) {
-                                    return this.fill
-                                } else if(this.markStyle()['background-image']) {
-                                    let margin = this.margin()
-                                    let chartBackgroundSize = {
-                                        width: 600*this.Wscaleratio,
-                                        height: 600*this.Hscaleratio
-                                    }
-                                    let defs = this.svg().append('svg:defs');
-                                    defs.append("svg:pattern")
-                                        .attr("id", "chart-background-image-" + i)
-                                        .attr("width", chartBackgroundSize.width)
-                                        .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartBackgroundSize.height)
-                                        .attr("patternUnits", "userSpaceOnUse")
-                                        .append("svg:image")
-                                        .attr("xlink:href", this.markStyle()["background-image"])
-                                        .attr("width", chartBackgroundSize.width)
-                                        .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartBackgroundSize.height)
-                                        .attr("x", this.xScale(d[this.x]))
-                                        .attr("y", 0);
-                                    return "url(#chart-background-image-" + i + ")"
-                                } else {
-                                    return this.fill
-                                }
-                            })
+                            .attr("fill", this.fill)
                             .attr("rx", this.cornerRadius)
                             .attr("ry", this.cornerRadius)
                             .attr("fill-opacity", this.fillOpacity)

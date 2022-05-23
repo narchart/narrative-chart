@@ -54,12 +54,8 @@
           "stroke": "#FFBE32",
           "stroke-width": 3,
           "stroke-opacity": 1,
-          "fill-opacity": 1,
-          "background-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
+          "fill-opacity": 1
         }
-      },
-      "style": {
-        "mask-image": "http://localhost:3000/texture/car-hire-hero-uk.png"
       }
     },
     {
@@ -87,11 +83,11 @@
         }
       ],
       "style": {
-          "font-size": 20,
-          "font-family": "sans-serif",
-          "font-color": "red",
-          "font-weight": 300,
-          "font-style": "italic"
+        "font-size": 20,
+        "font-family": "sans-serif",
+        "font-color": "red",
+        "font-weight": 300,
+        "font-style": "italic"
       }
     },
     {
@@ -131,7 +127,7 @@
           "field": "Brand",
           "value": "Hyundai"
         }
-
+        
       ],
       "style": {
         "background-image": "http://localhost:3000/texture/circle.png"
