@@ -26,6 +26,9 @@ class PieChart extends Chart {
         this.arcs = [];
         this.dataTemp = [];
 
+        this.initTheta = false;
+        this.initColor = false;
+
         this.Hscaleratio = this.height()/640
         this.Wscaleratio = this.width()/640
 
@@ -208,7 +211,7 @@ class PieChart extends Chart {
             .attr("opacity", (d, i) => d.opacity())
             .attr("stroke",stroke)
             .attr("stroke-width",strokeWidth)
-            .attr("stroke-opacity",strokeOpacity)
+            .attr("stroke-opacity",strokeOpacity);
 
         }
     /**
@@ -216,7 +219,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-    encodeTheta(animation = {}) {
+    encodeTheta(animation = {}, modify = false) {
         let width = this.width();
         let chartbackgroundsize = {
             width: 600*this.Wscaleratio,
@@ -238,8 +241,7 @@ class PieChart extends Chart {
             let pie = d3.pie()
                 .value(d => d[thetaEncoding]);
             let pieData = pie(processedData);
-            
-            this.dataTemp=[]
+            this.dataTemp=[];
             let thetaDelta=outerRadius;
             this.arcs.forEach((d,i)=>{
                 let thateDelta_temp= (pieData[i].endAngle - pieData[i].startAngle)*outerRadius
@@ -284,8 +286,41 @@ class PieChart extends Chart {
                 .attr("y",outerRadius)
                 
             }
-            this.svg().selectAll(".mark")
-                .attr("d", (d, i) => arcFun(this.dataTemp[i]))
+
+            if (!modify) {
+                this.svg().selectAll(".mark")
+                        // .transition("theta")
+                        // .duration(0)
+                        // .attrTween("d", function(d, i) {
+                        //     return function(t) {
+                        //         return arcFun(this_dataTemp[i]);
+                        //     }
+                        // })
+                        // .on("end", function(d, i) { 
+                        //     d3.select(this)
+                        //         .property("_dataTemp", this_dataTemp[i]);                        
+                        // });
+                        .attr("d", (d, i) => {return arcFun(this.dataTemp[i])})
+                        .property("_dataTemp", (d, i) => this.dataTemp[i]);
+
+            } else {
+                const this_dataTemp = this.dataTemp;
+                this.svg().selectAll(".mark")
+                        .transition("theta")
+                        .duration('duration' in animation ? animation['duration']: 0)
+                        .attrTween("d", function(d, i) {
+                            let _old_dataTemp = d3.select(this).property("_dataTemp");
+                            var interp = d3.interpolate(_old_dataTemp, this_dataTemp[i]);
+                            return function(t) {
+                                return arcFun(interp(t));
+                            }
+                        })
+                        .on("end", function(d, i) { 
+                            d3.select(this)
+                                .property("_dataTemp", this_dataTemp[i]);                        
+                        });
+            }
+            
             
             if(this.markStyle()["background-image"]){
                this.svg().selectAll(".mark-background-pattern")
@@ -336,8 +371,27 @@ class PieChart extends Chart {
                 d.text(colorEncoding ? processedData[i][colorEncoding] : "")
             })
 
-            this.svg().selectAll(".mark")
-                .attr("d", (d,i)=>arcFun(notheta_dataTemp[i]))
+            if (!modify) {
+                this.svg().selectAll(".mark")
+                        .attr("d", (d,i)=>arcFun(notheta_dataTemp[i]))
+                        .property("_dataTemp", (d, i) => notheta_dataTemp[i]);
+            } else {
+                this.svg().selectAll(".mark")
+                        .transition("theta")
+                        .duration('duration' in animation ? animation['duration']: 0)
+                        .attrTween("d", function(d, i) {
+                            let _old_dataTemp = d3.select(this).property("_dataTemp");
+                            var interp = d3.interpolate(_old_dataTemp, notheta_dataTemp[i]);
+                            return function(t) {
+                                return arcFun(interp(t));
+                            }
+                        })
+                        .on("end", function(d, i) { 
+                            d3.select(this)
+                                .property("_dataTemp", notheta_dataTemp[i]);
+                        });
+            }
+
             
         }
     }
@@ -347,8 +401,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-    encodeColor(animation = {}) {
-
+    encodeColor(animation = {}, initColor = false) {
         let fill = this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT);
         let fillOpacity= (this.markStyle()['fill-opacity']||this.markStyle()['fill-opacity']===0) ? this.markStyle()['fill-opacity'] : 1;
 
@@ -368,6 +421,12 @@ class PieChart extends Chart {
                 d.opacity(fillOpacity);
             })
         }
+        this.svg().select('.content')
+                    .selectAll(".mark")
+                    .transition("color")
+                    .duration('duration' in animation ? animation['duration']: 0)
+                    .attr("fill",(d,i)=>d.color())
+                    .attr("opacity",(d)=>d.opacity());
     }
     /**
      * @description Add encoding and redraw arcs.
@@ -379,8 +438,6 @@ class PieChart extends Chart {
             this[channel] = field;
             let changeTheta = false;
             let changeColor = false;
-            this.encodeTheta();
-            this.encodeColor();
 
             switch(channel){
                 case 'theta':
@@ -395,24 +452,38 @@ class PieChart extends Chart {
             }
 
             if(changeTheta){
+                if (!this.initTheta) {
+                    this.encodeTheta();
+                    this.animationWipe(animation);
+                    this.initTheta = true;
+                } else {
+                    this.encodeTheta(animation, true);
+                }
+                
                 // this.encodeTheta();
                 // this.encodeColor();
-                this.svg().select('.content')
-                    .selectAll(".mark")
-                    .attr("fill",(d,i)=>d.color())
-                    .attr("opacity",(d)=>d.opacity())
+                // this.svg().select('.content')
+                //     .selectAll(".mark")
+                //     .attr("fill",(d,i)=>d.color())
+                //     .attr("opacity",(d)=>d.opacity())
             }
             if(changeColor){
-                // this.encodeColor();
-                // this.encodeTheta();
-                this.svg().select('.content')
-                    .selectAll(".mark")
-                    .attr("fill",(d,i)=>d.color())
-                    .attr("opacity",(d)=>d.opacity())
+                if (!this.initTheta) {
+                    this.encodeTheta();
+                    this.animationWipe(animation);
+                    this.initTheta = true;
+                }
+                this.encodeColor(animation);
+
+            //     // this.encodeColor();
+            //     // this.encodeTheta();
+            //     this.svg().select('.content')
+            //         .selectAll(".mark")
+            //         .attr("fill",(d,i)=>d.color())
+            //         .attr("opacity",(d)=>d.opacity())
                 
             }
 
-            this.animationWipe(animation);
         }
     }
 
@@ -426,8 +497,6 @@ class PieChart extends Chart {
             this[channel] = field;
             let changeTheta = false;
             let changeColor = false;
-            this.encodeTheta();
-            this.encodeColor();
 
             switch(channel){
                 case 'theta':
@@ -440,15 +509,21 @@ class PieChart extends Chart {
                     console.log("no channel select")
                     break;
             }
+            
+            if (changeTheta) {
+                this.encodeTheta(animation, true);
+            }
 
-            if(changeTheta||changeColor){
-                this.svg().select('.content')
-                    .selectAll(".mark")
-                    .attr("fill",(d,i)=>d.color())
-                    .attr("opacity",(d)=>d.opacity())
+            if(changeColor){
+                this.encodeColor(animation);
+
+                // this.svg().select('.content')
+                //     .selectAll(".mark")
+                //     .attr("fill",(d,i)=>d.color())
+                //     .attr("opacity",(d)=>d.opacity())
             }
         }
-        this.animationWipe(animation);
+        // this.animationWipe(animation);
     }
 
     /**
@@ -460,8 +535,6 @@ class PieChart extends Chart {
         this[channel] = null;
         let changeTheta = false;
         let changeColor = false;
-        this.encodeTheta();
-        this.encodeColor();
 
         switch(channel){
             case 'theta':
@@ -476,15 +549,17 @@ class PieChart extends Chart {
         }
 
         if(changeColor){
-            this.svg().select('.content')
-                .selectAll(".mark")
-                .attr("fill",(d,i)=>d.color())
-                .attr("opacity",(d)=>d.opacity())
+            this.encodeColor(animation);
+
+            // this.svg().select('.content')
+            //     .selectAll(".mark")
+            //     .attr("fill",(d,i)=>d.color())
+            //     .attr("opacity",(d)=>d.opacity())
         }
         if(changeTheta){
-            this.encodeTheta();
+            this.encodeTheta(animation, true);
         }
-        this.animationWipe(animation);
+        // this.animationWipe(animation);
     } 
 
     animationWipe(animation) {
@@ -522,7 +597,7 @@ class PieChart extends Chart {
                 .attr("transform", "translate(" + cx + "," + cy + ")")
                 .datum(circle_data)
                 .attr("d", arc)
-                .transition()
+                .transition("wipe")
                 .duration(animation['duration'])
                 .ease(d3.easeLinear)
                 .attrTween('d', function (d) {
