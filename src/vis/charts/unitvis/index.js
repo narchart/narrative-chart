@@ -58,7 +58,7 @@ class Unitvis extends Chart {
         this._svg = d3.select(container)
             .select("svg")
             .append("g")
-            .attr("transform", margin.top === 130*this.scaleratio? "translate(" + (margin.left+10*this.scaleratio) + "," + margin.top + ")": "translate(" + 50*this.scaleratio + "," + 40*this.scaleratio + ")" );
+            .attr("transform", margin.top === 130*this.scaleratio? "translate(" + (margin.left+10*this.scaleratio) + "," + margin.top + ")": "translate(" + 10*this.scaleratio + "," + 40*this.scaleratio + ")" );
 
             
 
