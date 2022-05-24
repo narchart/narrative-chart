@@ -24,14 +24,11 @@ class Configure extends Action {
         color.setColor(this._mode, this._emotion);
 
         const background = new Background();
-        if (this._background_color){
-            background.setBackgroundColor(this._background_color)
-        }
-        
-        if (this._background_image){
-            background.setBackgroundImage(this._background_image)
-        }
 
+        background.setBackgroundColor(this._background_color)
+
+        background.setBackgroundImage(this._background_image)
+        
         if (this._width) { vis.width(this._width) }
         if (this._height) { vis.height(this._height) }
     }

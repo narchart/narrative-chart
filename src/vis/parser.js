@@ -31,6 +31,11 @@ class Parser {
         if (actionspecs.length > 0) {
 
             let title_caption_in_actions = actionspecs.some(v => v.add === 'title' || v.add === 'caption')
+            let config_in_actions = actionspecs.some(v => v.add === 'config')
+            if(!config_in_actions){
+                let action = new Configure({})
+                pipeline.add(action)
+            }
             for (const actionspec of actionspecs) {
                 let actions_to_add = [];
                 actionspec.leave_space = title_caption_in_actions; // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
