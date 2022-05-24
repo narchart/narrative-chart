@@ -401,7 +401,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-    encodeColor(animation = {}, initColor = false) {
+    encodeColor(animation = {}, remove = false) {
         let fill = this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT);
         let fillOpacity= (this.markStyle()['fill-opacity']||this.markStyle()['fill-opacity']===0) ? this.markStyle()['fill-opacity'] : 1;
 
@@ -421,12 +421,30 @@ class PieChart extends Chart {
                 d.opacity(fillOpacity);
             })
         }
-        this.svg().select('.content')
+        if (remove && this.markStyle()["background-image"]) { 
+            // remove color and have background-image => fade out color and the fade in image
+            this.svg().select('.content')
+            .selectAll(".mark")
+            .transition("color1")
+            .duration('duration' in animation ? animation['duration']/2: 0)
+            .attr("opacity", 0)
+            .on("end", function(d, i) {
+                d3.select(this)
+                .attr("fill",(d,i)=>d.color())
+                .transition("color2")
+                .duration('duration' in animation ? animation['duration']/2: 0)
+                .attr("opacity",(d)=>d.opacity());
+            })
+            
+        } else {
+            this.svg().select('.content')
                     .selectAll(".mark")
                     .transition("color")
                     .duration('duration' in animation ? animation['duration']: 0)
                     .attr("fill",(d,i)=>d.color())
                     .attr("opacity",(d)=>d.opacity());
+        }
+        
     }
     /**
      * @description Add encoding and redraw arcs.
@@ -482,6 +500,8 @@ class PieChart extends Chart {
             //         .attr("fill",(d,i)=>d.color())
             //         .attr("opacity",(d)=>d.opacity())
                 
+            } else {
+                this.encodeColor();
             }
 
         }
@@ -549,7 +569,7 @@ class PieChart extends Chart {
         }
 
         if(changeColor){
-            this.encodeColor(animation);
+            this.encodeColor(animation, true);
 
             // this.svg().select('.content')
             //     .selectAll(".mark")
