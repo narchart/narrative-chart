@@ -289,17 +289,6 @@ class PieChart extends Chart {
 
             if (!modify) {
                 this.svg().selectAll(".mark")
-                        // .transition("theta")
-                        // .duration(0)
-                        // .attrTween("d", function(d, i) {
-                        //     return function(t) {
-                        //         return arcFun(this_dataTemp[i]);
-                        //     }
-                        // })
-                        // .on("end", function(d, i) { 
-                        //     d3.select(this)
-                        //         .property("_dataTemp", this_dataTemp[i]);                        
-                        // });
                         .attr("d", (d, i) => {return arcFun(this.dataTemp[i])})
                         .property("_dataTemp", (d, i) => this.dataTemp[i]);
 
@@ -317,7 +306,7 @@ class PieChart extends Chart {
                         })
                         .on("end", function(d, i) { 
                             d3.select(this)
-                                .property("_dataTemp", this_dataTemp[i]);                        
+                                .property("_dataTemp", this_dataTemp[i]);                  
                         });
             }
             
@@ -336,7 +325,7 @@ class PieChart extends Chart {
 
         }else{
             let arcCount = this.arcs.length;
-            let avgTheta = (2 * Math.PI )/arcCount
+            let avgTheta = (2 * Math.PI )/arcCount;
             let notheta_dataTemp=[]
             this.arcs.forEach((d,i)=>{
                 // let thateDelta_temp= (pieData[i].endAngle - pieData[i].startAngle)*outerRadius
@@ -401,7 +390,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-    encodeColor(animation = {}, remove = false) {
+    encodeColor(animation = {}, mode = 'add') {
         let fill = this.markStyle()["fill"] ? this.markStyle()["fill"] :(this.style()["mask-image"] ? "url(#chart-mask-image)" : COLOR.DEFAULT);
         let fillOpacity= (this.markStyle()['fill-opacity']||this.markStyle()['fill-opacity']===0) ? this.markStyle()['fill-opacity'] : 1;
 
@@ -421,8 +410,14 @@ class PieChart extends Chart {
                 d.opacity(fillOpacity);
             })
         }
-        if (remove && this.markStyle()["background-image"]) { 
-            // remove color and have background-image => fade out color and the fade in image
+
+        // special transition when image involved
+        if ((mode === 'remove' && this.markStyle()["background-image"])
+           || (mode === 'add' && this.initColor && this.markStyle()["background-image"])
+           || (((mode === 'remove') || (mode === 'add' && this.initColor)) && this.style()['mask-image'])) { 
+            // remove color and have background-image => fade out color and fade in image
+            // or add color (not the first time) and now shows background-image => fade out image and fade in image
+            // or remove color to show mask-image or add color from mask image
             this.svg().select('.content')
             .selectAll(".mark")
             .transition("color1")
@@ -471,38 +466,26 @@ class PieChart extends Chart {
 
             if(changeTheta){
                 if (!this.initTheta) {
+                    // if not initTheta, means the canvas has no slices
+                    // using wipe animiation to enter
                     this.encodeTheta();
                     this.animationWipe(animation);
                     this.initTheta = true;
                 } else {
+                    // else transiting between old angle to new angle
                     this.encodeTheta(animation, true);
                 }
-                
-                // this.encodeTheta();
-                // this.encodeColor();
-                // this.svg().select('.content')
-                //     .selectAll(".mark")
-                //     .attr("fill",(d,i)=>d.color())
-                //     .attr("opacity",(d)=>d.opacity())
+            
             }
             if(changeColor){
-                if (!this.initTheta) {
-                    this.encodeTheta();
-                    this.animationWipe(animation);
-                    this.initTheta = true;
-                }
+                // if specify color encoding
+                // using fade in animation
                 this.encodeColor(animation);
-
-            //     // this.encodeColor();
-            //     // this.encodeTheta();
-            //     this.svg().select('.content')
-            //         .selectAll(".mark")
-            //         .attr("fill",(d,i)=>d.color())
-            //         .attr("opacity",(d)=>d.opacity())
-                
             } else {
+                // else directly show default slice style
                 this.encodeColor();
             }
+            this.initColor = true;
 
         }
     }
@@ -531,19 +514,15 @@ class PieChart extends Chart {
             }
             
             if (changeTheta) {
+                // since in `modify`, change slice with interpolation 
                 this.encodeTheta(animation, true);
             }
 
-            if(changeColor){
-                this.encodeColor(animation);
-
-                // this.svg().select('.content')
-                //     .selectAll(".mark")
-                //     .attr("fill",(d,i)=>d.color())
-                //     .attr("opacity",(d)=>d.opacity())
+            if (changeColor){
+                // since in `modify`, change color with transition 
+                this.encodeColor(animation, "modify");
             }
         }
-        // this.animationWipe(animation);
     }
 
     /**
@@ -569,19 +548,20 @@ class PieChart extends Chart {
         }
 
         if(changeColor){
-            this.encodeColor(animation, true);
-
-            // this.svg().select('.content')
-            //     .selectAll(".mark")
-            //     .attr("fill",(d,i)=>d.color())
-            //     .attr("opacity",(d)=>d.opacity())
+            // since in `remove`, set slice style back to default
+            this.encodeColor(animation, 'remove');
         }
         if(changeTheta){
+            // since in `remove`, change slice angle with interpolation(present same angle range)
             this.encodeTheta(animation, true);
         }
-        // this.animationWipe(animation);
     } 
 
+    /**
+     * @description wipe animation for first-time theta encoding.
+     *
+     * @return {void}
+     */
     animationWipe(animation) {
         if (!('duration' in animation) || animation['duration'] === 0 || this.svg().select(".content").selectAll("path").empty()) {
             return;
