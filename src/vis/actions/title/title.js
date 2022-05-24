@@ -27,7 +27,7 @@ class Title {
         
         let bannerarea = {
             width : vis.width(),
-            height: 130 * Math.min(Wscaleratio,Hscaleratio)
+            height: 70 * Math.min(Wscaleratio,Hscaleratio)
         }
 
 

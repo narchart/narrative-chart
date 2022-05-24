@@ -3,8 +3,7 @@
 - [Narrative Chart](#narrative-chart)
   - [Introduction](#introduction)
     - [What is Narrative Chart?](#what-is-narrative-chart)
-    - [Differences from other visualization libraries?](#differences-from-other-visualization-libraries)
-    - [Features](#features)
+    - [Differences from other visualization libraries](#differences-from-other-visualization-libraries)
   - [Getting Started](#getting-started)
     - [Installation](#installation)
     - [Import Narrative Chart](#import-narrative-chart)
@@ -54,19 +53,9 @@
 
 **Narrative Chart** is an open-source visualization library for authoring narrative visualization and data storytelling with a high-level domain-specific language (DSL). The library is implemented in JavaScript and compatible with most modern web browsers.
 
-### Differences from other visualization libraries?
+### Differences from other visualization libraries
 
-There are several mature visualization libraries for the web, such as D3.js, Vega, and ECharts. Users can easily author interactive visualizations for data presentation or data analysis. However, these libraries are all developed for general purposes. Using these tools, users still need to write a hundred lines of code to generate a narrative visualization with expressive annotations, animations, and captions. **Narrative Chart** can make this easier.
-
-### Features
-
-1. Data processing
-2. Data facts
-3. Statistical charts & Unit visualization
-4. Visual encoding
-5. Annotation
-6. Animation
-7. Title & Caption
+There are several visualization libraries for the web, such as *D3.js*, *Vega*, and *ECharts*. However, these libraries are all developed for general purposes. Using these tools, users still need to write a hundred lines of code to generate a narrative visualization with expressive annotations, animations, embellishments, and captions. **Narrative Chart** can simplify this process by providing a high-level action-driven grammar that enables rapid specification of narrative visualizations.
 
 ## Getting Started
 
@@ -109,8 +98,7 @@ var yourSpec = {...}
 ```
 const vis = new NarrativeChart();
 vis.container('#vis');
-vis.load(yourSpec);
-vis.generate();
+vis.generate(yourSpec);
 ```
 
 ## Visualization Specification

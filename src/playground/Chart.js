@@ -8,8 +8,7 @@ export default class Chart extends Component {
         let container = "#demo-chart";
         this.vis = new NarrativeChart();
         this.vis.container(container);
-        this.vis.load(spec);
-        this.vis.generate();
+        this.vis.generate(spec);
     }
 
     componentDidUpdate() {
@@ -17,8 +16,7 @@ export default class Chart extends Component {
         let spec = this.props.spec;
         this.vis.container(container);
         this.vis.stop()
-        this.vis.load(spec);
-        this.vis.generate();
+        this.vis.generate(spec);
     }
 
     render() {

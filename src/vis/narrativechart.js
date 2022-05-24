@@ -24,12 +24,9 @@ class NarrativeChart {
         this._container = value;
     }
 
-    load(spec) {
-        this._spec = spec;
-    }
-
-    generate() {
+    generate(specification) {
         // STEP 0: parse specification
+        this._spec = specification;
         let spec = this._spec;
         let { dataspec, pipeline } = this.parser.parse(spec);
 
