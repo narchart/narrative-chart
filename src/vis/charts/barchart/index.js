@@ -29,7 +29,7 @@ class BarChart extends Chart {
               width = img.width
               height = img.height
           })
-          return [img.width, img.height]
+          return [width, height]
         }
       };
 
