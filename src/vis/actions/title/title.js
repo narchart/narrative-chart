@@ -10,11 +10,11 @@ const COLOR = new Color();
  */
 class Title {
     /**
-     * @description Add the caption at the bottom of chart
+     * @description Add the title at the top of chart
      * 
      * @param {vis} visualization src/vis/visualization.js
      * @param {{text: text, font-size:font-size}} style Style parameters of the title.
-     * @param {{delay: number, type: string}} animation Animation parameters of the caption.
+     * @param {{delay: number, type: string}} animation Animation parameters of the title.
      * 
      * 
      * @return {void}
@@ -47,7 +47,7 @@ class Title {
         }
 
 
-        let titlbackgroundearea= {
+        let titlebackgroundearea= {
             width : Wscaleratio * (600 + titleborderpadding.left*2)
         }
 
@@ -75,9 +75,11 @@ class Title {
         let textsize = style['font-size']?? 20* Math.min(Wscaleratio,Hscaleratio)
 
         let textcolor = style['font-color']?? COLOR.TITLE
+
+        let titleContent = svg.append("g").attr("id","titleContent")
         
     
-        let virtualE = svg.append("text")
+        let virtualE = titleContent.append("text")
             .attr("font-family", style['font-family']?? 'Arial-Regular')
             .attr("font-weight",  style['font-weight']?? "bold")
             .attr("font-style",  style['font-style']?? "normal")
@@ -96,7 +98,7 @@ class Title {
 
         // 1. banner section background-image
         if (style["background-image"]){
-            let defs = svg.append('svg:defs');
+            let defs = titleContent.append('svg:defs');
 
             defs.append("svg:pattern")
                 .attr("id", "text-backgroundimage")
@@ -112,7 +114,7 @@ class Title {
                 .attr("y", 0);
             backgroundimage = "url(#text-backgroundimage)"
             
-            svg.append("g")
+            titleContent.append("g")
                 .attr("id","textBack")
                 .append("rect")
                 .attr("width", bannerarea.width)
@@ -123,8 +125,8 @@ class Title {
         
 
             
-        let textE = svg.append("g") 
-            .attr("id","textContent")
+        let textE = titleContent.append("g") 
+            .attr("id","titleText")
             .append("text")
             .attr("dominant-baseline", "Alphabetic")
             .attr("transform", "translate(" + titletransform.left + "," + titletransform.top + ")")
@@ -204,11 +206,11 @@ class Title {
 
         // 2. title section background color
         if (style["background-color"]){
-            d3.select("#textContent")
+            d3.select("#titleText")
                 .insert("g", "text")
                 .attr("id","titleBackGrnd")
                 .append("rect")
-                .attr("width", titlbackgroundearea.width)
+                .attr("width", titlebackgroundearea.width)
                 .attr("height", textE.node().getBBox().height + titleborderpadding.top*2)
                 .attr("transform", "translate(" + titlebackgroundmargin.left + "," + titlebackgroundmargin.top + ")")
                 .attr("fill", style["background-color"]);
@@ -216,7 +218,7 @@ class Title {
         
         // 3. title section border
         if (style["border-color"] || style["border-width"]){    
-            svg.append("g")
+            titleContent.append("g")
             .attr("id","titleBorder")
             .append("rect")
             .attr("width", titleborderarea.width)
@@ -229,7 +231,7 @@ class Title {
 
         // 4. divide-line border
         if (style["divide-line-width"] || style["divide-line-color"]){    
-            svg.append("line")
+            titleContent.append("line")
             .attr("id","divideLine")
             .attr("stroke", style["divide-line-color"]??  "black")
             .attr("stroke-width", style["divide-line-width"]?? 2)
@@ -243,27 +245,28 @@ class Title {
         if(animation.duration !==-1){
             switch (animation.type) {
                 case 'wipe':
-                    let bbox = d3.select("#textContent").node().getBBox();
-
-                    let fadeBox = svg.append('rect')
-                                    .attr('x', 0.8*bbox.x)
-                                    .attr('y', 0.9*titlebackgroundmargin.top)
-                                    .attr('width', 1.1*titlbackgroundearea.width)
-                                    .attr('height', 1.1*bbox.height)
-                                    .style("fill", COLOR.BACKGROUND);
-
-            
-                    d3.selectAll('#textContent tspan')
-                        .attr("fill-opacity", 0)
-                        .transition()
-                        .duration(animation.duration/4)
-                        .attr("fill-opacity", 1)
-        
+                    let bbox = textE.node().getBBox();
                     
-                    fadeBox.transition()
-                        .duration(animation.duration)
-                        .attr('width', 0)
-                        .attr('x', bbox.x + 1.2*bbox.width)
+
+                    titleContent.append("defs")
+                        .attr("class", "title_defs")
+                        .append("clipPath")
+                        .attr("id", "clip_title")
+                        .append("rect")
+                        .attr('x', 0)
+                        .attr('y', 0)
+                        .attr("width", 0)
+                        .attr("height", Math.max(1.3 * bbox.height,bannerarea.height));
+
+
+                    titleContent.attr("clip-path", "url(#clip_title)");
+                    
+                    titleContent.selectAll("#clip_title rect")
+                        .attr("width", 0)
+                        .transition()
+                        .duration('duration' in animation ? animation['duration'] : 0)
+                        .ease(d3.easeLinear)
+                        .attr("width", Math.max(1.2 * bbox.height,bannerarea.width));                    
 
                     break;
                 
@@ -307,7 +310,7 @@ class Title {
 
                 default:
 
-                    d3.selectAll('#textContent tspan')
+                    d3.selectAll('#titleText tspan')
                         .transition()
                         .duration(animation.duration)
                         .attr("fill-opacity", 1)

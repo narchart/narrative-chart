@@ -235,44 +235,29 @@ class Tooltip extends Annotator {
 
             switch (animation.type) {
                 case 'wipe':
+
                     let bbox = toolTipSvg.node().getBBox();
-                    var gradient = toolTipSvg.append("defs")
-                        .append("linearGradient")
-                        .attr("id", "gradient")
-                        .attr("x1", "0%")
-                        .attr("x2", "0%")
-                        .attr("spreadMethod", "pad");
+                    
 
-                    gradient.append("stop")
-                        .attr("offset", "0%")
-                        .attr("stop-color", COLOR.BACKGROUND)
-                        .attr("stop-opacity", 1);
-
-                    gradient.append("stop")
-                        .attr("offset", "100%")
-                        .attr("stop-color", COLOR.BACKGROUND)
-                        .attr("stop-opacity", 0);
-
-                    let fadeBox = toolTipSvg.append('rect')
+                    toolTipSvg.append("defs")
+                        .attr("class", "tooltip_defs")
+                        .append("clipPath")
+                        .attr("id", "clip_tooltip")
+                        .append("rect")
                         .attr('x', bbox.x)
                         .attr('y', bbox.y)
-                        .attr('width', bbox.width)
-                        .attr('height', bbox.height)
-                        .style("fill", "url(#gradient)");
-
-                    toolTipSvg.attr("opacity", 0)
-                        .transition()
-                        .duration(animation['duration'] ?? 0)
-                        .attr("opacity", 1)
-
-                    fadeBox.transition()
-                        .duration(animation['duration'] ?? 0)
                         .attr('width', 0)
-                        .attr('x', bbox.x + bbox.width)
+                        .attr('height', bbox.height)
+                        
 
-                    gradient.transition()
-                        .duration(animation['duration'] ?? 0)
-                        .attr('x1', '100%')
+                    toolTipSvg.attr("clip-path", "url(#clip_tooltip)");
+                    
+                    toolTipSvg.selectAll("#clip_tooltip rect")
+                        .attr("width", 0)
+                        .transition()
+                        .duration('duration' in animation ? animation['duration'] : 0)
+                        .ease(d3.easeLinear)
+                        .attr("width", bbox.width);                    
 
                     break;
 
