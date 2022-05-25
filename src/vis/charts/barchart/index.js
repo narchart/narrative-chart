@@ -16,6 +16,23 @@ const background = new Background();
  */
 class BarChart extends Chart {
 
+    checkImgSize = (fileUrl) => {
+        if (fileUrl) {
+          const img = new Image();
+          img.src = fileUrl;
+          let height, width;
+          new Promise((resolve, result) => {
+                img.onload = () => {
+                    resolve()
+                }
+          }).then(result => {
+              width = img.width
+              height = img.height
+          })
+          return [img.width, img.height]
+        }
+      };
+
     /**
      * @description Main function of drawing bar chart.
      *
@@ -51,10 +68,13 @@ class BarChart extends Chart {
         if(this.markStyle()["fill"]) {
             this.fill = this.markStyle()["fill"]
         }else if(this.markStyle()["background-image"]) {
+            const [imgWidth, imgHeight] = this.checkImgWidth( this.markStyle()["background-image"])
+            const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
+            console.log(ratio)
             let margin = this.margin()
             let chartbackgroundsize = {
-                width: 600*this.Wscaleratio,
-                height: Math.max(600*this.Wscaleratio, 600*this.Hscaleratio)
+                width: imgWidth * ratio,
+                height: imgHeight * ratio
             }
             let defs = svg.append('svg:defs');
             defs.append("svg:pattern")
@@ -70,10 +90,12 @@ class BarChart extends Chart {
                 .attr("y", 0);
             this.fill = "url(#chart-background-image)"
         }else if(this.style()["mask-image"]) {
+            const [imgWidth, imgHeight] = this.checkImgSize(this.style()["mask-image"])
+            const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
             let margin = this.margin()
             let chartmasksize = {
-                width: 600*this.Wscaleratio,
-                height: Math.max(600*this.Wscaleratio, 600*this.Hscaleratio)
+                width: imgWidth * ratio,
+                height: imgHeight * ratio
             }
             let defs = svg.append('svg:defs');
             defs.append("svg:pattern")
@@ -85,9 +107,10 @@ class BarChart extends Chart {
                 .attr("xlink:href", this.style()["mask-image"])
                 .attr("width", chartmasksize.width)
                 .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
-                .attr("x", 0)
+                .attr("x", -2)
                 .attr("y", 0);
             this.fill = "url(#chart-mask-image)"
+
         }else {
             this.fill = COLOR.DEFAULT
         }
@@ -568,6 +591,15 @@ class BarChart extends Chart {
                 processedData.push(row);
             }
             stackData = d3.stack().keys(series)(processedData);
+            // console.log(processedData)
+            // console.log('stackData', stackData)
+
+            // stackData.forEach((d, i) => {
+            //     d.forEach
+            // })
+
+            // console.log('stackData', stackData)
+            
 
             /** set the ranges */
             let xScale = d3.scaleBand()
@@ -592,7 +624,10 @@ class BarChart extends Chart {
                 .data(d => d)
                 .enter().append("rect")
                 .attr("class", "mark")
-                .attr("x", d => xScale(d.data[xEncoding]))
+                .attr("x", d => {
+                    d[xEncoding] = d.data[xEncoding]
+                    return xScale(d.data[xEncoding])
+                })
                 .attr("y", d => yScale(d[1]))
                 .attr("width", xScale.bandwidth())
                 .attr("height", d => Math.abs(yScale(d[1]) - yScale(d[0])))
