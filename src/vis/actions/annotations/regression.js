@@ -1,5 +1,7 @@
 import Annotator from './annotator';
 import Color from '../../visualization/color';
+import { Unitvis, LineChart, BarChart, Scatterplot } from '../../charts';
+
 
 const COLOR = new Color();
 
@@ -41,6 +43,9 @@ class Regression extends Annotator {
         // return if the focus defined in the spec does not exist
         if (focus_elements.empty()) return;
 
+        // now only support linechart/barchart/scatterplot/unitvis
+        if (!(chart instanceof LineChart || chart instanceof BarChart || chart instanceof Scatterplot || chart instanceof Unitvis)) return;
+
         // step 1: get all focused elements position
         let positions = [];
         focus_elements.nodes().forEach(one_element => {
@@ -60,16 +65,31 @@ class Regression extends Annotator {
 
         // step 2: get content range
         // range on X
-        let x_axis_path = svg.selectAll('.axis_x').select(".domain");
-        let x_axis_bbox = x_axis_path.node().getBBox();
-        let x_lower_bound = x_axis_bbox.x;
-        let x_upper_bound = x_lower_bound + x_axis_bbox.width;
+        let x_lower_bound, x_upper_bound, y_lower_bound, y_upper_bound
+        if (chart instanceof Unitvis) {
+            let x_bbox = svg.select(".circleGroup").node().getBBox();
+            x_lower_bound = x_bbox.x;
+            x_upper_bound = x_bbox.x + x_bbox.width;
+        } else {
+            let x_axis_path = svg.selectAll('.axis_x').select(".domain");
+            let x_axis_bbox = x_axis_path.node().getBBox();
+            x_lower_bound = x_axis_bbox.x;
+            x_upper_bound = x_lower_bound + x_axis_bbox.width;
+        }
+        
 
         // range on Y
-        let y_axis_path = svg.selectAll('.axis_y').select(".domain");
-        let y_axis_bbox = y_axis_path.node().getBBox();
-        let y_lower_bound = y_axis_bbox.y;
-        let y_upper_bound = y_lower_bound + y_axis_bbox.height;
+        if (chart instanceof Unitvis) {
+            let y_bbox = svg.select(".circleGroup").node().getBBox();
+            y_lower_bound = y_bbox.x;
+            y_upper_bound = y_bbox.x + y_bbox.width;
+        } else {
+            let y_axis_path = svg.selectAll('.axis_y').select(".domain");
+            let y_axis_bbox = y_axis_path.node().getBBox();
+            y_lower_bound = y_axis_bbox.y;
+            y_upper_bound = y_lower_bound + y_axis_bbox.height;
+        }
+        
 
         // step 3: get regression line parameters
         // params for regression line
