@@ -222,21 +222,7 @@ class Texture extends Annotator {
                         return "url(#scatterplot-texture-image-" + uid + ")"
                     } 
                 )
-            }else if (chart instanceof PieChart){
-                var configPieChart = {
-                    "texture_size" : 300
-                }
-                var defsPieChart = svg.append('svg:defs');
-                defsPieChart.append("svg:pattern")
-                    .attr("id", "texture_background")
-                    .attr("width", configPieChart.texture_size)
-                    .attr("height", configPieChart.texture_size)
-                    .attr("patternUnits", "userSpaceOnUse")
-                    .append("svg:image")
-                    .attr("xlink:href", style["background-image"])
-                    .attr("x", 0)
-                    .attr("y", 0);
-        
+            }else if (chart instanceof PieChart){    
                 var selectedMarks = svg.selectAll(".mark")
                 .filter(function(d) {
                     if (target.length === 0) {
@@ -253,16 +239,50 @@ class Texture extends Annotator {
                 })
                 .transition()
                 .duration('duration' in animation ? animation['duration']: 0)
-                .style("fill", "url(#texture_background)")
+                .style("fill", (d,i) => {
+                    const uid = Date.now().toString() + Math.random().toString(36).substring(2);
 
+                    var image = new Image();
+                    image.src = style["background-image"];
+                    image.id = uid;    
+                    
+                    var texture_size_width, texture_size_height
+                    var configPieChart
+                    
+                    image.onload = function(){
+                        texture_size_width = image.naturalWidth
+                        texture_size_height = image.naturalHeight
+                        configPieChart = {
+                            "texture_size_width" : texture_size_width ? texture_size_width : 317,
+                            "texture_size_height" : texture_size_height ? texture_size_height : 216
+                        }
+
+                        var defsPieChart = svg.append('svg:defs');
+                    
+                        defsPieChart.append("svg:pattern")
+                        .attr("id", "piechart-texture-image-" + uid)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", style["background-image"])
+                        .attr("width", configPieChart.texture_size_width)
+                        .attr("height", configPieChart.texture_size_height)
+                    }
+
+                    
+                    return "url(#piechart-texture-image-" + uid + ")"
+                })
 
                 focus_elements.nodes().forEach(one_element => {
                     let data_temp = one_element.__data__;
                     let data_x = data_temp.centroidX();
                     let data_y = data_temp.centroidY();
-                selectedMarks.attr("x",(d,i)=>data_x-150)
-                    .attr("y",(d,i)=>data_y-150)
+
+                selectedMarks.attr("x",data_x-150)
+                .attr("y",data_y-150)
                 })
+
             }else{
                 var config = {
                     "texture_size" : 300
