@@ -43,16 +43,17 @@ class Caption {
         }
 
 
+        let captionContent = svg.append("g").attr("id","captionContent")
 
-        let virtualE = svg.append("text")
+        let virtualE = captionContent.append("text")
             .attr("font-family", style['font-family'] ?? 'Arial-Regular')
             .attr("font-weight", style['font-weight'] ?? "normal")
             .attr("font-style", style['font-style'] ?? "normal")
             .attr("font-size", textsize)
             .text(words[0]);
 
-        let textE = svg.append("text")
-            .attr("id", "captionContent")
+        let textE = captionContent.append("text")
+            .attr("id", "captionText")
             .attr("dominant-baseline", "central")
             .attr("transform", "translate(" + 0 + "," + (Hscaleratio * 65) + ")")
             .attr("font-family", style['font-family'] ?? 'Arial-Regular')
@@ -130,27 +131,28 @@ class Caption {
             switch (animation.type) {
                 case 'wipe':
 
-                    let bbox = d3.select("#captionContent").node().getBBox();
+                    let bbox = textE.node().getBBox();
+                    
 
-                    let fadeBox = svg.append('rect')
+                    captionContent.append("defs")
+                        .attr("class", "caption_defs")
+                        .append("clipPath")
+                        .attr("id", "clip_caption")
+                        .append("rect")
                         .attr('x', 0.8 * bbox.x)
                         .attr('y', 0.9 * captionbackgroundmargin.top)
-                        .attr('width', 1.1 * captionbackgroundearea.width)
-                        .attr('height', 1.1 * bbox.height)
-                        .style("fill", COLOR.BACKGROUND);
+                        .attr("width", 0)
+                        .attr("height", 1.3 * bbox.height);
 
 
-                    d3.selectAll('#captionContent tspan')
-                        .attr("fill-opacity", 0)
+                    captionContent.attr("clip-path", "url(#clip_caption)");
+                    
+                    captionContent.selectAll("#clip_caption rect")
+                        .attr("width", 0)
                         .transition()
-                        .duration(animation.duration / 4)
-                        .attr("fill-opacity", 1)
-
-
-                    fadeBox.transition()
-                        .duration(animation.duration)
-                        .attr('width', 0)
-                        .attr('x', bbox.x + 1.2 * bbox.width)
+                        .duration('duration' in animation ? animation['duration'] : 0)
+                        .ease(d3.easeLinear)
+                        .attr("width", 1.2 * captionbackgroundearea.width);                    
 
                     break;
 
