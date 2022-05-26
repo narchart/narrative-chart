@@ -142,10 +142,11 @@ class BarChart extends Chart {
             .attr("transform", "translate(" + (20*this.Wscaleratio) + "," + margin.top + ")");
             
 
+        const axisTextOffset_y = 5;
         this._svg = d3.select(container)
                     .select("svg")
                     .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                    .attr("transform", "translate(" + margin.left + "," + `${margin.top + axisTextOffset_y}`  + ")");
 
         
         if(background.Background_Image){
@@ -571,11 +572,9 @@ class BarChart extends Chart {
                 series.map(s => row[s] = [0]); 
                 categoriesData[category].map(d => row[d[colorEncoding]].push(d[yEncoding]));
                 series.map(s => row[s] = d3.sum(row[s]));
-
                 processedData.push(row);
             }
             stackData = d3.stack().keys(series)(processedData);
-            // console.log(processedData)
             // console.log('stackData', stackData)
 
             // stackData.forEach((d, i) => {
