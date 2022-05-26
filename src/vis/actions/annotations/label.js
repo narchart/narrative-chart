@@ -63,11 +63,13 @@ class Label extends Annotator {
             else {
                 let data_d = parseFloat(focus_element.__data__[yEncoding]);
                 if ((data_d / 1000000) >= 1) {
-                    formatData = data_d / 1000000 + "M";
+                    let formatNum = data_d / 1000000 
+                    formatData = formatNum.toFixed(2)+ "M";
                 } else if ((data_d / 1000) >= 1) {
-                    formatData = data_d / 1000 + "K";
-                }else {
-                    formatData = data_d + "";
+                    let formatNum = data_d / 1000
+                    formatData = formatNum.toFixed(2)+ "K";
+                } else {
+                    formatData = data_d.toFixed(2) + "";
                 }
             }
 
