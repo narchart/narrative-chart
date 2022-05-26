@@ -77,7 +77,7 @@ class Caption {
                 textE.attr("text-anchor", "end")
                 break;
             default:
-                position = Wscaleratio*40
+                position = Wscaleratio*30
                 textE.attr("text-anchor", "start")
         }
 
