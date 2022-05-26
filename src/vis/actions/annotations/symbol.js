@@ -69,6 +69,9 @@ class Symbol extends Annotator {
                 }
             }
 
+            const customizeOffset_x = style["offset-x"] || 0;
+            const customizeOffset_y = style["offset-y"] || 0;
+
             // append icon
             if ("type" in animation && animation["type"] === "fly") {
                 const parentWidth = Number(svg.node().parentNode.getAttribute("width"));
@@ -84,11 +87,11 @@ class Symbol extends Annotator {
                         }
                     })
                     .attr("x", parentWidth)
-                    .attr("y", data_y + offset_y)
+                    .attr("y", data_y + offset_y + customizeOffset_y)
                     .transition()
                     .duration('duration' in animation ? animation['duration']: 0)
-                    .attr("x", data_x - width_icon / 2)
-                    .attr("y", data_y + offset_y)
+                    .attr("x", data_x - width_icon / 2 + customizeOffset_x)
+                    .attr("y", data_y + offset_y + customizeOffset_y)
 
             } else if ("type" in animation && animation["type"] === "wipe") {
                 // ensure that clip-paths for different symbols won't affect one another. 
@@ -105,8 +108,8 @@ class Symbol extends Annotator {
                             return ;
                         }
                     })
-                    .attr("x",  data_x - width_icon / 2)
-                    .attr("y", data_y + offset_y)
+                    .attr("x",  data_x - width_icon / 2 + customizeOffset_x)
+                    .attr("y", data_y + offset_y + customizeOffset_y)
 
                 const iconBox = icon.node().getBBox();
 
@@ -126,8 +129,8 @@ class Symbol extends Annotator {
             } else {
                 svg.append("image")
                     .attr("class", "icon-img")
-                    .attr("x", data_x - width_icon / 2)
-                    .attr("y", data_y + offset_y)
+                    .attr("x", data_x - width_icon / 2 + customizeOffset_x)
+                    .attr("y", data_y + offset_y + customizeOffset_y)
                     .attr("width", width_icon)
                     .attr("height", height_icon)
                     .attr("xlink:href", () => {

@@ -63,11 +63,13 @@ class Label extends Annotator {
             else {
                 let data_d = parseFloat(focus_element.__data__[yEncoding]);
                 if ((data_d / 1000000) >= 1) {
-                    formatData = data_d / 1000000 + "M";
+                    let formatNum = data_d / 1000000 
+                    formatData = formatNum.toFixed(2)+ "M";
                 } else if ((data_d / 1000) >= 1) {
-                    formatData = data_d / 1000 + "K";
-                }else {
-                    formatData = data_d + "";
+                    let formatNum = data_d / 1000
+                    formatData = formatNum.toFixed(2)+ "K";
+                } else {
+                    formatData = data_d.toFixed(2) + "";
                 }
             }
 
@@ -97,11 +99,14 @@ class Label extends Annotator {
                     return;
                 }
             }
+
+            const customizeOffset_x = style["offset-x"] || 0;
+            const customizeOffset_y = style["offset-y"] || 0;
             // draw text
             svg.append("text")
                 .attr("class", "text")
-                .attr("x", data_x)
-                .attr("y", data_y + offset_y)
+                .attr("x", data_x + customizeOffset_x)
+                .attr("y", data_y + offset_y + customizeOffset_y)
                 .text(formatData)
                 .attr("font-size", style["font-size"] || 12)
                 .attr("font-family", style["font-family"] || "Inter")

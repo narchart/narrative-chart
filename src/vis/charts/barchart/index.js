@@ -52,9 +52,8 @@ class BarChart extends Chart {
         if(this.markStyle()["fill"]) {
             this.fill = this.markStyle()["fill"]
         }else if(this.markStyle()["background-image"]) {
-            const [imgWidth, imgHeight] = this.checkImgWidth( this.markStyle()["background-image"])
+            const [imgWidth, imgHeight] = this.checkImgWidth( this.markStyle()["background-image"])()
             const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
-            console.log(ratio)
             let margin = this.margin()
             let chartbackgroundsize = {
                 width: imgWidth * ratio,
@@ -89,6 +88,7 @@ class BarChart extends Chart {
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["mask-image"])
+                .attr("preserveAspectRatio", "xMidYMid slice") 
                 .attr("width", chartmasksize.width)
                 .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
                 .attr("x", -2)
@@ -120,7 +120,7 @@ class BarChart extends Chart {
            
         let chartbackgroundsize = {
             width: 600*this.Wscaleratio,
-            height: 600*this.Hscaleratio
+            height: 615*this.Hscaleratio
         }   
 
         let container = this.container()
@@ -138,7 +138,7 @@ class BarChart extends Chart {
             .attr("id","chartBackGrnd")
             .append("rect")
             .attr("width", chartbackgroundsize.width)
-            .attr("height", margin.top === 130*this.Hscaleratio? 490*this.Hscaleratio: chartbackgroundsize.height)
+            .attr("height", margin.top === 130*this.Hscaleratio? 505*this.Hscaleratio: chartbackgroundsize.height)
             .attr("transform", "translate(" + (20*this.Wscaleratio) + "," + margin.top + ")");
             
 
@@ -164,13 +164,13 @@ class BarChart extends Chart {
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("height", margin.top === 130*this.Hscaleratio? 505*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
                 .attr("preserveAspectRatio", "xMidYMid slice") 
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("height", margin.top === 130*this.Hscaleratio? 505*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
                 d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
@@ -191,9 +191,9 @@ class BarChart extends Chart {
                 y = this.y;
             let svg = this.svg();
             let width = this.width(),
-                height = this.height();
+                height = this.height() - 10;
             let fontsize = 16, strokeWidth = 2;
-            const padding = fontsize * 0.6,
+            const padding = fontsize,
                 triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
             
             let axis = svg.select('.axis');
@@ -202,7 +202,7 @@ class BarChart extends Chart {
 
             axis.append("text")
                 .attr("x", width / 2)
-                .attr("y", height + padding - 1)
+                .attr("y", padding - 1)
                 .attr("font-size", fontsize)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
@@ -249,7 +249,7 @@ class BarChart extends Chart {
         if(this.x && this.y) {
             let svg = this.svg();
             let width = this.width(),
-                height = this.height();
+                height = this.height() - 10;
             const processedData = this.processedData();
             const xEncoding = this.x,
                 yEncoding = this.y;
@@ -324,7 +324,7 @@ class BarChart extends Chart {
 
             axis.append("text")
                 .attr("x", width / 2)
-                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + 10)
+                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 15)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
@@ -370,7 +370,7 @@ class BarChart extends Chart {
           if (this.x) {
             let svg = this.svg();
             let width = this.width(),
-                height = this.height();
+                height = this.height() - 10;
             const processedData = this.processedData();
             const xEncoding = this.x;
 
@@ -404,7 +404,7 @@ class BarChart extends Chart {
 
             axis_X.append("text")
                  .attr("x", width / 2)
-                 .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + 10)
+                 .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 15)
                  .attr("text-anchor", "middle")
                  .attr("dominant-baseline", "hanging")
                  .attr("font-size", fontsize)
@@ -420,7 +420,7 @@ class BarChart extends Chart {
      */
     encodeY() {
         if (this.y) {
-            let height = this.height();
+            let height = this.height() - 10;
             const processedData = this.processedData();
             const yEncoding = this.y;
 
@@ -528,7 +528,7 @@ class BarChart extends Chart {
         // if colorEncoding, clear and redraw 
         if(this.color) {
             let width = this.width(),
-                height = this.height();
+                height = this.height() - 10;
             const data = this.data();
             const xEncoding = this.x,
                 yEncoding = this.y;
@@ -665,7 +665,7 @@ class BarChart extends Chart {
                     .enter().append("rect")
                     .attr("class", "mark")
                     .attr("x", d => this.xScale(d[this.x]))
-                    .attr("y", this.height())
+                    .attr("y", this.height() - 10)
                     .attr("width", this.xScale.bandwidth())
                     .attr("height", 0)
                     .attr("fill", this.fill)
@@ -681,7 +681,7 @@ class BarChart extends Chart {
                 else{
                     this.content.selectAll(".mark")
                         .attr("y", d => this.yScale(d[this.y]))
-                        .attr("height", d => this.height() - this.yScale(d[this.y]))
+                        .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
                 }
                 
             }
@@ -721,7 +721,7 @@ class BarChart extends Chart {
                             .enter().append("rect")
                             .attr("class", "mark")
                             .attr("x", d => this.xScale(d[this.x]))
-                            .attr("y", this.height())
+                            .attr("y", this.height() - 10)
                             .attr("width", this.xScale.bandwidth())
                             .attr("height", 0)
                             .attr("fill", this.fill)
@@ -738,7 +738,7 @@ class BarChart extends Chart {
                         else{
                             this.content.selectAll(".mark")
                                     .attr("y", d => this.yScale(d[this.y]))
-                                    .attr("height", d => this.height() - this.yScale(d[this.y]))
+                                    .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
                         }
                     })
                     break;
@@ -751,7 +751,7 @@ class BarChart extends Chart {
                     else{
                         this.content.selectAll(".mark")
                                 .attr("y", d => this.yScale(d[this.y]))
-                                .attr("height", d => this.height() - this.yScale(d[this.y]))
+                                .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
                     }
                     break;
                 case 'color':
@@ -816,7 +816,7 @@ class BarChart extends Chart {
                     .attr("x", d => this.xScale(d[this.x]))
                     .attr("y", d => this.yScale(d[this.y]))
                     .attr("width", this.xScale.bandwidth())
-                    .attr("height", d => this.height() - this.yScale(d[this.y]))
+                    .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
                     .attr("fill", this.fill)
                     .attr("rx", this.cornerRadius)
                     .attr("ry", this.cornerRadius)
@@ -852,7 +852,7 @@ class BarChart extends Chart {
                 .duration(d => {duration = d[this.y] * unitduration; return duration})
                 .ease(d3.easeLinear)
                 .attr("y", d => this.yScale(d[this.y]))
-                .attr("height", d => this.height() - this.yScale(d[this.y]))
+                .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
                 //.delay((d, i) => {return (i*barduration)})
                 .delay(d => {return transDelay(d[this.x])})
                 //.delay((d, i) => {if(i===0){delay = 0}else{delay = delay + durationlist[i-1];};return delay})
@@ -873,12 +873,12 @@ class BarChart extends Chart {
                 .duration(animation['duration'])
                 .ease(d3.easeLinear)
                 .attr("y", d => this.yScale(d[this.y]))
-                .attr("height", d => this.height() - this.yScale(d[this.y]))
+                .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
    }
 
    /**
-     * @description get image size 
-     * @param {{fileUrl: string}}  fileUrl url of image
+     * @description get image size
+     * @param {string} fileUrl url of image
      * @return {function} 
      */
     checkImgSize = (fileUrl) => {
