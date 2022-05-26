@@ -146,7 +146,7 @@ class BarChart extends Chart {
         this._svg = d3.select(container)
                     .select("svg")
                     .append("g")
-                    .attr("transform", "translate(" + margin.left + "," + `${margin.top + axisTextOffset_y}`  + ")");
+                    .attr("transform", "translate(" + margin.left + "," + (margin.top + axisTextOffset_y)  + ")");
 
         
         if(background.Background_Image){
