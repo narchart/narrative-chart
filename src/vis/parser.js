@@ -38,7 +38,11 @@ class Parser {
             }
             for (const actionspec of actionspecs) {
                 let actions_to_add = [];
-                actionspec.leave_space = title_caption_in_actions; // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
+                
+                if (actionspec['add'] === 'chart') {
+                    actionspec.leave_space = title_caption_in_actions; // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
+                }
+
                 if (actionspec['add'] === 'group') {
                     let duration = 0;
                     let sync = false;
