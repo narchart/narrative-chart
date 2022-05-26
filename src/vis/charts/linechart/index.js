@@ -191,7 +191,7 @@ class LineChart extends Chart {
 
             /** set the ranges */
             let yScale = d3.scaleLinear()
-                .range([height, 0])
+                .range([height, 10])
                 .domain([0, d3.max(processedData, d => d[yEncoding])])
                 .nice();
 
@@ -302,7 +302,7 @@ class LineChart extends Chart {
             .domain(processedData.map(d => d[xEncoding]));
     
         let yScale = d3.scaleLinear()
-            .range([height, 0])
+            .range([height, 10])
             .domain([0, d3.max(processedData, d => d[yEncoding])])
             .nice();
     
