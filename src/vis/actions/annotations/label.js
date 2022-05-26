@@ -99,11 +99,14 @@ class Label extends Annotator {
                     return;
                 }
             }
+
+            const customizeOffset_x = style["offset-x"] || 0;
+            const customizeOffset_y = style["offset-y"] || 0;
             // draw text
             svg.append("text")
                 .attr("class", "text")
-                .attr("x", data_x)
-                .attr("y", data_y + offset_y)
+                .attr("x", data_x + customizeOffset_x)
+                .attr("y", data_y + offset_y + customizeOffset_y)
                 .text(formatData)
                 .attr("font-size", style["font-size"] || 12)
                 .attr("font-family", style["font-family"] || "Inter")
