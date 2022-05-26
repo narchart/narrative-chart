@@ -4,7 +4,7 @@ import { BarChart, LineChart, Scatterplot, Unitvis, PieChart } from '../charts';
 
 class AddChart extends Action {
     // mark represents chart type, leave_space represents if needs to reserve space for titles or captions in charts
-    constructor(spec) {
+    constructor(spec, leave_space) {
         super(spec);
         let mark = spec.mark
         this._mark = mark['type'];
@@ -16,7 +16,7 @@ class AddChart extends Action {
         if ('animation' in spec) { this._animation = spec.animation; }
         this._style = {};
         if ('style' in spec) { this._style = spec.style; }
-        this._leave_space = spec.leave_space
+        this._leave_space = leave_space
     }
 
     operate(vis) {

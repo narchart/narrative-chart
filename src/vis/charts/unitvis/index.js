@@ -174,8 +174,7 @@ class Unitvis extends Chart {
 
 
         let xbar = xValueFreq.length;
-        let length = Math.ceil(30 / xbar) < 5 ? Math.ceil(30 / xbar) : 5
-
+        let length = Math.ceil(30 / xbar) < 4 ? 4 : 5
         let ybar = yValueFreq.length;
 
 
@@ -217,7 +216,7 @@ class Unitvis extends Chart {
 
 
         let wradius = ((width - margin.left - margin.right) / ((length + 1) * (xbar - 1) + length)) / 2.2;
-        let hradius = d3.min([(height * 0.9 - 2 * textSize) / (xmaxCount) / 2, (height * 0.9 - 2 * textSize) / ybar / (Math.ceil(length) + 1) / 2]);
+        let hradius = d3.min([(height * 0.8 - 2 * textSize) / (xmaxCount) / 2, (height * 0.9 - 2 * textSize) / ybar / (Math.ceil(length) + 1) / 2]);
         // let radius = Math.min(wradius, hradius);
         let radius = this.radiusMultiplier  * Math.min(Math.min(wradius, hradius), 6* this.scaleratio);
         let textpadding = 10 * this.scaleratio
@@ -237,7 +236,7 @@ class Unitvis extends Chart {
         
 
         let baseY = [topPadding]
-
+        
         let y = baseY[0]
         for (let i = 0; i < ybar; i++) {
             y += ymax[yValue[i]] / length * 2 * radius + d3.max([6*this.scaleratio, 1.5 * radius])
@@ -339,10 +338,10 @@ class Unitvis extends Chart {
             .append("text")
             .attr("fill", COLOR.TEXT)
             .text(yField)
-            .attr("x", baseX[0] - radius - 2 * textpadding - ystrmax)
+            .attr("x", baseX[0] - radius - 2 * textpadding - 1.2*ystrmax)
             .attr("y", ybar % 2 === 0 ? baseY[Math.floor(ybar / 2) - 1] : baseY[Math.floor(ybar / 2)])
             .attr("font-size", textSize)
-            .attr("transform", `rotate(-90, ${baseX[0] - radius - 2 * textpadding - ystrmax}, ${ybar % 2 === 0 ? baseY[Math.floor(ybar / 2) - 1] : baseY[Math.floor(ybar / 2)]})`)
+            .attr("transform", `rotate(-90, ${baseX[0] - radius - 2 * textpadding - 1.2*ystrmax}, ${ybar % 2 === 0 ? baseY[Math.floor(ybar / 2) - 1] : baseY[Math.floor(ybar / 2)]})`)
             .attr('text-anchor', 'start')
             .attr("fill-opacity", 0)
             .transition()
@@ -808,7 +807,8 @@ class Unitvis extends Chart {
             if (row > 2) {
                 columnTotalHeight = d3.min([columnTotalHeight, height])
                 let topPadding = (height - columnTotalHeight) / 2 + 2 * maxR;
-                return topPadding + d3.min([(height - 6 * maxR) / (row - 1), 4 * maxR]) * (i);
+                let bottomPadding = topPadding
+                return topPadding + d3.min([(height - bottomPadding - 6 * maxR) / (row - 1), 4 * maxR]) * (i);
             }
             else {
                 let topPadding = ((height - 3.6 * maxR) / (row - 1) <= 3 * maxR ? 3 * maxR : (height - 3 * maxR * (row - 1)) / 1.4);

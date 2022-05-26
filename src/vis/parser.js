@@ -30,7 +30,7 @@ class Parser {
         let delay = 0;
         if (actionspecs.length > 0) {
 
-            let title_caption_in_actions = actionspecs.some(v => v.add === 'title' || v.add === 'caption')
+            this.title_caption_in_actions = actionspecs.some(v => v.add === 'title' || v.add === 'caption')
             let config_in_actions = actionspecs.some(v => v.add === 'config')
             if(!config_in_actions){
                 let action = new Configure({})
@@ -39,9 +39,9 @@ class Parser {
             for (const actionspec of actionspecs) {
                 let actions_to_add = [];
                 
-                if (actionspec['add'] === 'chart') {
-                    actionspec.leave_space = title_caption_in_actions; // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
-                }
+                // if (actionspec['add'] === 'chart') {
+                //     actionspec.leave_space = title_caption_in_actions; // If we needs to add titles or captions to the charts, reserve enough place when initialize the charts. 
+                // }
 
                 if (actionspec['add'] === 'group') {
                     let duration = 0;
@@ -94,7 +94,7 @@ class Parser {
                     action = new Configure(actionspec);
                     break;
                 case 'chart':
-                    action = new AddChart(actionspec);
+                    action = new AddChart(actionspec, this.title_caption_in_actions);
                     break;
                 case 'annotation':
                     action = new AddAnnotation(actionspec);
