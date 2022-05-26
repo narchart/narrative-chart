@@ -6,6 +6,7 @@ import Background from '../../visualization/background';
 
 const COLOR = new Color();
 const background = new Background();
+const offset = 30;
 
 
 /**
@@ -192,7 +193,7 @@ class BarChart extends Chart {
                 y = this.y;
             let svg = this.svg();
             let width = this.width(),
-                height = this.height() - 10;
+                height = this.height() - offset;
             let fontsize = 16, strokeWidth = 2;
             const padding = fontsize,
                 triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
@@ -250,7 +251,7 @@ class BarChart extends Chart {
         if(this.x && this.y) {
             let svg = this.svg();
             let width = this.width(),
-                height = this.height() - 10;
+                height = this.height() - offset;
             const processedData = this.processedData();
             const xEncoding = this.x,
                 yEncoding = this.y;
@@ -321,11 +322,11 @@ class BarChart extends Chart {
                 .attr("transform",  "translate(3, 0)");
             
             // axix-label
-            const labelPadding = 20, fontsize = 12;
+            const labelPadding = 24, fontsize = 16;
 
             axis.append("text")
                 .attr("x", width / 2)
-                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 15)
+                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 20)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
@@ -371,7 +372,7 @@ class BarChart extends Chart {
           if (this.x) {
             let svg = this.svg();
             let width = this.width(),
-                height = this.height() - 10;
+                height = this.height() - offset;
             const processedData = this.processedData();
             const xEncoding = this.x;
 
@@ -401,11 +402,11 @@ class BarChart extends Chart {
                 .attr("fill", COLOR.AXIS);
             
             // axix-label
-            const fontsize = 12;
+            const fontsize = 16;
 
             axis_X.append("text")
                  .attr("x", width / 2)
-                 .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 15)
+                 .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 20)
                  .attr("text-anchor", "middle")
                  .attr("dominant-baseline", "hanging")
                  .attr("font-size", fontsize)
@@ -421,7 +422,7 @@ class BarChart extends Chart {
      */
     encodeY() {
         if (this.y) {
-            let height = this.height() - 10;
+            let height = this.height() - offset;
             const processedData = this.processedData();
             const yEncoding = this.y;
 
@@ -501,7 +502,7 @@ class BarChart extends Chart {
                 .attr("transform",  "translate(3, 0)");
             
             // axix-label
-            const labelPadding = 20, fontsize = 12;
+            const labelPadding = 24, fontsize = 16;
 
             axis_Y.append("text")
                 .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
@@ -529,7 +530,7 @@ class BarChart extends Chart {
         // if colorEncoding, clear and redraw 
         if(this.color) {
             let width = this.width(),
-                height = this.height() - 10;
+                height = this.height() - offset;
             const data = this.data();
             const xEncoding = this.x,
                 yEncoding = this.y;
@@ -664,7 +665,7 @@ class BarChart extends Chart {
                     .enter().append("rect")
                     .attr("class", "mark")
                     .attr("x", d => this.xScale(d[this.x]))
-                    .attr("y", this.height() - 10)
+                    .attr("y", this.height() - offset)
                     .attr("width", this.xScale.bandwidth())
                     .attr("height", 0)
                     .attr("fill", this.fill)
@@ -680,7 +681,7 @@ class BarChart extends Chart {
                 else{
                     this.content.selectAll(".mark")
                         .attr("y", d => this.yScale(d[this.y]))
-                        .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
+                        .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
                 }
                 
             }
@@ -720,7 +721,7 @@ class BarChart extends Chart {
                             .enter().append("rect")
                             .attr("class", "mark")
                             .attr("x", d => this.xScale(d[this.x]))
-                            .attr("y", this.height() - 10)
+                            .attr("y", this.height() - offset)
                             .attr("width", this.xScale.bandwidth())
                             .attr("height", 0)
                             .attr("fill", this.fill)
@@ -737,7 +738,7 @@ class BarChart extends Chart {
                         else{
                             this.content.selectAll(".mark")
                                     .attr("y", d => this.yScale(d[this.y]))
-                                    .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
+                                    .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
                         }
                     })
                     break;
@@ -750,7 +751,7 @@ class BarChart extends Chart {
                     else{
                         this.content.selectAll(".mark")
                                 .attr("y", d => this.yScale(d[this.y]))
-                                .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
+                                .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
                     }
                     break;
                 case 'color':
@@ -815,7 +816,7 @@ class BarChart extends Chart {
                     .attr("x", d => this.xScale(d[this.x]))
                     .attr("y", d => this.yScale(d[this.y]))
                     .attr("width", this.xScale.bandwidth())
-                    .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
+                    .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
                     .attr("fill", this.fill)
                     .attr("rx", this.cornerRadius)
                     .attr("ry", this.cornerRadius)
@@ -851,7 +852,7 @@ class BarChart extends Chart {
                 .duration(d => {duration = d[this.y] * unitduration; return duration})
                 .ease(d3.easeLinear)
                 .attr("y", d => this.yScale(d[this.y]))
-                .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
+                .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
                 //.delay((d, i) => {return (i*barduration)})
                 .delay(d => {return transDelay(d[this.x])})
                 //.delay((d, i) => {if(i===0){delay = 0}else{delay = delay + durationlist[i-1];};return delay})
@@ -872,7 +873,7 @@ class BarChart extends Chart {
                 .duration(animation['duration'])
                 .ease(d3.easeLinear)
                 .attr("y", d => this.yScale(d[this.y]))
-                .attr("height", d => this.height() - 10 - this.yScale(d[this.y]))
+                .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
    }
 
    /**

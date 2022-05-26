@@ -5,6 +5,7 @@ import Background from '../../visualization/background';
 
 const COLOR = new Color();
 const background = new Background();
+const offset = 30;
 
 /**
  * @description A line chart is a chart type.
@@ -99,7 +100,7 @@ class LineChart extends Chart {
     initvis() {
         let svg = this.svg();
         let width = this.width() - 12,
-            height = this.height() - 7;
+            height = this.height() - offset;
     
         svg.append("g")
             .attr("class", "axis");
@@ -119,7 +120,7 @@ class LineChart extends Chart {
         if(this.x){
             let svg = this.svg();
             let width = this.width() - 12,
-                height = this.height() - 7;
+                height = this.height() - offset;
             const xEncoding = this.x;
             let axis = svg.select(".axis");
 
@@ -158,7 +159,7 @@ class LineChart extends Chart {
                 .attr("fill", COLOR.AXIS);
 
             /* draw labels */
-            const labelPadding = 20, fontsize = 12;
+            const labelPadding = 24, fontsize = 16;
 
             axis_X.append("text")
                 .attr("x", width / 2)
@@ -185,7 +186,7 @@ class LineChart extends Chart {
         if (this.y) {
             let svg = this.svg();
             let width = this.width() - 12,
-                height = this.height() - 7;
+                height = this.height() - offset;
             const yEncoding = this.y;
             let axis = svg.select(".axis");
 
@@ -243,7 +244,7 @@ class LineChart extends Chart {
                 .attr("opacity", 1);
 
             /* draw labels */
-            const labelPadding = 20, fontsize = 12;
+            const labelPadding = 24, fontsize = 16;
             axis_Y.append("text")
                 .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`) 
                 .attr("text-anchor", "middle")
@@ -265,7 +266,7 @@ class LineChart extends Chart {
     encodeLine() {
         let svg = this.svg();
         let width = this.width() - 12,
-            height = this.height() - 7;
+            height = this.height() - offset;
         let processedData = this.processedData();
 
         const lineWidth = this.markStyle()['stroke-width'] ? this.markStyle()['stroke-width'] : 2;
@@ -371,7 +372,7 @@ class LineChart extends Chart {
     encodeColor() {           
         if(this.color) {
             let width = this.width(),
-            height = this.height();
+            height = this.height() - offset;
             const data = this.data();
             const xEncoding = this.x,
                 yEncoding = this.y;
@@ -540,7 +541,7 @@ class LineChart extends Chart {
                 this.encodeY();
                 let processedData = this.processedData();
                 let width = this.width() - 12,
-                    height = this.height() - 7;
+                    height = this.height() - offset;
                 let svg = this.svg();
                 let content = svg.selectAll(".content");
                 let xScale = d3.scaleBand()
@@ -635,7 +636,7 @@ class LineChart extends Chart {
    animationWipe(animation){
         let svg = this.svg();
         let width = this.width() - 12,
-            height = this.height() - 7;
+            height = this.height() - offset;
         let content = svg.selectAll(".content")
 
         content.attr("id", "lineChartClip")
