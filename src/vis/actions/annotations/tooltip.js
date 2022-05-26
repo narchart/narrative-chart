@@ -235,6 +235,7 @@ class Tooltip extends Annotator {
 
             switch (animation.type) {
                 case 'wipe':
+                    const uid =  Math.random().toString(36).substring(2);
 
                     let bbox = toolTipSvg.node().getBBox();
                     
@@ -242,7 +243,7 @@ class Tooltip extends Annotator {
                     toolTipSvg.append("defs")
                         .attr("class", "tooltip_defs")
                         .append("clipPath")
-                        .attr("id", "clip_tooltip")
+                        .attr("id", "clip_tooltip" + uid)
                         .append("rect")
                         .attr('x', bbox.x)
                         .attr('y', bbox.y)
@@ -250,9 +251,9 @@ class Tooltip extends Annotator {
                         .attr('height', bbox.height)
                         
 
-                    toolTipSvg.attr("clip-path", "url(#clip_tooltip)");
+                    toolTipSvg.attr("clip-path", "url(#clip_tooltip" + uid + ")");
                     
-                    toolTipSvg.selectAll("#clip_tooltip rect")
+                    toolTipSvg.selectAll("#clip_tooltip" + uid + " rect")
                         .attr("width", 0)
                         .transition()
                         .duration('duration' in animation ? animation['duration'] : 0)
