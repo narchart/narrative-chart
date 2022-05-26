@@ -23,8 +23,8 @@ class Scatterplot extends Chart {
     visualize() {
         let margin = this.margin()
 
-        this.Hscaleratio = this.height()/640
-        this.Wscaleratio = this.width()/640
+        this.Hscaleratio = this.height() / 640
+        this.Wscaleratio = this.width() / 640
 
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
@@ -32,8 +32,8 @@ class Scatterplot extends Chart {
         this.points = [];
 
         let chartbackgroundsize = {
-            width: 600*this.Wscaleratio,
-            height: 600*this.Hscaleratio
+            width: 600 * this.Wscaleratio,
+            height: 600 * this.Hscaleratio
         }
 
         let container = this.container()
@@ -50,13 +50,14 @@ class Scatterplot extends Chart {
             .attr("id", "chartBackGrnd")
             .append("rect")
             .attr("width", chartbackgroundsize.width)
-            .attr("height", margin.top === 130*this.Hscaleratio ? 490*this.Hscaleratio : chartbackgroundsize.height)
-            .attr("transform", "translate(" + (20*this.Wscaleratio) + "," + margin.top + ")");
+            .attr("height", margin.top === 130 * this.Hscaleratio ? 490 * this.Hscaleratio : chartbackgroundsize.height)
+            .attr("transform", "translate(" + (20 * this.Wscaleratio) + "," + margin.top + ")");
 
+        const marginTopOffset = 6.3;
         this._svg = d3.select(container)
             .select("svg")
             .append("g")
-            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            .attr("transform", "translate(" + margin.left + "," + (margin.top + marginTopOffset) + ")");
 
         if (background.Background_Image) {
             d3.select(container).select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover").style("background-repeat", "no-repeat")
@@ -79,9 +80,9 @@ class Scatterplot extends Chart {
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"])
-                .attr("preserveAspectRatio", "xMidYMid slice") 
+                .attr("preserveAspectRatio", "xMidYMid slice")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio ? 490*this.Hscaleratio : chartbackgroundsize.height)
+                .attr("height", margin.top === 130 * this.Hscaleratio ? 490 * this.Hscaleratio : chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
             d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
@@ -127,7 +128,8 @@ class Scatterplot extends Chart {
         let svg = this.svg();
         svg.append("g")
             .attr("class", "axis");
-        let width = this.width() - 21,
+        const widthOffset = 21;
+        let width = this.width() - widthOffset,
             height = this.height();
         let initX = width / 2;
         let initY = height / 2;
@@ -166,7 +168,7 @@ class Scatterplot extends Chart {
             .attr("stroke-opacity", strokeOpacity)
             .attr("fill-opacity", fillOpacity)
             .attr("fill", (d, i) => {
-                if (this.markStyle()['background-image'] ) {
+                if (this.markStyle()['background-image']) {
                     let defs = content.append('svg:defs');
                     defs.append("svg:pattern")
                         .attr("id", "mark-background-image-" + i)
@@ -199,9 +201,10 @@ class Scatterplot extends Chart {
      */
     encodeX(animation = {}) {
         if (this.x) {
+            const widthOffset = 21, heightOffset = 36;
             let svg = this.svg();
-            let width = this.width() - 21,
-                height = this.height() - 10;
+            let width = this.width() - widthOffset,
+                height = this.height() - heightOffset;
             const xEncoding = this.x;
             let axis = svg.select(".axis")
 
@@ -314,10 +317,11 @@ class Scatterplot extends Chart {
      */
     encodeY(animation = {}) {
         if (this.y) {
+            const widthOffset = 21, heightOffset = 36;
             let svg = this.svg();
-            let width = this.width() - 21,
-                height = this.height() - 10;
-            const yEncoding = this.y;;
+            let width = this.width() - widthOffset,
+                height = this.height() - heightOffset;
+            const yEncoding = this.y;
             let axis = svg.select(".axis")
 
             // set the ranges
