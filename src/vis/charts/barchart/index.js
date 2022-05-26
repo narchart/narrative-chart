@@ -16,22 +16,6 @@ const background = new Background();
  */
 class BarChart extends Chart {
 
-    checkImgSize = (fileUrl) => {
-        if (fileUrl) {
-          const img = new Image();
-          img.src = fileUrl;
-          let height, width;
-          new Promise((resolve, result) => {
-                img.onload = () => {
-                    resolve()
-                }
-          }).then(result => {
-              width = img.width
-              height = img.height
-          })
-          return [width, height]
-        }
-      };
 
     /**
      * @description Main function of drawing bar chart.
@@ -90,7 +74,7 @@ class BarChart extends Chart {
                 .attr("y", 0);
             this.fill = "url(#chart-background-image)"
         }else if(this.style()["mask-image"]) {
-            const [imgWidth, imgHeight] = this.checkImgSize(this.style()["mask-image"])
+            const [imgWidth, imgHeight] = this.checkImgSize(this.style()["mask-image"])()
             const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
             let margin = this.margin()
             let chartmasksize = {
@@ -891,6 +875,21 @@ class BarChart extends Chart {
                 .attr("y", d => this.yScale(d[this.y]))
                 .attr("height", d => this.height() - this.yScale(d[this.y]))
    }
+
+   /**
+     * @description get image size 
+     * @param {{fileUrl: string}}  fileUrl url of image
+     * @return {function} 
+     */
+    checkImgSize = (fileUrl) => {
+        if (fileUrl) {
+          const img = new Image();
+          img.src = fileUrl; 
+          return img.onload = () => { 
+              return [img.width, img.height]
+          };
+        }
+      };
 
 }
 export default BarChart;
