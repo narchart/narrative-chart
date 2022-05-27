@@ -663,7 +663,7 @@ class BarChart extends Chart {
                     .attr("stroke-width", this.strokeWidth)
                     .attr("stroke-opacity", this.strokeOpacity);
                 if( 'duration' in animation ){
-                    this.animationGrow(animation);
+                    this.animationGrowTogether(animation);
                 }
                 else{
                     this.content.selectAll(".mark")
@@ -720,7 +720,7 @@ class BarChart extends Chart {
                             .attr("stroke-opacity", this.strokeOpacity);
                         if('duration' in animation){
                             animation['duration'] = animation['duration']/2
-                            this.animationGrow(animation)
+                            this.animationGrowTogether(animation)
                         }
                         else{
                             this.content.selectAll(".mark")
