@@ -53,7 +53,8 @@ class Fill extends Annotator {
                 } else {
                     return COLOR.ANNOTATION
                 }
-            });
+            })
+            .attr("opacity", 1);
     }
 }
 
