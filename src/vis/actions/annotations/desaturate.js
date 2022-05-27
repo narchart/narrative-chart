@@ -17,10 +17,10 @@ class Desaturate extends Annotator {
                 }
                 return true
             })
+            .attr("opacity", 1)
             .transition()
             .duration('duration' in animation ? animation['duration']: 0)
             .attr("fill", "lightgray")
-            .attr("opacity", 1)
     }
 }
 
