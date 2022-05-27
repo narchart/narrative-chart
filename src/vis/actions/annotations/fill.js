@@ -43,6 +43,7 @@ class Fill extends Annotator {
                 }
                 return true
             })
+            .attr("opacity", 1)
             // .moveToFront()
             .transition()
             .duration('duration' in animation ? animation['duration']: 0)
@@ -52,8 +53,7 @@ class Fill extends Annotator {
                 } else {
                     return COLOR.ANNOTATION
                 }
-            })
-            .attr("opacity", 1);
+            });
     }
 }
 

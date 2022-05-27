@@ -267,7 +267,7 @@ class Scatterplot extends Chart {
                 .attr("fill", COLOR.AXIS);
 
             /* draw labels */
-            const labelPadding = 20, fontsize = 12;
+            const labelPadding = 24, fontsize = 16;
 
             axis_X.append("text")
                 .attr("x", width / 2)
@@ -383,7 +383,7 @@ class Scatterplot extends Chart {
                 .attr("y2", 0);
 
             /* draw labels */
-            const labelPadding = 20, fontsize = 12;
+            const labelPadding = 24, fontsize = 16;
 
             axis_Y.append("text")
                 .attr("transform", `translate(${-labelPadding - svg.selectAll(".axis_y").select("path").node().getBBox().width}, ${height / 2}) rotate(-90)`)
