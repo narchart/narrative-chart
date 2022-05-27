@@ -173,7 +173,11 @@ class Reference extends Annotator {
             })
             .attr("stroke-width", strokeWidth)
             .attr("stroke-linecap", strokeLinecap)
-            .attr("stroke-dasharray", strokeDasharray);
+            .attr("stroke-dasharray", strokeDasharray)
+            .attr("opacity", 0)
+            .transition()
+            .duration('duration' in animation ? animation['duration']: 0)
+            .attr("opacity", 1);
         }
 
     }
