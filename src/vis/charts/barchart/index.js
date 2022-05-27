@@ -429,7 +429,6 @@ class BarChart extends Chart {
             let obj = {};
             this.bardata = [];
 
-            //
             if(this.x){
                 processedData.forEach(item => {
                     if(obj.hasOwnProperty(item[this.x])) {
@@ -542,16 +541,6 @@ class BarChart extends Chart {
             d3.selectAll(".rects").remove();
 
             /** process data */
-            let stackData = [];
-            // get categories
-            let categoriesData = {};
-            data.forEach((d, i) => {
-                if(categoriesData[d[xEncoding]]) {
-                    categoriesData[d[xEncoding]].push(d);
-                } else {
-                    categoriesData[d[xEncoding]] = [d];
-                }
-            });
             // get series
             let seriesData = {};
             data.forEach(d => {
@@ -562,28 +551,26 @@ class BarChart extends Chart {
                 }
             });
             let series = Object.keys(seriesData);
+            let seriesDict = {}
+            series.forEach(d => seriesDict[d] = 0)
 
-            // get stack data
-            let processedData = [];
-            for(let category in categoriesData) {
-                let row = {};
-                row[xEncoding] = category;
-                // series.map(s => row[s] = 0); 
-                // categoriesData[category].map(d => row[d[colorEncoding]] = d[yEncoding]);
-                series.map(s => row[s] = [0]); 
-                categoriesData[category].map(d => row[d[colorEncoding]].push(d[yEncoding]));
-                series.map(s => row[s] = d3.sum(row[s]));
-                processedData.push(row);
+            // adjust data structure to fit stackdata
+            const processedData = this.processedData()
+            let processedDict = {}
+            processedData.forEach((d, i) => {
+                let temp = {}
+                temp[d[colorEncoding]] = d[yEncoding]
+                processedDict[d[xEncoding]] = {...processedDict[d[xEncoding]], ...temp}
+            })
+            let stackProcessedData = []
+            for(let key in processedDict) {
+                let temp2 = {}
+                temp2[xEncoding] = key
+                stackProcessedData.push({...seriesDict,...temp2, ...processedDict[key]})
             }
-            stackData = d3.stack().keys(series)(processedData);
-            // console.log('stackData', stackData)
+            let stackData = d3.stack().keys(series)(stackProcessedData);
 
-            // stackData.forEach((d, i) => {
-            //     d.forEach
-            // })
 
-            // console.log('stackData', stackData)
-            
 
             /** set the ranges */
             let xScale = d3.scaleBand()
@@ -625,7 +612,7 @@ class BarChart extends Chart {
             d3.selectAll(".rectLayer")
                 .transition()
                 .duration('duration' in animation ? animation['duration'] : 0)
-                .attr("fill", (d, i) => COLOR.CATEGORICAL[i]);
+                .attr("fill", (d, i) => COLOR.CATEGORICAL[i % COLOR.CATEGORICAL.length] );
         }
     }
 
