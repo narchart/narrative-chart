@@ -73,6 +73,7 @@ class Glow extends Annotator {
                     return COLOR.ANNOTATION
                 }
             })
+            .style("stroke-opacity", 1)
             .style("stroke-width", 2)
             .style("filter", "url(#drop-shadow)")
     }
