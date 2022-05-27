@@ -217,7 +217,7 @@ class Title {
             }
         
         // 3. title section border
-        if (style["border-color"] || style["border-width"]){    
+        if (style["border-color"] || style["border-width"]){   
             titleContent.append("g")
             .attr("id","titleBorder")
             .append("rect")
@@ -273,6 +273,30 @@ class Title {
 
                 case 'typewritter':
 
+                    d3.select("#titleBorder")
+                        .attr("stroke-opacity", 0)
+                        .transition()
+                        .duration(animation.duration)
+                        .attr("stroke-opacity", 1);
+
+                    d3.select("#titleBackGrnd")
+                        .attr("fill-opacity", 0)
+                        .transition()
+                        .duration(animation.duration)
+                        .attr("fill-opacity", 1);
+
+                    d3.select("#textBack")
+                        .attr("fill-opacity", 0)
+                        .transition()
+                        .duration(animation.duration)
+                        .attr("fill-opacity", 1);
+
+                    d3.select("#divideLine")
+                        .attr("stroke-opacity", 0)
+                        .transition()
+                        .duration(animation.duration)
+                        .attr("stroke-opacity", 1);
+
                     d3.select('#title1stline')
                         .transition()
                         .duration(animation.duration/2)
@@ -321,6 +345,12 @@ class Title {
                         .duration(animation.duration)
                         .attr("stroke-opacity", 1);
 
+                    d3.select("#textBack")
+                        .attr("fill-opacity", 0)
+                        .transition()
+                        .duration(animation.duration)
+                        .attr("fill-opacity", 1);
+
                     d3.select("#titleBackGrnd")
                         .attr("fill-opacity", 0)
                         .transition()
@@ -331,9 +361,8 @@ class Title {
                         .attr("stroke-opacity", 0)
                         .transition()
                         .duration(animation.duration)
-                        .attr("stroke-opacity", 1)
-                        .remove();
-
+                        .attr("stroke-opacity", 1);
+                        
                         break;
             }
     
