@@ -123,11 +123,29 @@ class Tooltip extends Annotator {
                 }
                 return true
             });
-
+        
         // if the focus defined in the spec does not exist
         if (focus_elements.length === 0) {
             return;
         }
+
+        // For stacked bar charts, find the Y-Coordinate of the top rect mark in each bar
+        let RectsCoordinates = {}
+
+        for (let focus_element of focus_elements.nodes()) {
+            const nodeName = focus_element.nodeName;
+            let data_x, data_y
+
+            if (nodeName === "rect") {
+                const bbox = focus_element.getBBox();
+                data_x = bbox.x + bbox.width / 2;
+                data_y = bbox.y;
+                RectsCoordinates[data_x] = RectsCoordinates[data_x]? Math.min(RectsCoordinates[data_x], data_y): data_y
+            } else{
+                break
+            }
+        }
+
 
         for (let focus_element of focus_elements.nodes()) {
 
@@ -165,6 +183,19 @@ class Tooltip extends Annotator {
                 data_x = bbox.x + bbox.width / 2;
                 data_y = bbox.y;
                 offset_y = -5;
+
+                // filter out the rect marks which height is 0 ( for stacked bar charts)
+                if(bbox.height===0){
+                    continue
+                }
+
+                // filter out the rect marks which are not the top mark in each bar ( for stacked bar charts)
+
+                if(RectsCoordinates[data_x] !== data_y){
+                    continue
+                }
+
+               
             } else { // currently only support piechart
                  if(chart instanceof PieChart){
                     let data_temp = focus_element.__data__;
