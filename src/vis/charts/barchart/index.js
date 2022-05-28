@@ -53,49 +53,50 @@ class BarChart extends Chart {
         if(this.markStyle()["fill"]) {
             this.fill = this.markStyle()["fill"]
         }else if(this.markStyle()["background-image"]) {
-            const [imgWidth, imgHeight] = this.checkImgWidth( this.markStyle()["background-image"])()
-            const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
-            let margin = this.margin()
-            let chartbackgroundsize = {
-                width: imgWidth * ratio,
-                height: imgHeight * ratio
-            }
-            let defs = svg.append('svg:defs');
-            defs.append("svg:pattern")
-                .attr("id", "chart-background-image")
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
-                .attr("patternUnits", "userSpaceOnUse")
-                .append("svg:image")
-                .attr("xlink:href", this.markStyle()["background-image"])
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
-                .attr("x", 0)
-                .attr("y", 0);
+            this.checkImgSize(this.markStyle()["background-image"], (imgWidth, imgHeight) => {
+                const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
+                let margin = this.margin()
+                let chartbackgroundsize = {
+                    width: imgWidth * ratio,
+                    height: imgHeight * ratio
+                }
+                let defs = svg.append('svg:defs');
+                defs.append("svg:pattern")
+                    .attr("id", "chart-background-image")
+                    .attr("width", chartbackgroundsize.width)
+                    .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                    .attr("patternUnits", "userSpaceOnUse")
+                    .append("svg:image")
+                    .attr("xlink:href", this.markStyle()["background-image"])
+                    .attr("width", chartbackgroundsize.width)
+                    .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                    .attr("x", 0)
+                    .attr("y", 0);
+            })
             this.fill = "url(#chart-background-image)"
         }else if(this.style()["mask-image"]) {
-            const [imgWidth, imgHeight] = this.checkImgSize(this.style()["mask-image"])()
-            const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
-            let margin = this.margin()
-            let chartmasksize = {
-                width: imgWidth * ratio,
-                height: imgHeight * ratio
-            }
-            let defs = svg.append('svg:defs');
-            defs.append("svg:pattern")
-                .attr("id", "chart-mask-image")
-                .attr("width", chartmasksize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
-                .attr("patternUnits", "userSpaceOnUse")
-                .append("svg:image")
-                .attr("xlink:href", this.style()["mask-image"])
-                .attr("preserveAspectRatio", "xMidYMid slice") 
-                .attr("width", chartmasksize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
-                .attr("x", -2)
-                .attr("y", 0);
+            this.checkImgSize(this.style()["mask-image"], (imgWidth, imgHeight) => {
+                const ratio = Math.max(this.width() / imgWidth, this.height() / imgHeight)
+                let margin = this.margin()
+                let chartmasksize = {
+                    width: imgWidth * ratio,
+                    height: imgHeight * ratio
+                }
+                let defs = svg.append('svg:defs');
+                defs.append("svg:pattern")
+                    .attr("id", "chart-mask-image")
+                    .attr("width", chartmasksize.width)
+                    .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
+                    .attr("patternUnits", "userSpaceOnUse")
+                    .append("svg:image")
+                    .attr("xlink:href", this.style()["mask-image"])
+                    .attr("preserveAspectRatio", "xMidYMid slice") 
+                    .attr("width", chartmasksize.width)
+                    .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartmasksize.height)
+                    .attr("x", -2)
+                    .attr("y", 0);
+            })
             this.fill = "url(#chart-mask-image)"
-
         }else {
             this.fill = COLOR.DEFAULT
         }
@@ -866,14 +867,15 @@ class BarChart extends Chart {
    /**
      * @description get image size
      * @param {string} fileUrl url of image
+     * @param {function} callback a callback to get imgWidth & imgHeight
      * @return {function} 
      */
-    checkImgSize = (fileUrl) => {
+    checkImgSize = (fileUrl, callback) => {
         if (fileUrl) {
           const img = new Image();
           img.src = fileUrl; 
-          return img.onload = () => { 
-              return [img.width, img.height]
+          img.onload = () => { 
+              callback(img.width, img.height)
           };
         }
       };
