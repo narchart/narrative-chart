@@ -241,24 +241,34 @@ class Texture extends Annotator {
                 .duration('duration' in animation ? animation['duration']: 0)
                 .style("fill", (d,i) => {
                     const uid = Date.now().toString() + Math.random().toString(36).substring(2);
-
                     var image = new Image();
                     image.src = style["background-image"];
                     image.id = uid;    
+
+                    let markWidth = focus_elements.node().getBBox().width;
+                    let markHeight = focus_elements.node().getBBox().height;
                     
-                    var texture_size_width, texture_size_height
+                    var textureWidth, textureHeight, scaleWidth, scaleHeight
                     var configPieChart
                     
                     image.onload = function(){
-                        texture_size_width = image.naturalWidth
-                        texture_size_height = image.naturalHeight
-                        configPieChart = {
-                            "texture_size_width" : texture_size_width ? texture_size_width : 317,
-                            "texture_size_height" : texture_size_height ? texture_size_height : 216
+                        textureWidth = image.naturalWidth?image.naturalWidth:markWidth
+                        textureHeight = image.naturalHeight?image.naturalHeight:markWidth
+                        scaleWidth = textureWidth/markWidth
+                        scaleHeight = textureHeight/markHeight
+                        if(scaleWidth < scaleHeight){
+                            configPieChart = {
+                                "texture_size_width" : markWidth,
+                                "texture_size_height" : markWidth * textureHeight/textureWidth
+                            }
+                        }else{
+                            configPieChart = {
+                                "texture_size_width" : markHeight * textureWidth/textureHeight,
+                                "texture_size_height" : markHeight
+                            }
                         }
-
-                        var defsPieChart = svg.append('svg:defs');
-                    
+               
+                        var defsPieChart = svg.append('svg:defs');                   
                         defsPieChart.append("svg:pattern")
                         .attr("id", "piechart-texture-image-" + uid)
                         .attr("width", 1)
@@ -269,8 +279,6 @@ class Texture extends Annotator {
                         .attr("width", configPieChart.texture_size_width)
                         .attr("height", configPieChart.texture_size_height)
                     }
-
-                    
                     return "url(#piechart-texture-image-" + uid + ")"
                 })
 
@@ -278,7 +286,6 @@ class Texture extends Annotator {
                     let data_temp = one_element.__data__;
                     let data_x = data_temp.centroidX();
                     let data_y = data_temp.centroidY();
-
                 selectedMarks.attr("x",data_x-150)
                 .attr("y",data_y-150)
                 })
