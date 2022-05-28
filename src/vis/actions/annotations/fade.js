@@ -17,6 +17,7 @@ class Fade extends Annotator {
                 }
                 return true
             })
+            .attr("opacity", 1)
             .transition()
             .duration('duration' in animation ? animation['duration']: 0)
             .attr("opacity", 0.3)
