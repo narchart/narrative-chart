@@ -24,12 +24,17 @@ class Unitvis extends Chart {
     visualize() {
         let margin = this.margin()
 
-        let minHeightWidth =  Math.min(this.width(),this.height())
+        let Hscaleratio = this.height() / 640
+
+        let Wscaleratio = this.width() / 640
+
+
+        let minHeightWidth = Math.min(this.width(), this.height())
 
         this.scaleratio = minHeightWidth / 640
-                
+
         let chartbackgroundsize = {
-            width: 600 * this.scaleratio  ,
+            width: 600 * this.scaleratio,
             height: 600 * this.scaleratio
         }
 
@@ -37,7 +42,7 @@ class Unitvis extends Chart {
 
         d3.select(container)
             .append("svg")
-            .attr("width", this.width() )
+            .attr("width", this.width())
             .attr("height", this.height())
             .style("background-color", COLOR.BACKGROUND);
 
@@ -49,53 +54,80 @@ class Unitvis extends Chart {
         d3.select(container)
             .select("svg")
             .append("g")
+            .attr("id", "svgBackGrnd")
+            .append("rect")
+            .attr("width", Wscaleratio * 640)
+            .attr("height", Hscaleratio * 640)
+
+
+
+        d3.select(container)
+            .select("svg")
+            .append("g")
             .attr("id", "chartBackGrnd")
             .append("rect")
             .attr("width", chartbackgroundsize.width)
-            .attr("height", margin.top === 130*this.scaleratio ? 490*this.scaleratio : chartbackgroundsize.height)
-            .attr("transform", "translate(" + (20*this.scaleratio) + "," + margin.top + ")");
+            .attr("height", margin.top === 130 * this.scaleratio ? 490 * this.scaleratio : chartbackgroundsize.height)
+            .attr("transform", "translate(" + (20 * this.scaleratio) + "," + margin.top + ")");
 
-            this._svg = d3.select(container)
+        this._svg = d3.select(container)
             .select("svg")
             .append("g")
-            .attr("transform", margin.top === 130*this.scaleratio? "translate(" + (margin.left+10*this.scaleratio) + "," + margin.top + ")": "translate(" + 10*this.scaleratio + "," + margin.top + ")" );
+            .attr("transform", margin.top === 130 * this.scaleratio ? "translate(" + (margin.left + 10 * this.scaleratio) + "," + margin.top + ")" : "translate(" + 10 * this.scaleratio + "," + margin.top + ")");
 
-            
 
 
 
         if (background.Background_Image) {
-            d3.select(container).select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover").style("background-repeat", "no-repeat")
-        }
-
-        if (background.Background_Color) {
-            d3.select(container).select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
-        }
-
-        if (this.style()['background-color']) {
-            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'])
-        }
-        else if (this.style()['background-image']) {
-
-
-        let defs = d3.select(container).select("svg").append('svg:defs');      
+            let defs = d3.select(container).select("svg").append('svg:defs');
             defs.append("svg:pattern")
-                .attr("id", "chart-backgroundimage")
+                .attr("id", "svg-backgroundimage")
                 .attr("width", 1)
                 .attr("height", 1)
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
-                .attr("xlink:href", this.style()["background-image"])
-                .attr("preserveAspectRatio", "none") 
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.scaleratio ? 490*this.scaleratio : chartbackgroundsize.height)
+                .attr("xlink:href", background.Background_Image.url)
+                .attr("preserveAspectRatio", "none")
+                .attr("opacity", background.Background_Image.opacity ?? 1)
+                .attr("filter", background.Background_Image.grayscale ? "grayscale(" + background.Background_Image.grayscale + "%)" : "grayscale(0%)")
+                .attr("width", Wscaleratio * 640)
+                .attr("height", Hscaleratio * 640)
                 .attr("x", 0)
                 .attr("y", 0);
-            d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+            d3.select("#svgBackGrnd").attr("fill", "url(#svg-backgroundimage)")
+        } else if (background.Background_Color) {
+            d3.select("#svgBackGrnd").attr("fill", background.Background_Color.color ?? "white").attr("fill-opacity", background.Background_Color.opacity ?? 1)
+        }
+        else {
+            d3.select("#svgBackGrnd").remove()
+        }
+
+
+
+        if(this.style()['background-color']){
+            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'].color ?? "white").attr("fill-opacity", this.style()['background-color'].opacity ?? 1)
+        } 
+        else if (this.style()['background-image']){
+            let defs = d3.select(container).select("svg").append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "chart-backgroundimage")
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("patternUnits", "userSpaceOnUse")
+                .append("svg:image")
+                .attr("xlink:href", this.style()["background-image"].url)
+                .attr("preserveAspectRatio", "xMidYMid slice")
+                .attr("opacity", this.style()["background-image"].opacity ?? 1)
+                .attr("filter", this.style()["background-image"].grayscale ? "grayscale(" + this.style()["background-image"].grayscale + "%)" : "grayscale(0%)")
+                .attr("width", chartbackgroundsize.width)
+                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("x", 0)
+                .attr("y", 0);
+                d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
         }
         else {
             d3.select("#chartBackGrnd").attr("fill-opacity", 0)
-        }
+        }   
 
         this.radiusMultiplier = 1
 
@@ -164,7 +196,7 @@ class Unitvis extends Chart {
         }
 
 
-        let textSize = 14* this.scaleratio;
+        let textSize = 14 * this.scaleratio;
         let xField = this.x;
         let yField = this.y;
 
@@ -218,7 +250,7 @@ class Unitvis extends Chart {
         let wradius = ((width - margin.left - margin.right) / ((length + 1) * (xbar - 1) + length)) / 2.2;
         let hradius = d3.min([(height * 0.8 - 2 * textSize) / (xmaxCount) / 2, (height * 0.9 - 2 * textSize) / ybar / (Math.ceil(length) + 1) / 2]);
         // let radius = Math.min(wradius, hradius);
-        let radius = this.radiusMultiplier  * Math.min(Math.min(wradius, hradius), 6* this.scaleratio);
+        let radius = this.radiusMultiplier * Math.min(Math.min(wradius, hradius), 6 * this.scaleratio);
         let textpadding = 10 * this.scaleratio
         let s = (0.9 * width - 2 * (xbar) * length * radius) / (radius) / (xbar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (xbar) * length * radius) / (radius) / (xbar + 3) / 2)
         let padding = (0.9 * width - xbar * length * 2 * radius - (xbar - 1) * s * 2 * radius) / 2
@@ -233,13 +265,13 @@ class Unitvis extends Chart {
 
 
         let topPadding = d3.max([(height - xmaxCount * radius * 2 - ybar * radius * 2 - 3 * textpadding) / 2 + (20 * this.scaleratio), 0.025 * height]) // 30 added in here is the difference between svg size and this.height()
-        
+
 
         let baseY = [topPadding]
-        
+
         let y = baseY[0]
         for (let i = 0; i < ybar; i++) {
-            y += ymax[yValue[i]] / length * 2 * radius + d3.max([6*this.scaleratio, 1.5 * radius])
+            y += ymax[yValue[i]] / length * 2 * radius + d3.max([6 * this.scaleratio, 1.5 * radius])
             baseY.push(y)
         }
 
@@ -320,8 +352,8 @@ class Unitvis extends Chart {
             .append("text")
             .attr("fill", COLOR.TEXT)
             .text(xField)
-            .attr("x", xbar % 2 === 0 ? baseX[Math.floor(xbar / 2) - 1] + (length - 1) * radius  : baseX[Math.floor(xbar / 2)] + (length - 1) * radius)
-            .attr("y", baseY[baseY.length - 1] + 1.8 * xstrmax) 
+            .attr("x", xbar % 2 === 0 ? baseX[Math.floor(xbar / 2) - 1] + (length - 1) * radius : baseX[Math.floor(xbar / 2)] + (length - 1) * radius)
+            .attr("y", baseY[baseY.length - 1] + 1.8 * xstrmax)
             .attr("font-size", textSize)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
@@ -338,10 +370,10 @@ class Unitvis extends Chart {
             .append("text")
             .attr("fill", COLOR.TEXT)
             .text(yField)
-            .attr("x", baseX[0] - radius - 2 * textpadding - 1.2*ystrmax)
+            .attr("x", baseX[0] - radius - 2 * textpadding - 1.2 * ystrmax)
             .attr("y", ybar % 2 === 0 ? baseY[Math.floor(ybar / 2) - 1] : baseY[Math.floor(ybar / 2)])
             .attr("font-size", textSize)
-            .attr("transform", `rotate(-90, ${baseX[0] - radius - 2 * textpadding - 1.2*ystrmax}, ${ybar % 2 === 0 ? baseY[Math.floor(ybar / 2) - 1] : baseY[Math.floor(ybar / 2)]})`)
+            .attr("transform", `rotate(-90, ${baseX[0] - radius - 2 * textpadding - 1.2 * ystrmax}, ${ybar % 2 === 0 ? baseY[Math.floor(ybar / 2) - 1] : baseY[Math.floor(ybar / 2)]})`)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
             .transition()
@@ -367,7 +399,7 @@ class Unitvis extends Chart {
 
         let xValueFreq = d3.nest().key(function (d) { return d[xField] }).rollup(function (v) { return v.length; }).entries(this.processedData())
 
-        let textSize = 14*this.scaleratio;
+        let textSize = 14 * this.scaleratio;
 
         xValueFreq.sort(function (x, y) {
             return d3.ascending(x['key'], y['key']);
@@ -420,7 +452,7 @@ class Unitvis extends Chart {
             }
         })
 
-        
+
 
         let centernodey = xValueFreq.map(function (d, i) {
             let startPoint = height / 2
@@ -517,7 +549,7 @@ class Unitvis extends Chart {
             .attr("fill", COLOR.TEXT)
             .text(xField)
             .attr("x", column % 2 === 0 ? centernodex[Math.floor(column / 2) - 1] : centernodex[Math.floor(column / 2)])
-            .attr("y", centernodey[0] + 2 * radiusa + 1 * maxR + 1.2*xstrmax)
+            .attr("y", centernodey[0] + 2 * radiusa + 1 * maxR + 1.2 * xstrmax)
             .attr("font-size", textSize)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
@@ -538,7 +570,7 @@ class Unitvis extends Chart {
 
     YSizeLayout(height, width, svg) {
 
-        let textSize = 14*this.scaleratio;
+        let textSize = 14 * this.scaleratio;
 
         let yField = this.y;
 
@@ -593,7 +625,7 @@ class Unitvis extends Chart {
                 return (height - radiusa) / 2
             }
             else {
-                let paddingMaxR = 2.3;  
+                let paddingMaxR = 2.3;
                 let TopPadding = (height - (rowTotalHeight - paddingMaxR * maxR)) / 2;
                 return TopPadding + (rowTotalHeight) / (column) * (Math.floor(i % column));
             }
@@ -603,7 +635,7 @@ class Unitvis extends Chart {
         let strlen = yValueFreq.map(d => this.textSizef(textSize, 'Arial', d['key']).width)
         let strmax = d3.max(strlen)
 
-        let centernodex =  maxR  + 2 * radiusa + this.textSizef(textSize, 'Arial', yField).height + d3.max([1.2*strmax, 50*this.scaleratio])  
+        let centernodex = maxR + 2 * radiusa + this.textSizef(textSize, 'Arial', yField).height + d3.max([1.2 * strmax, 50 * this.scaleratio])
 
 
         let unitnew = [];
@@ -687,10 +719,10 @@ class Unitvis extends Chart {
         svg.select(".content").append("text")
             .attr("fill", COLOR.TEXT)
             .text(yField)
-            .attr("x", Math.max(centernodex - 2 * radiusa - maxR - 1.2*strmax, 0))
+            .attr("x", Math.max(centernodex - 2 * radiusa - maxR - 1.2 * strmax, 0))
             .attr("y", column % 2 === 0 ? centernodey[Math.floor(column / 2) - 1] : centernodey[Math.floor(column / 2)])
             .attr("font-size", textSize)
-            .attr("transform", `rotate(-90, ${Math.max(centernodex - 2 * radiusa - maxR - 1.2*strmax, 0)}, ${column % 2 === 0 ? centernodey[Math.floor(column / 2) - 1] : centernodey[Math.floor(column / 2)]})`)
+            .attr("transform", `rotate(-90, ${Math.max(centernodex - 2 * radiusa - maxR - 1.2 * strmax, 0)}, ${column % 2 === 0 ? centernodey[Math.floor(column / 2) - 1] : centernodey[Math.floor(column / 2)]})`)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
             .transition()
@@ -709,7 +741,7 @@ class Unitvis extends Chart {
     */
 
     XYSizeLayout(height, width, svg) {
-        let textSize = 14*this.scaleratio;
+        let textSize = 14 * this.scaleratio;
         let sizeField = this.size
         let yField = this.y
         let xField = this.x
@@ -780,9 +812,9 @@ class Unitvis extends Chart {
             }
             else {
                 if (width - rowTotalWidth - 2 * Minleftpadding > 0) {
-                    let leftpadding = Math.min(100*scaleratio, (1 * width - rowTotalWidth - 2 * Minleftpadding) / 2 + Minleftpadding)
+                    let leftpadding = Math.min(100 * scaleratio, (1 * width - rowTotalWidth - 2 * Minleftpadding) / 2 + Minleftpadding)
                     let rightpadding = leftpadding
-                    let padding = (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))   
+                    let padding = (width - leftpadding - rightpadding) / (column - 1) * (Math.floor(i % column))
 
                     return leftpadding + padding
 
@@ -935,15 +967,15 @@ class Unitvis extends Chart {
             .duration(this.duration / 2)
             .attr("fill-opacity", 1)
 
-    
+
         svg.select(".content").append("text")
             .attr("fill", COLOR.TEXT)
             .text(yField)
-            .attr("x", centernodex[0] - 2 * maxR - 1.1*strmax )
+            .attr("x", centernodex[0] - 2 * maxR - 1.1 * strmax)
             .attr("y", row % 2 === 0 ? centernodey[Math.floor(row / 2) - 1] : centernodey[Math.floor(row / 2)])
             .attr("font-size", textSize * 0.9)
             .attr('text-anchor', 'middle')
-            .attr("transform", `rotate(-90, ${centernodex[0] - 2 * maxR - 1.1*strmax}, ${row % 2 === 0 ? centernodey[Math.floor(row / 2) - 1] : centernodey[Math.floor(row / 2)]})`)
+            .attr("transform", `rotate(-90, ${centernodex[0] - 2 * maxR - 1.1 * strmax}, ${row % 2 === 0 ? centernodey[Math.floor(row / 2) - 1] : centernodey[Math.floor(row / 2)]})`)
             .attr("fill-opacity", 0)
             .transition()
             .delay(this.duration ? this.duration / 2 : 0)
@@ -960,33 +992,33 @@ class Unitvis extends Chart {
      * @return {void}
     */
 
-    AddMarkBackGrnd(svg){
+    AddMarkBackGrnd(svg) {
         svg.select(".content").selectAll("circle")
-        .transition()
-        .duration(this.duration / 2)
-        .attr("fill", (d, i) => {
-            if (this.markStyle()['background-image']) {
-                let defs = this.svg().select(".content").append('svg:defs');
-                defs.append("svg:pattern")
-                    .attr("id", "mark-background-image-" + i)
-                    .attr("width", 1)
-                    .attr("height", 1)
-                    .attr("patternUnits", "objectBoundingBox")
-                    .append("svg:image")
-                    .attr("xlink:href", this.markStyle()["background-image"])
-                    .attr("preserveAspectRatio", "none") 
-                    .attr("width", 2 * d.radius())
-                    .attr("height", 2 * d.radius())
-                    .attr("x", 0)
-                    .attr("y", 0);
-                return "url(#mark-background-image-" + i + ")"
-            } else if (this.markStyle()['fill']) {
-                return this.markStyle()['fill']
-            }
-            else {
-                return d.color()
-            }
-        })
+            .transition()
+            .duration(this.duration / 2)
+            .attr("fill", (d, i) => {
+                if (this.markStyle()['background-image']) {
+                    let defs = this.svg().select(".content").append('svg:defs');
+                    defs.append("svg:pattern")
+                        .attr("id", "mark-background-image-" + i)
+                        .attr("width", 1)
+                        .attr("height", 1)
+                        .attr("patternUnits", "objectBoundingBox")
+                        .append("svg:image")
+                        .attr("xlink:href", this.markStyle()["background-image"])
+                        .attr("preserveAspectRatio", "none")
+                        .attr("width", 2 * d.radius())
+                        .attr("height", 2 * d.radius())
+                        .attr("x", 0)
+                        .attr("y", 0);
+                    return "url(#mark-background-image-" + i + ")"
+                } else if (this.markStyle()['fill']) {
+                    return this.markStyle()['fill']
+                }
+                else {
+                    return d.color()
+                }
+            })
 
     }
 
@@ -1067,7 +1099,7 @@ class Unitvis extends Chart {
                         .attr("patternUnits", "objectBoundingBox")
                         .append("svg:image")
                         .attr("xlink:href", this.markStyle()["background-image"])
-                        .attr("preserveAspectRatio", "none") 
+                        .attr("preserveAspectRatio", "none")
                         .attr("width", 2 * d.radius())
                         .attr("height", 2 * d.radius())
                         .attr("x", 0)
@@ -1104,13 +1136,13 @@ class Unitvis extends Chart {
             left: width / 20,
             right: width / 20
         }
-        let textSize = 14*this.scaleratio;
+        let textSize = 14 * this.scaleratio;
         // situation 1:      
         if (this.x && this.y && this.size) {
             this.XYSizeLayout(height, width, svg)
         }
         // situation 2
-        else if (this.x &&!this.y && this.size) {
+        else if (this.x && !this.y && this.size) {
             this.XSizeLayout(height, width, svg)
         }
         // situation 3
@@ -1140,7 +1172,7 @@ class Unitvis extends Chart {
             let length = Math.ceil(30 / bar) < 4 ? Math.ceil(30 / bar) : 4
 
             let wradius = ((width - margin.left - margin.right) / ((length + 2) * (bar - 1) + length)) / 2;
-            let hradius = height* 0.8 / Math.ceil(maxCount / length) / 2;
+            let hradius = height * 0.8 / Math.ceil(maxCount / length) / 2;
 
             let radius = this.radiusMultiplier * Math.min(Math.min(wradius, hradius), 6);
             let s = (0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
@@ -1185,23 +1217,23 @@ class Unitvis extends Chart {
                     d.unitgroup('x', breakdownField);
                 })
             });
-                let xstrlen = breakdownValue.map(d => this.textSizef(textSize, 'Arial', d).height)
-                let xstrmax = d3.max(xstrlen)
-                
-    
-                svg.select(".content").append("text")
-                    .attr("fill", COLOR.TEXT)
-                    .text(breakdownField)
-                    .attr("x", databreakdown.length % 2 === 0 ? baseX[Math.floor(databreakdown.length / 2) - 1] : baseX[Math.floor(databreakdown.length / 2)])
-                    .attr("y", Math.min(baseY + radius + textSize + 1.2*xstrmax, height))
-                    .attr("font-size", textSize)
-                    .attr('text-anchor', 'middle')
-                    .attr("fill-opacity", 0)
-                    .transition()
-                    .delay(this.duration ? this.duration / 2 : 0)
-                    .duration(this.duration / 2)
-                    .attr("fill-opacity", 1)
-            
+            let xstrlen = breakdownValue.map(d => this.textSizef(textSize, 'Arial', d).height)
+            let xstrmax = d3.max(xstrlen)
+
+
+            svg.select(".content").append("text")
+                .attr("fill", COLOR.TEXT)
+                .text(breakdownField)
+                .attr("x", databreakdown.length % 2 === 0 ? baseX[Math.floor(databreakdown.length / 2) - 1] : baseX[Math.floor(databreakdown.length / 2)])
+                .attr("y", Math.min(baseY + radius + textSize + 1.2 * xstrmax, height))
+                .attr("font-size", textSize)
+                .attr('text-anchor', 'middle')
+                .attr("fill-opacity", 0)
+                .transition()
+                .delay(this.duration ? this.duration / 2 : 0)
+                .duration(this.duration / 2)
+                .attr("fill-opacity", 1)
+
         }
 
         svg.select(".content").selectAll("defs").transition().duration(this.duration / 2).remove()
@@ -1236,10 +1268,10 @@ class Unitvis extends Chart {
         else {
 
             let margin = {
-                left: width / 20 *this.scaleratio,
-                right: width / 20 *this.scaleratio
+                left: width / 20 * this.scaleratio,
+                right: width / 20 * this.scaleratio
             }
-            let textSize = 14 *this.scaleratio ;
+            let textSize = 14 * this.scaleratio;
 
             let breakdownField = this.y;
 
@@ -1267,9 +1299,9 @@ class Unitvis extends Chart {
             let radius = this.radiusMultiplier * 0.8 * Math.min(wradius, hradius);
             let s = (height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
             let padding = (height - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
-            
+
             let baseY = d3.range(padding, height - padding, (height - padding - (2 * length - 1) * radius - padding) / (bar - 1));
-            
+
 
             let yField = this.y;
 
@@ -1279,7 +1311,7 @@ class Unitvis extends Chart {
             let strmax = d3.max(strlen)
 
 
-            let baseX = radius + this.textSizef(textSize, 'Arial', yField).height + 1.2*strmax + 2 * textSize
+            let baseX = radius + this.textSizef(textSize, 'Arial', yField).height + 1.2 * strmax + 2 * textSize
 
 
             let visibleUnits = this.units.filter(d => d.visible() === "1");
@@ -1324,11 +1356,11 @@ class Unitvis extends Chart {
 
                 svg.select(".content").append("text")
                     .attr("fill", COLOR.TEXT)
-                    .text(breakdownField)      
-                    .attr("x", Math.max(baseX - radius - 2 * textSize - 1.2*strmax, 0))
+                    .text(breakdownField)
+                    .attr("x", Math.max(baseX - radius - 2 * textSize - 1.2 * strmax, 0))
                     .attr("y", databreakdown.length % 2 === 0 ? baseY[Math.floor(databreakdown.length / 2) - 1] : baseY[Math.floor(databreakdown.length / 2)])
                     .attr("font-size", textSize)
-                    .attr("transform", `rotate(-90, ${Math.max(baseX - radius - 2 * textSize - 1.2*strmax, 0)}, ${databreakdown.length % 2 === 0 ? baseY[Math.floor(databreakdown.length / 2) - 1] : baseY[Math.floor(databreakdown.length / 2)]})`)
+                    .attr("transform", `rotate(-90, ${Math.max(baseX - radius - 2 * textSize - 1.2 * strmax, 0)}, ${databreakdown.length % 2 === 0 ? baseY[Math.floor(databreakdown.length / 2) - 1] : baseY[Math.floor(databreakdown.length / 2)]})`)
                     .attr('text-anchor', 'end')
                     .attr("fill-opacity", 0)
                     .transition()
@@ -1405,8 +1437,8 @@ class Unitvis extends Chart {
             let sizeField = this.size
 
             let allcenter = {
-                xcenter: width / 2 ,
-                ycenter: height / 2 
+                xcenter: width / 2,
+                ycenter: height / 2
             };
 
             // circle size and position calculation

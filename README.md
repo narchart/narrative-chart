@@ -145,7 +145,15 @@ Initializing the basic configuration of the chart.
     "add": "config",
 	"mode": light/dark, // (default: light)
 	"emotion": none/calm/exciting/positive/negative/serious/playful/trustworthy/disturbing, // (default: none)
-    "background-image": image-url // (optional)
+    "background-image": {
+                    "url" : image-url, 
+                    "opacity": float (optional), // (optional)
+                    "grayscale": int // (optional) 
+                    }, 
+    "background-color": {
+                    "color" : string, 
+                    "opacity": float (optional)
+                    },                     
     "width": 640, // (optional)
     "height": 640 // (optional)
 }
@@ -202,9 +210,16 @@ Add marks to initialize the chart.
         "animation": { "type": type }, // (optional)
     } 
     "style": {
-        "background-image": image-url, // (optional)
-        "background-color": color, // (optional)
-        "mask-image": image-url, // (optional)
+    "background-image": {
+                    "url" : image-url, 
+                    "opacity": float, // (optional)
+                    "grayscale": int // (optional) 
+                    } ,
+    "background-color": {
+                    "color" : string, 
+                    "opacity": float (optional)
+                    }, 
+    "mask-image": image-url, // (optional)
     },
     "animation": { ... }
 }
@@ -615,7 +630,8 @@ Adding title or caption.
         "font-weight": string, // (optional)
         "font-style": string, // (optional)
         "position": string, // (optional)
-
+        "left-padding": int, // (optional)
+        "top-padding": int, // (optional)
     },
     "animation": { "duration": number }
 }

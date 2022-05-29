@@ -55,6 +55,7 @@ class PieChart extends Chart {
         }
         
         let container = this.container()
+
         d3.select(container)
             .append("svg")
             .attr("width", this.width() + margin.left + margin.right)
@@ -64,10 +65,19 @@ class PieChart extends Chart {
         d3.select(container)
             .select("svg")
             .append("g")
+            .attr("id", "svgBackGrnd")
+            .append("rect")
+            .attr("width", this.Wscaleratio * 640)
+            .attr("height", this.Hscaleratio * 640)
+
+
+        d3.select(container)
+            .select("svg")
+            .append("g")
             .attr("id","chartBackGrnd")
             .append("rect")
             .attr("width", chartbackgroundsize.width)
-            .attr("height", margin.top === 130*this.Hscaleratio? 490*this.Hscaleratio: chartbackgroundsize.height)
+            .attr("height", margin.top === 130*this.Hscaleratio? 500*this.Hscaleratio: chartbackgroundsize.height)
             .attr("transform", "translate(" + (20*this.Wscaleratio) + "," + margin.top + ")");
 
         let top_temp= margin.top>40*this.Wscaleratio ? (margin.top-40*this.Wscaleratio) : margin.top
@@ -77,16 +87,32 @@ class PieChart extends Chart {
                     .attr("transform", "translate(" + margin.left + "," + top_temp + ")");
 
                 
-        if(background.Background_Image){
-            d3.select(container).select("svg").style("background", "url(" + background.Background_Image + ") center ").style("background-size", "cover").style("background-repeat", "no-repeat")
+        if (background.Background_Image) {
+            let defs = d3.select(container).select("svg").append('svg:defs');
+            defs.append("svg:pattern")
+                .attr("id", "svg-backgroundimage")
+                .attr("width", 1)
+                .attr("height", 1)
+                .attr("patternUnits", "objectBoundingBox")
+                .append("svg:image")
+                .attr("xlink:href", background.Background_Image.url)
+                .attr("preserveAspectRatio", "none")
+                .attr("opacity", background.Background_Image.opacity ?? 1)
+                .attr("filter", background.Background_Image.grayscale ? "grayscale(" + background.Background_Image.grayscale + "%)" : "grayscale(0%)")
+                .attr("width", this.Wscaleratio * 640)
+                .attr("height", this.Hscaleratio * 640)
+                .attr("x", 0)
+                .attr("y", 0);
+            d3.select("#svgBackGrnd").attr("fill", "url(#svg-backgroundimage)")
+        } else if (background.Background_Color) {
+            d3.select("#svgBackGrnd").attr("fill", background.Background_Color.color ?? "white").attr("fill-opacity", background.Background_Color.opacity ?? 1)
         }
-
-        if(background.Background_Color){
-            d3.select(container).select("svg").style("background", background.Background_Color + " center ").style("background-size", "cover")
+        else {
+            d3.select("#svgBackGrnd").remove()
         }
-
+            
         if(this.style()['background-color']){
-            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color']) 
+            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'].color ?? "white").attr("fill-opacity", this.style()['background-color'].opacity ?? 1)
         } 
         else if (this.style()['background-image']){
             let defs = d3.select(container).select("svg").append('svg:defs');
@@ -96,8 +122,10 @@ class PieChart extends Chart {
                 .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
-                .attr("xlink:href", this.style()["background-image"])
-                .attr("preserveAspectRatio", "xMidYMid slice") 
+                .attr("xlink:href", this.style()["background-image"].url)
+                .attr("preserveAspectRatio", "xMidYMid slice")
+                .attr("opacity", this.style()["background-image"].opacity ?? 1)
+                .attr("filter", this.style()["background-image"].grayscale ? "grayscale(" + this.style()["background-image"].grayscale + "%)" : "grayscale(0%)")
                 .attr("width", chartbackgroundsize.width)
                 .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("x", 0)
