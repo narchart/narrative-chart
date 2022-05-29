@@ -42,6 +42,18 @@ class Caption {
             width: Wscaleratio * 610
         }
 
+        let captionpadding = {
+            left: style['left-padding']?? 0,
+            top: style['top-padding']?? 0
+        }
+
+
+        let captiontransform = {
+            left: 0 + (captionpadding.left), 
+            top: 65 + (captionpadding.top)
+        }
+
+
 
         let captionContent = svg.append("g").attr("id","captionContent")
 
@@ -55,7 +67,7 @@ class Caption {
         let textE = captionContent.append("text")
             .attr("id", "captionText")
             .attr("dominant-baseline", "central")
-            .attr("transform", "translate(" + 0 + "," + (Hscaleratio * 65) + ")")
+            .attr("transform", "translate(" + captiontransform.left + "," + (Hscaleratio * captiontransform.top) + ")")
             .attr("font-family", style['font-family'] ?? 'Arial-Regular')
             .attr("font-weight", style['font-weight'] ?? "normal")
             .attr("font-style", style['font-style'] ?? "normal")
