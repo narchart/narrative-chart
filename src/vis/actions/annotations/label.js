@@ -111,7 +111,7 @@ class Label extends Annotator {
                 .attr("font-size", style["font-size"] || 12)
                 .attr("font-family", style["font-family"] || "Inter")
                 .attr("fill", style["font-color"] || COLOR.TEXT)
-                .attr("font-weight", style["font-weight"] || 100)
+                .attr("font-weight", style["font-weight"] || 400)
                 .attr("font-style", style["font-style"] || "normal")
                 .attr("text-anchor", (chart instanceof PieChart) ? (arc_angle > Math.PI ? "end":"start"):"middle")
                 .attr("alignment-baseline", "Alphabetic")
