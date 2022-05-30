@@ -108,26 +108,28 @@ class Unitvis extends Chart {
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'].color ?? "white").attr("fill-opacity", this.style()['background-color'].opacity ?? 1)
         } 
         else if (this.style()['background-image']){
-            let defs = d3.select(container).select("svg").append('svg:defs');
+            let defs = d3.select(container).select("svg").append('svg:defs'); 
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
-                .attr("patternUnits", "userSpaceOnUse")
+                .attr("width", 1)
+                .attr("height", 1)
+                .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"].url)
-                .attr("preserveAspectRatio", "xMidYMid slice")
+                .attr("preserveAspectRatio", "none") 
                 .attr("opacity", this.style()["background-image"].opacity ?? 1)
                 .attr("filter", this.style()["background-image"].grayscale ? "grayscale(" + this.style()["background-image"].grayscale + "%)" : "grayscale(0%)")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("height", margin.top === 130*this.scaleratio ? 490*this.scaleratio : chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
-                d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+            d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
         }
         else {
-            d3.select("#chartBackGrnd").attr("fill-opacity", 0)
-        }   
+            d3.select("#chartBackGrnd").remove()
+        }  
+        
+        
 
         this.radiusMultiplier = 1
 
