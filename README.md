@@ -13,12 +13,12 @@
       - [1. Data from URL](#1-data-from-url)
       - [2. Inline Data](#2-inline-data)
     - [Action List](#action-list)
-      - [0. Configuation](#0-configuation)
-      - [1. Data Preprocessing](#1-data-preprocessing)
-      - [2. Visualization](#2-visualization)
+      - [1. Configuation](#1-configuation)
+      - [2. Data Preprocessing](#2-data-preprocessing)
+      - [3. Visualization](#3-visualization)
         - [Add Marks](#add-marks)
         - [Encode Visual Channels](#encode-visual-channels)
-      - [3. Annotation](#3-annotation)
+      - [4. Annotation](#4-annotation)
         - [Fill](#fill)
         - [Glow](#glow)
         - [Texture](#texture)
@@ -32,11 +32,11 @@
         - [Tooltip](#tooltip)
         - [Reference](#reference)
         - [Regression](#regression)
-      - [4. Title & Caption](#4-title--caption)
+      - [5. Title & Caption](#5-title--caption)
         - [Title](#title)
         - [Caption](#caption)
-      - [5. Image](#5-image)
-      - [6. Group](#6-group)
+      - [6. Image](#6-image)
+      - [7. Group](#7-group)
     - [Animations](#animations)
     - [Examples](#examples)
       - [1. Without Animations](#1-without-animations)
@@ -135,7 +135,7 @@ vis.generate(yourSpec);
 
 ### Action List
 
-#### 0. Configuation
+#### 1. Configuation
 
 Initializing the basic configuration of the chart.
 
@@ -146,19 +146,19 @@ Initializing the basic configuration of the chart.
 	"emotion": "none"/"calm"/"exciting"/"positive"/"negative"/"serious"/"playful"/"trustworthy"/"disturbing", // (default: "none")
     "background-image": {
                     "url" : image-url, 
-                    "opacity": float (optional), // (optional)
+                    "opacity": float // (optional)
                     "grayscale": int // (optional) 
                     }, 
     "background-color": {
                     "color" : string, 
-                    "opacity": float (optional)
+                    "opacity": float // (optional)
                     },                     
     "width": 640, // (optional)
     "height": 640 // (optional)
 }
 ```
 
-#### 1. Data Preprocessing
+#### 2. Data Preprocessing
 
 Operating a SQL-like action to query data from the spreadsheet.
 
@@ -186,7 +186,7 @@ Operating a SQL-like action to query data from the spreadsheet.
 }
 ```
 
-#### 2. Visualization
+#### 3. Visualization
 
 ##### Add Marks
 
@@ -204,7 +204,7 @@ Choosing a mark to initialize the chart.
 {
     "add": "chart",
     "mark": {
-        "type": point/line/bar/unit/arc,
+        "type": "point"/"line"/"bar"/"unit"/"arc",
         "style": { ... }, // (optional)
         "animation": { "type": type }, // (optional)
     } 
@@ -216,7 +216,7 @@ Choosing a mark to initialize the chart.
                     } ,
     "background-color": {
                     "color" : string, 
-                    "opacity": float (optional)
+                    "opacity": float // (optional)
                     }, 
     "mask-image": image-url, // (optional)
     },
@@ -252,7 +252,7 @@ Add Encoding
 ```
 {
     "add": "encoding",
-    "channel": x/y/color/size/theta,
+    "channel": "x"/"y"/"color"/"size"/"theta",
     "field": field,
     "animation": { "duration": number }
 }
@@ -263,7 +263,7 @@ Modify Encoding
 ```
 {
     "modify": "encoding",
-    "channel": x/y/color/size/theta,
+    "channel": "x"/"y"/"color"/"size"/"theta",
     "field": field,
     "animation": { "duration": number }
 }
@@ -274,12 +274,12 @@ Remove Encoding
 ```
 {
     "remove": "encoding",
-    "channel": x/y/color/size/theta,
+    "channel": "x"/"y"/"color"/"size"/"theta",
     "animation": { "duration": number }
 }
 ```
 
-#### 3. Annotation
+#### 4. Annotation
 
 Annotating certain data marks in the chart by changing the marks' graphical appearance or adding additional objects such as arrows and circles.
 
@@ -484,7 +484,7 @@ Annotating certain data marks in the chart by changing the marks' graphical appe
     ],
     "text": text, // (optional)
     "style": {
-        "font-size": font-size,
+        "font-size": int,
         "color": color
     },
     "animation": { "duration": number }
@@ -576,7 +576,7 @@ Annotating certain data marks in the chart by changing the marks' graphical appe
 ```
 
 
-#### 4. Title & Caption
+#### 5. Title & Caption
 
 Adding title or caption.
 
@@ -627,7 +627,7 @@ Adding title or caption.
 }
 ```
 
-#### 5. Image
+#### 6. Image
 
 Adding an image anywhere on the canvas.
 
@@ -645,7 +645,7 @@ Adding an image anywhere on the canvas.
 }
 ```
 
-#### 6. Group
+#### 7. Group
 
 Assigning multiple actions to a group. 
 
@@ -656,8 +656,8 @@ Assigning multiple actions to a group.
         ...
     ],
     "animation": { 
-      "sync": bool (default: false)
-      "duration": int (default: 0)
+      "sync": bool // (default: false)
+      "duration": int // (default: 0)
     }
 }
 ```
