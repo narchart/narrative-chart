@@ -304,7 +304,7 @@ class PieChart extends Chart {
                 let percent = Number(d[thetaEncoding]) / d3.sum(pieData, function (x) {
                     return x.value;
                 }) * 100;
-                let text_temp = d[colorEncoding]?(d[colorEncoding] + ": " + percent.toFixed(1) + '%') : (percent.toFixed(1) + '%');
+                let text_temp = percent.toFixed(1) + '%'
                 d.text(text_temp)
             })
 
