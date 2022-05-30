@@ -13,31 +13,30 @@
       - [1. Data from URL](#1-data-from-url)
       - [2. Inline Data](#2-inline-data)
     - [Action List](#action-list)
-      - [0. Configuation](#0-configuation)
-      - [1. Data Preprocessing](#1-data-preprocessing)
-      - [2. Visualization](#2-visualization)
+      - [1. Configuation](#1-configuation)
+      - [2. Data Preprocessing](#2-data-preprocessing)
+      - [3. Visualization](#3-visualization)
         - [Add Marks](#add-marks)
         - [Encode Visual Channels](#encode-visual-channels)
-      - [3. Annotation](#3-annotation)
-        - [Arrow](#arrow)
-        - [Circle](#circle)
-        - [Contour](#contour)
-        - [Desaturate](#desaturate)
-        - [Distribution](#distribution)
-        - [Fade](#fade)
+      - [4. Annotation](#4-annotation)
         - [Fill](#fill)
         - [Glow](#glow)
+        - [Texture](#texture)
+        - [Desaturate](#desaturate)
+        - [Fade](#fade)
+        - [Contour](#contour)
+        - [Arrow](#arrow)
+        - [Circle](#circle)
         - [Label](#label)
+        - [Symbol](#symbol)
+        - [Tooltip](#tooltip)
         - [Reference](#reference)
         - [Regression](#regression)
-        - [Symbol](#symbol)
-        - [Texture](#texture)
-        - [Tooltip](#tooltip)
-      - [4. Title & Caption](#4-title--caption)
+      - [5. Title & Caption](#5-title--caption)
         - [Title](#title)
         - [Caption](#caption)
-      - [5. Image](#5-image)
-      - [6. Group](#6-group)
+      - [6. Image](#6-image)
+      - [7. Group](#7-group)
     - [Animations](#animations)
     - [Examples](#examples)
       - [1. Without Animations](#1-without-animations)
@@ -51,11 +50,11 @@
 
 ### What is Narrative Chart?
 
-**Narrative Chart** is an open-source visualization library for authoring narrative visualization and data storytelling with a high-level domain-specific language (DSL). The library is implemented in JavaScript and compatible with most modern web browsers.
+**Narrative Chart** is an open-source visualization library specialized for authoring charts that facilitete data storytelling with a high-level action-orienented declarative grammar. The library is implemented in JavaScript and compatible with most modern web browsers.
 
 ### Differences from other visualization libraries
 
-There are several visualization libraries for the web, such as *D3.js*, *Vega*, and *ECharts*. However, these libraries are all developed for general purposes. Using these tools, users still need to write a hundred lines of code to generate a narrative visualization with expressive annotations, animations, embellishments, and captions. **Narrative Chart** can simplify this process by providing a high-level action-driven grammar that enables rapid specification of narrative visualizations.
+Unlike existing visualization libraries such as *D3.js*, *Vega*, and *Apache ECharts*, Narrative Chart is designed to meet the needs of data storytelling specifically and lower the barrier of creating such charts. The grammar of Narrative Chart is simple and intuitive to learn, even for non-expert users, as it mimics the real actions of designers. Besides, Narrative Chart has rich supportive features for visual narratives, which enables users to rapidly create expressive charts and inspires their creativity.
 
 ## Getting Started
 
@@ -136,30 +135,30 @@ vis.generate(yourSpec);
 
 ### Action List
 
-#### 0. Configuation
+#### 1. Configuation
 
 Initializing the basic configuration of the chart.
 
 ```
 {
     "add": "config",
-	"mode": light/dark, // (default: light)
-	"emotion": none/calm/exciting/positive/negative/serious/playful/trustworthy/disturbing, // (default: none)
+	"mode": "light"/"dark", // (default: "light")
+	"emotion": "none"/"calm"/"exciting"/"positive"/"negative"/"serious"/"playful"/"trustworthy"/"disturbing", // (default: "none")
     "background-image": {
                     "url" : image-url, 
-                    "opacity": float (optional), // (optional)
+                    "opacity": float // (optional)
                     "grayscale": int // (optional) 
                     }, 
     "background-color": {
                     "color" : string, 
-                    "opacity": float (optional)
+                    "opacity": float // (optional)
                     },                     
     "width": 640, // (optional)
     "height": 640 // (optional)
 }
 ```
 
-#### 1. Data Preprocessing
+#### 2. Data Preprocessing
 
 Operating a SQL-like action to query data from the spreadsheet.
 
@@ -187,11 +186,11 @@ Operating a SQL-like action to query data from the spreadsheet.
 }
 ```
 
-#### 2. Visualization
+#### 3. Visualization
 
 ##### Add Marks
 
-Add marks to initialize the chart.
+Choosing a mark to initialize the chart.
 
 | Chart | Mark | Mark Style |
 |:--|:--|:--|
@@ -205,7 +204,7 @@ Add marks to initialize the chart.
 {
     "add": "chart",
     "mark": {
-        "type": point/line/bar/unit/arc,
+        "type": "point"/"line"/"bar"/"unit"/"arc",
         "style": { ... }, // (optional)
         "animation": { "type": type }, // (optional)
     } 
@@ -217,7 +216,7 @@ Add marks to initialize the chart.
                     } ,
     "background-color": {
                     "color" : string, 
-                    "opacity": float (optional)
+                    "opacity": float // (optional)
                     }, 
     "mask-image": image-url, // (optional)
     },
@@ -253,7 +252,7 @@ Add Encoding
 ```
 {
     "add": "encoding",
-    "channel": x/y/color/size/theta,
+    "channel": "x"/"y"/"color"/"size"/"theta",
     "field": field,
     "animation": { "duration": number }
 }
@@ -264,7 +263,7 @@ Modify Encoding
 ```
 {
     "modify": "encoding",
-    "channel": x/y/color/size/theta,
+    "channel": "x"/"y"/"color"/"size"/"theta",
     "field": field,
     "animation": { "duration": number }
 }
@@ -275,14 +274,14 @@ Remove Encoding
 ```
 {
     "remove": "encoding",
-    "channel": x/y/color/size/theta,
+    "channel": "x"/"y"/"color"/"size"/"theta",
     "animation": { "duration": number }
 }
 ```
 
-#### 3. Annotation
+#### 4. Annotation
 
-Adding graphical and textural annotations.
+Annotating certain data marks in the chart by changing the marks' graphical appearance or adding additional objects such as arrows and circles.
 
 ```
 {
@@ -294,141 +293,32 @@ Adding graphical and textural annotations.
             "value": value
         }
     ],
-    "text": string,
     "style": {
         ...
     },
     "animation": { 
-        "type": fade/fly/wipe,
+        "type": "fade"/"fly"/"wipe" // (default: "fade"),
         "duration": number 
     }
 }
 ```
 
-| Annotation | Style |
+| Annotation Methods | Style |
 |:--|:--|
-| Arrow | height; width; color |
-| Circle | color; width; height |
-| Contour | stroke-width; color |
-| Desaturate | \ |
-| Distribution | \ |
-| Fade | opacity |
 | Fill | color |
 | Glow | color |
+| Texture | background-image; |
+| Desaturate | \ |
+| Fade | opacity |
+| Contour | stroke-width; color |
+| Arrow | height; width; color |
+| Circle | color; width; height |
 | Label | font-size; font-family; font-color; font-weight; font-style |
+| Symbol | icon-url; width; height |
+| Tooltip | font-size; font-family; font-color; font-weight; font-style; tooltip-color |
 | Reference | stroke-width; color; stroke-dasharray; stroke-linecap |
 | Regression | stroke-width; color; stroke-dasharray; stroke-linecap |
-| Symbol | icon-url; width; height |
-| Texture | background-image; |
-| Tooltip | font-size; font-family; font-color; font-weight; font-style; tooltip-color |
 
-##### Arrow
-
-```
-{
-    "add": "annotation",
-    "method": "arrow",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "style": {
-        "color": color
-    },
-    "animation": { "duration": number }
-}
-```
-
-##### Circle
-
-```
-{
-    "add": "annotation",
-    "method": "circle",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "style": {
-        "color": color
-    },
-    "animation": { "duration": number }
-}
-```
-
-##### Contour
-
-```
-{
-    "add": "annotation",
-    "method": "contour",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "style": {
-        "color": color
-    },
-    "animation": { "duration": number }
-}
-```
-
-##### Desaturate
-
-```
-{
-    "add": "annotation",
-    "method": "desaturate",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "animation": { "duration": number }
-}
-```
-
-##### Distribution
-
-```
-{
-    "add": "annotation",
-    "method": "distribution",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "animation": { "duration": number }
-}
-```
-
-##### Fade
-
-```
-{
-    "add": "annotation",
-    "method": "fade",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "style": {
-        "opacity": opacity
-    },
-    "animation": { "duration": number }
-}
-```
 
 ##### Fill
 
@@ -468,6 +358,118 @@ Adding graphical and textural annotations.
 }
 ```
 
+##### Texture
+
+```
+{
+    "add": "annotation",
+    "method": "texture",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "background-image": background-image-url
+    },
+    "animation": { "duration": number }
+}
+```
+
+##### Desaturate
+
+```
+{
+    "add": "annotation",
+    "method": "desaturate",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "animation": { "duration": number }
+}
+```
+
+##### Fade
+
+```
+{
+    "add": "annotation",
+    "method": "fade",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "opacity": float
+    },
+    "animation": { "duration": number }
+}
+```
+
+
+##### Contour
+
+```
+{
+    "add": "annotation",
+    "method": "contour",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    },
+    "animation": { "duration": number }
+}
+```
+
+##### Arrow
+
+```
+{
+    "add": "annotation",
+    "method": "arrow",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    },
+    "animation": { "duration": number }
+}
+```
+
+##### Circle
+
+```
+{
+    "add": "annotation",
+    "method": "circle",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "color": color
+    },
+    "animation": { "duration": number }
+}
+```
+
 ##### Label
 
 ```
@@ -482,10 +484,59 @@ Adding graphical and textural annotations.
     ],
     "text": text, // (optional)
     "style": {
-        "font-size": font-size,
+        "font-size": int,
         "color": color
     },
     "animation": { "duration": number }
+}
+```
+
+
+##### Symbol
+
+```
+{
+    "add": "annotation",
+    "method": "symbol",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "style": {
+        "icon-url": icon-url
+    },
+    "animation": { "duration": number }
+}
+```
+
+
+
+##### Tooltip
+
+```
+{
+    "add": "annotation",
+    "method": "tooltip",
+    "target": [
+        {
+            "field": field,
+            "value": value
+        }
+    ],
+    "text": text, // (optional)
+    "style": {
+        "font-size": int, // (optional)
+        "font-family": string, // (optional)
+        "font-color": string, // (optional)
+        "font-weight": string, // (optional)
+        "font-style": string, // (optional)
+        "tooltip-color": string // (optional)
+    },
+    "animation": { "duration": number, "type": string}
+
+    
 }
 ```
 
@@ -524,72 +575,8 @@ Adding graphical and textural annotations.
 }
 ```
 
-##### Symbol
 
-```
-{
-    "add": "annotation",
-    "method": "symbol",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "style": {
-        "icon-url": icon-url
-    },
-    "animation": { "duration": number }
-}
-```
-
-##### Texture
-
-```
-{
-    "add": "annotation",
-    "method": "texture",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "style": {
-        "background-image": background-image-url
-    },
-    "animation": { "duration": number }
-}
-```
-
-##### Tooltip
-
-```
-{
-    "add": "annotation",
-    "method": "tooltip",
-    "target": [
-        {
-            "field": field,
-            "value": value
-        }
-    ],
-    "text": text, // (optional)
-    "style": {
-        "font-size": int, // (optional)
-        "font-family": string, // (optional)
-        "font-color": string, // (optional)
-        "font-weight": string, // (optional)
-        "font-style": string, // (optional)
-        "tooltip-color": string // (optional)
-    },
-    "animation": { "duration": number, "type": string}
-
-    
-}
-```
-
-#### 4. Title & Caption
+#### 5. Title & Caption
 
 Adding title or caption.
 
@@ -627,7 +614,7 @@ Adding title or caption.
     "add": "caption",
     "text": string,
     "style": {
-        "font-size": size, // (optional)
+        "font-size": int, // (optional)
         "font-family": string, // (optional)
         "font-color": string, // (optional)
         "font-weight": string, // (optional)
@@ -640,9 +627,9 @@ Adding title or caption.
 }
 ```
 
-#### 5. Image
+#### 6. Image
 
-Adding an image for embellishing the chart. (Note: you have to specify the image url and the position to place the image.)
+Adding an image anywhere on the canvas.
 
 ```
 {
@@ -651,16 +638,16 @@ Adding an image for embellishing the chart. (Note: you have to specify the image
         "image": image-url,
         "x": number,
         "y": number,
-        "width": number,
-        "height": number
+        "width": number, // (optional)
+        "height": number // (optional)
     },
     "animation": { "duration": number }
 }
 ```
 
-#### 6. Group
+#### 7. Group
 
-Adding a group of actions. 
+Assigning multiple actions to a group. 
 
 ```
 {
@@ -669,8 +656,8 @@ Adding a group of actions.
         ...
     ],
     "animation": { 
-      "sync": bool (default: false)
-      "duration": int (default: 0)
+      "sync": bool // (default: false)
+      "duration": int // (default: 0)
     }
 }
 ```
