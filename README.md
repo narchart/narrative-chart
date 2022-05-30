@@ -51,11 +51,11 @@
 
 ### What is Narrative Chart?
 
-**Narrative Chart** (or **NarChart**) is an open-source visualization library specialized for authoring charts that facilitete data storytelling with a high-level action-orienented declarative grammar. The library is implemented in JavaScript and compatible with most modern web browsers.
+**Narrative Chart** is an open-source visualization library specialized for authoring charts that facilitete data storytelling with a high-level action-orienented declarative grammar. The library is implemented in JavaScript and compatible with most modern web browsers.
 
 ### Differences from other visualization libraries
 
-There are several visualization libraries for the web, such as *D3.js*, *Vega*, and *ECharts*. However, these libraries are all developed for general purposes. Using these tools, users still need to write a hundred lines of code to generate a narrative visualization with expressive annotations, animations, embellishments, and captions. **Narrative Chart** can simplify this process by providing a high-level action-driven grammar that enables rapid specification of narrative visualizations.
+Unlike existing visualization libraries such as *D3.js*, *Vega*, and *Apache ECharts*, **Narrative Chart** is designed to meet the needs of data storytelling specifically and lower the barrier of creating such charts. The grammar of **Narrative Chart** is simple and intuitive as it mimics the real actions of designers. Besides, the grammar is high-level and concise, which enables non-expert users to rapidly create expressive charts with a few lines.
 
 ## Getting Started
 
