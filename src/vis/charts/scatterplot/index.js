@@ -546,7 +546,7 @@ class Scatterplot extends Chart {
      * 
      * @return {void}
     */
-    addEncoding(channel, field, animation = {}) {
+    addEncoding(channel, field, animation = {}, axis = {}) {
         if (!this[channel]) {
             this[channel] = field;
 

@@ -397,7 +397,7 @@ class BarChart extends Chart {
      *
      * @return {void}
      */
-      encodeX() {
+      encodeX(axis = {}) {
           if (this.x) {
             let svg = this.svg();
             let width = this.width(),
@@ -650,7 +650,7 @@ class BarChart extends Chart {
      *
      * @return {void}
      */
-    addEncoding(channel, field, animation = {}) {
+    addEncoding(channel, field, animation = {}, axis = {}) {
         if(!this[channel]) {
             this[channel] = field;
 
@@ -660,7 +660,7 @@ class BarChart extends Chart {
             switch(channel) {
                 case "x":
                     changeX = true;
-                    this.encodeX();
+                    this.encodeX(axis);
                     break;
                 case "y":
                     changeY = true;

@@ -254,9 +254,15 @@ Add Encoding
     "add": "encoding",
     "channel": "x"/"y"/"color"/"size"/"theta",
     "field": field,
-    "animation": { "duration": number }
+    "axis": { ... }, // (optional)
+    "animation": { "duration": number } // (optional)
 }
 ```
+
+| Axis Style | Description |
+|:--|:--|
+| labelAngle | number |
+| labelFontSize | number |
 
 Modify Encoding
 

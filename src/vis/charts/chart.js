@@ -136,7 +136,7 @@ class Chart {
 
     encodeShape(animation = {}) { }
 
-    addEncoding(channel, field, animation = {}) { }
+    addEncoding(channel, field, animation = {}, axis = {}) { }
 
     modifyEncoding(channel, field, animation = {}) { }
 

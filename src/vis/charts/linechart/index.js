@@ -497,11 +497,11 @@ class LineChart extends Chart {
      *
      * @return {void}
      */
-    addEncoding(channel, field, animation = {}) {
+    addEncoding(channel, field, animation = {}, axis = {}) {
         if(!this[channel]) {
             this[channel] = field;
-            if (this.x) this.encodeX();
-            if (this.y) this.encodeY();
+            if (this.x) this.encodeX(axis);
+            if (this.y) this.encodeY(axis);
             if (this.x && this.y) {
                 this.encodeLine();
                 this.animationWipe(animation)
