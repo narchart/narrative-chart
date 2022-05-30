@@ -23,7 +23,10 @@ class Circle extends Annotator {
      * @return {void}
      */
     annotate(chart, target, style, animation) {
-        let animationType = animation ? animation.type : null;
+        let animationType;
+        if(animation) {
+            animationType = animation.type || "fade";
+        }
         let svg = chart.svg();
         let selected = svg.selectAll(".mark")
             .filter(function (d) {
