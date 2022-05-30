@@ -809,6 +809,7 @@ class BarChart extends Chart {
                         .on("end", resolve)
             })
             .then(()=>{
+                this.svg().selectAll(".rects").remove();
                 this.svg().selectAll(".axis_y").remove().on("end", this.removemark = true);      
             })
         }
