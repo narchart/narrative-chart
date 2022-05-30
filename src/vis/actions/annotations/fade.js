@@ -20,7 +20,13 @@ class Fade extends Annotator {
             .attr("opacity", 1)
             .transition()
             .duration('duration' in animation ? animation['duration']: 0)
-            .attr("opacity", 0.3)
+            .attr("opacity", function(d) {
+                if ('opacity' in style) {
+                    return style['opacity']
+                } else {
+                    return 0.3
+                }
+            })
     }
 }
 

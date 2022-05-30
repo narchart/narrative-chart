@@ -312,7 +312,7 @@ Adding graphical and textural annotations.
 | Contour | stroke-width; color |
 | Desaturate | \ |
 | Distribution | \ |
-| Fade | \ |
+| Fade | opacity |
 | Fill | color |
 | Glow | color |
 | Label | font-size; font-family; font-color; font-weight; font-style |
@@ -423,6 +423,9 @@ Adding graphical and textural annotations.
             "value": value
         }
     ],
+    "style": {
+        "opacity": opacity
+    },
     "animation": { "duration": number }
 }
 ```
