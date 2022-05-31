@@ -6,7 +6,7 @@ import Background from '../../visualization/background';
 
 const COLOR = new Color();
 const background = new Background();
-const offset = 30;
+const offset = 65;
 
 
 /**
@@ -355,7 +355,7 @@ class BarChart extends Chart {
 
             axis.append("text")
                 .attr("x", width / 2)
-                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 20)
+                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + offset - 5)
                 .attr("text-anchor", "middle")
                 .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
@@ -414,9 +414,9 @@ class BarChart extends Chart {
             let axisX = d3.axisBottom(this.xScale);
 
             let axis_X = this.axis.append("g")
-            .attr("class", "axis_x")
-            .attr('transform', `translate(0, ${height})`)
-            .call(axisX);
+                .attr("class", "axis_x")
+                .attr('transform', `translate(0, ${height})`)
+                .call(axisX);
             
             // specify color for axis elements
             // tick
@@ -428,14 +428,17 @@ class BarChart extends Chart {
             // tick label
             axis_X.selectAll(".tick")
                 .selectAll("text")
-                .attr("fill", COLOR.AXIS);
+                .attr("fill", COLOR.AXIS)
+                .attr("font-size", axis['labelFontSize'] || 10)
+                .attr("text-anchor", "end")
+                .attr("transform", `rotate(-${axis['labelAngle'] || 45} 0 10)`)
             
             // axix-label
             const fontsize = 16;
 
             axis_X.append("text")
                  .attr("x", width / 2)
-                 .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + 20)
+                 .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + offset - 5)
                  .attr("text-anchor", "middle")
                  .attr("dominant-baseline", "hanging")
                  .attr("font-size", fontsize)
