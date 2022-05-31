@@ -96,6 +96,7 @@ class Caption {
 
 
         let maxWidth = Math.max(virtualE.node().getComputedTextLength(), Wscaleratio*590);
+        let maxHeight = 60 * Hscaleratio ;
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         let line = '';
         let rowCount = 0;
@@ -111,11 +112,18 @@ class Caption {
             }
             /* Messure textElement */
             let testWidth = virtualE.node().getComputedTextLength();
+            let testHeight = virtualE.node().getBBox().height
+
             if (testWidth > maxWidth) {
                 if (rowCount === maxRow - 1) {//最后一行还有文字没显示
                     line += "…";
                     break;
-                } else {//new row
+                } 
+                else if (testHeight > maxHeight/maxRow){
+                    line += "…";
+                    break;
+                }
+                else {//new row
                     textE.append("tspan")
                         .attr("id", "caption1stline")
                         .attr("x", position)
