@@ -305,13 +305,12 @@ class Unitvis extends Chart {
             xstrlen = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d).height)
             xstrmax = d3.max(xstrlen)
         }
-    
 
         for (let i = 0; i < xbar; i++) {
             xtick.append("text")
                 .attr("fill", COLOR.TEXT)
                 .text(xValue[i])
-                .attr("transform", "translate(" + (baseX[i] + (length - 1) * radius) + "," + (baseY[baseY.length - 1] + xstrmax) + ") rotate(" + (this.axis.xaxis.labelAngle?? 0 ) + ")")
+                .attr("transform", "translate(" + (baseX[i] + (length - 1) * radius) + "," + (baseY[baseY.length - 1] + 0.5 * xstrmax) + ") rotate(" + (this.axis.xaxis.labelAngle?? 0 ) + ")")
                 // .attr("x", baseX[i] + (length - 1) * radius)
                 // .attr("y", baseY[baseY.length - 1] + textpadding)
                 .attr("font-size", this.axis.xaxis.labelFontSize?? textSize)
@@ -357,8 +356,6 @@ class Unitvis extends Chart {
                     })
                 }
             }
-
-
         }
 
 
@@ -368,7 +365,7 @@ class Unitvis extends Chart {
             .attr("fill", COLOR.TEXT)
             .text(xField)
             .attr("x", xbar % 2 === 0 ? baseX[Math.floor(xbar / 2) - 1] + (length - 1) * radius : baseX[Math.floor(xbar / 2)] + (length - 1) * radius)
-            .attr("y",  Math.min(baseY[baseY.length - 1] + 2.2 * xstrmax,height))
+            .attr("y",  Math.min(baseY[baseY.length - 1] + 2.2 * xstrmax, height))
             .attr("font-size", textSize)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
@@ -395,8 +392,6 @@ class Unitvis extends Chart {
             .delay(this.duration ? this.duration / 2 : 0)
             .duration(this.duration)
             .attr("fill-opacity", 1)
-
-
 
     }
 
@@ -944,8 +939,20 @@ class Unitvis extends Chart {
             .append("g")
             .attr("class", "yaxistick")
 
-        let xstrheight = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d['key']).height)
-        let xstrheightmax = d3.max(xstrheight)
+
+        let xstrheight
+
+        let xstrheightmax
+
+
+        if(this.axis.xaxis.labelAngle){
+            xstrheight = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d).width)
+            xstrheightmax = Math.abs(d3.max(xstrheight) * Math.sin(this.axis.xaxis.labelAngle * Math.PI/180))
+        }else{
+            xstrheight = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d['key']).height)
+            xstrheightmax = d3.max(xstrheight)
+        }
+
     
 
         xValueFreq.forEach((bar, iBar) => {
@@ -985,7 +992,7 @@ class Unitvis extends Chart {
             .attr("fill", COLOR.TEXT)
             .text(xField)
             .attr("x", column % 2 === 0 ? centernodex[Math.floor(column / 2) - 1] : centernodex[Math.floor(column / 2)])
-            .attr("y", centernodey[centernodey.length - 1] + 2.5 * maxR + 1.2 * xstrheightmax)
+            .attr("y", Math.min(centernodey[centernodey.length - 1] + 2.5 * maxR + 1.2 * xstrheightmax, height))
             .attr("font-size", textSize)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
