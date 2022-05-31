@@ -143,21 +143,21 @@ class LineChart extends Chart {
      *
      * @return {void}
      */
-    encodeX() {
+    encodeX(axis = {}) {
         let processedData = this.processedData();
         if(this.x){
             let svg = this.svg();
             let width = this.width() - 12,
                 height = this.height() - offset;
             const xEncoding = this.x;
-            let axis = svg.select(".axis");
+            let axisClass = svg.select(".axis");
 
             /** set the ranges */
             let xScale = d3.scaleBand()
                 .range([0, width])
                 .domain(processedData.map(d => d[xEncoding]));
 
-            let axis_X = axis.append("g")
+            let axis_X = axisClass.append("g")
                 .attr("class", "axis_X");
 
             let axisX = d3.axisBottom(xScale)
@@ -184,7 +184,10 @@ class LineChart extends Chart {
             // tick label
             axis_X.selectAll(".tick")
                 .selectAll("text")
-                .attr("fill", COLOR.AXIS);
+                .attr("fill", COLOR.AXIS)
+                .attr("font-size", axis['labelFontSize']?axis['labelFontSize']:10)
+                .attr("text-anchor", axis['labelAngle']?"end":"middle")
+                .attr("transform", `rotate(-${axis['labelAngle']?axis['labelAngle']:0} 0 0)`);
 
             /* draw labels */
             const labelPadding = 24, fontsize = 16;
@@ -335,8 +338,8 @@ class LineChart extends Chart {
             .domain([0, d3.max(processedData, d => d[yEncoding])])
             .nice();
     
-        svg.append("g")
-            .attr("class", "axis");
+        // svg.append("g")
+        //     .attr("class", "axis");
         let content = svg.append("g")
             .attr("class", "content")
             .attr("chartWidth", width)
@@ -500,13 +503,30 @@ class LineChart extends Chart {
     addEncoding(channel, field, animation = {}, axis = {}) {
         if(!this[channel]) {
             this[channel] = field;
-            if (this.x) this.encodeX(axis);
-            if (this.y) this.encodeY(axis);
-            if (this.x && this.y) {
-                this.encodeLine();
-                this.animationWipe(animation)
+
+            switch(channel) {
+                case "x":
+                    this.encodeX(axis);
+                    break;
+                case "y":
+                    this.encodeY();
+                    this.encodeLine();
+                    this.animationWipe(animation);
+                    break;
+                case "color":
+                    this.encodeColor();
+                    break;
+                default:
+                    console.log("no channel select") ;   
             }
-            if (this.color) this.encodeColor();
+
+            // if (this.x) this.encodeX(axis);
+            // if (this.y) this.encodeY();
+            // if (this.x && this.y) {
+            //     this.encodeLine();
+            //     this.animationWipe(animation)
+            // }
+            // if (this.color) this.encodeColor();
         }
     }
 
