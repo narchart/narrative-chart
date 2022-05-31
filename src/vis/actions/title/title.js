@@ -89,6 +89,9 @@ class Title {
         
         let maxWidth = Math.max(virtualE.node().getComputedTextLength(), Wscaleratio* (595-titleborderpadding.left*2));
 
+        let maxHeight = 56 * Hscaleratio ;
+        
+
         const lineHeight = virtualE.node().getBBox().height * 0.9;
         const maxRow = textsize > 16 * Math.min(Wscaleratio,Hscaleratio) ? 2: 3;
     
@@ -174,13 +177,21 @@ class Title {
             }else{
                 virtualE.text(testLine);
             }
+           
             /* Messure textElement */
             let testWidth = virtualE.node().getComputedTextLength();
+            let testHeight = virtualE.node().getBBox().height
+
             if (testWidth > maxWidth) {
                 if(rowCount === maxRow - 1){//最后一行还有文字没显示
                     line += "…";
                     break;
-                }else{//new row
+                }
+                else if (testHeight > maxHeight/maxRow){
+                    line += "…";
+                    break;
+                }
+                else{//new row
                     textE.append("tspan")
                         .attr("id","title1stline")
                         .attr("x", position)
