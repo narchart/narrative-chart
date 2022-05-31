@@ -935,7 +935,7 @@ Narrative Chart supports animated transitions between actions by specifying "dur
 Clone repository
 
 ```
-git clone https://github.com/idvxlab/NarrativeChart.git
+git clone https://github.com/narchart/narrative-chart.git
 ```
 
 Switch to the Master branch

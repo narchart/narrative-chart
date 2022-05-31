@@ -52,9 +52,9 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/narchart/NarrativeChart.git"
+    "url": "git+https://github.com/narchart/narrative-chart.git"
   },
   "bugs": {
-    "url": "https://github.com/narchart/NarrativeChart/issues"
+    "url": "https://github.com/narchart/narrative-chart/issues"
   }
 }
