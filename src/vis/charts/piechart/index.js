@@ -119,7 +119,7 @@ class PieChart extends Chart {
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("height", margin.top === 130*this.Hscaleratio? 500*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("patternUnits", "userSpaceOnUse")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"].url)
@@ -127,7 +127,7 @@ class PieChart extends Chart {
                 .attr("opacity", this.style()["background-image"].opacity ?? 1)
                 .attr("filter", this.style()["background-image"].grayscale ? "grayscale(" + this.style()["background-image"].grayscale + "%)" : "grayscale(0%)")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 480*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("height", margin.top === 130*this.Hscaleratio? 500*this.Hscaleratio: chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
                 d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
