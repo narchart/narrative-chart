@@ -73,7 +73,7 @@ class Unitvis extends Chart {
         this._svg = d3.select(container)
             .select("svg")
             .append("g")
-            .attr("transform", margin.top === 130 * this.scaleratio ? "translate(" + (margin.left + 10 * this.scaleratio) + "," + margin.top + ")" : "translate(" + margin.left * this.scaleratio + "," + margin.top + ")");
+            .attr("transform", margin.top === 130 * this.scaleratio ? "translate(" + (margin.left * this.scaleratio) + "," + margin.top + ")" : "translate(" + margin.left * this.scaleratio + "," + margin.top + ")");
 
 
 
@@ -104,11 +104,11 @@ class Unitvis extends Chart {
 
 
 
-        if(this.style()['background-color']){
+        if (this.style()['background-color']) {
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'].color ?? "white").attr("fill-opacity", this.style()['background-color'].opacity ?? 1)
-        } 
-        else if (this.style()['background-image']){
-            let defs = d3.select(container).select("svg").append('svg:defs'); 
+        }
+        else if (this.style()['background-image']) {
+            let defs = d3.select(container).select("svg").append('svg:defs');
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
                 .attr("width", 1)
@@ -116,20 +116,20 @@ class Unitvis extends Chart {
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", this.style()["background-image"].url)
-                .attr("preserveAspectRatio", "none") 
+                .attr("preserveAspectRatio", "none")
                 .attr("opacity", this.style()["background-image"].opacity ?? 1)
                 .attr("filter", this.style()["background-image"].grayscale ? "grayscale(" + this.style()["background-image"].grayscale + "%)" : "grayscale(0%)")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.scaleratio ? 490*this.scaleratio : chartbackgroundsize.height)
+                .attr("height", margin.top === 130 * this.scaleratio ? 490 * this.scaleratio : chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
             d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
         }
         else {
             d3.select("#chartBackGrnd").remove()
-        }  
-        
-        
+        }
+
+
 
         this.radiusMultiplier = 1
 
@@ -298,10 +298,10 @@ class Unitvis extends Chart {
         let xstrmax
 
 
-        if(this.axis.xaxis.labelAngle){
+        if (this.axis.xaxis.labelAngle) {
             xstrlen = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d).width)
-            xstrmax = Math.abs(d3.max(xstrlen) * Math.sin(this.axis.xaxis.labelAngle * Math.PI/180))
-        }else{
+            xstrmax = Math.abs(d3.max(xstrlen) * Math.sin(this.axis.xaxis.labelAngle * Math.PI / 180))
+        } else {
             xstrlen = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d).height)
             xstrmax = d3.max(xstrlen)
         }
@@ -310,10 +310,10 @@ class Unitvis extends Chart {
             xtick.append("text")
                 .attr("fill", COLOR.TEXT)
                 .text(xValue[i])
-                .attr("transform", "translate(" + (baseX[i] + (length - 1) * radius) + "," + (baseY[baseY.length - 1] + 0.5 * xstrmax) + ") rotate(" + (this.axis.xaxis.labelAngle?? 0 ) + ")")
+                .attr("transform", "translate(" + (baseX[i] + (length - 1) * radius) + "," + (baseY[baseY.length - 1] + 0.5 * xstrmax) + ") rotate(" + (this.axis.xaxis.labelAngle ?? 0) + ")")
                 // .attr("x", baseX[i] + (length - 1) * radius)
                 // .attr("y", baseY[baseY.length - 1] + textpadding)
-                .attr("font-size", this.axis.xaxis.labelFontSize?? textSize)
+                .attr("font-size", this.axis.xaxis.labelFontSize ?? textSize)
                 .attr("text-anchor", "middle")
                 .attr("fill-opacity", 0)
                 .transition()
@@ -365,7 +365,7 @@ class Unitvis extends Chart {
             .attr("fill", COLOR.TEXT)
             .text(xField)
             .attr("x", xbar % 2 === 0 ? baseX[Math.floor(xbar / 2) - 1] + (length - 1) * radius : baseX[Math.floor(xbar / 2)] + (length - 1) * radius)
-            .attr("y",  Math.min(baseY[baseY.length - 1] + 2.2 * xstrmax, height))
+            .attr("y", Math.min(baseY[baseY.length - 1] + 2.2 * xstrmax, height))
             .attr("font-size", textSize)
             .attr('text-anchor', 'middle')
             .attr("fill-opacity", 0)
@@ -537,25 +537,25 @@ class Unitvis extends Chart {
         let xstrmax
 
 
-        if(this.axis.xaxis.labelAngle){
+        if (this.axis.xaxis.labelAngle) {
             xstrlen = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d).width)
-            xstrmax = Math.abs(d3.max(xstrlen) * Math.sin(this.axis.xaxis.labelAngle * Math.PI/180))
-        }else{
+            xstrmax = Math.abs(d3.max(xstrlen) * Math.sin(this.axis.xaxis.labelAngle * Math.PI / 180))
+        } else {
             xstrlen = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d['key']).height)
             xstrmax = d3.max(xstrlen)
-            }
-    
+        }
 
 
-    
+
+
         xValueFreq.forEach((bar, iBar) => {
             xtick.append("text")
                 .attr("fill", COLOR.TEXT)
                 .text(xValue[iBar])
-                .attr("transform", "translate(" + centernodex[iBar] + "," + (centernodey[0] + 2 * radiusa + 1 * maxR) + ") rotate(" + (this.axis.xaxis.labelAngle?? 0 ) + ")")
+                .attr("transform", "translate(" + centernodex[iBar] + "," + (centernodey[0] + 2 * radiusa + 1 * maxR) + ") rotate(" + (this.axis.xaxis.labelAngle ?? 0) + ")")
                 // .attr("x", centernodex[iBar])
                 // .attr("y", centernodey[0] + 2 * radiusa + 1 * maxR)
-                .attr("font-size", this.axis.xaxis.labelFontSize?? textSize)
+                .attr("font-size", this.axis.xaxis.labelFontSize ?? textSize)
                 .attr("text-anchor", "middle")
                 .attr("fill-opacity", 0)
                 .transition()
@@ -945,22 +945,22 @@ class Unitvis extends Chart {
         let xstrheightmax
 
 
-        if(this.axis.xaxis.labelAngle){
+        if (this.axis.xaxis.labelAngle) {
             xstrheight = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d).width)
-            xstrheightmax = Math.abs(d3.max(xstrheight) * Math.sin(this.axis.xaxis.labelAngle * Math.PI/180))
-        }else{
+            xstrheightmax = Math.abs(d3.max(xstrheight) * Math.sin(this.axis.xaxis.labelAngle * Math.PI / 180))
+        } else {
             xstrheight = xValueFreq.map(d => this.textSizef(textSize, 'Arial', d['key']).height)
             xstrheightmax = d3.max(xstrheight)
         }
 
-    
+
 
         xValueFreq.forEach((bar, iBar) => {
             xtick.append("text")
                 .attr("fill", COLOR.TEXT)
                 .text(xValue[iBar])
-                .attr("transform", "translate(" + (centernodex[iBar]) + "," + (centernodey[centernodey.length - 1] + 2.5 * maxR) + ") rotate(" + (this.axis.xaxis.labelAngle?? 0 ) + ")")
-                .attr("font-size", this.axis.xaxis.labelFontSize?? textSize)
+                .attr("transform", "translate(" + (centernodex[iBar]) + "," + (centernodey[centernodey.length - 1] + 2.5 * maxR) + ") rotate(" + (this.axis.xaxis.labelAngle ?? 0) + ")")
+                .attr("font-size", this.axis.xaxis.labelFontSize ?? textSize)
                 .attr("text-anchor", "middle")
                 .attr("fill-opacity", 0)
                 .transition()
@@ -1171,8 +1171,8 @@ class Unitvis extends Chart {
             right: width / 20
         }
 
-        let textSize =  14 * this.scaleratio;
-        
+        let textSize = 14 * this.scaleratio;
+
         // situation 1:      
         if (this.x && this.y && this.size) {
             this.XYSizeLayout(height, width, svg)
@@ -1205,16 +1205,38 @@ class Unitvis extends Chart {
 
             let maxCount = d3.max(count);
 
-            let length = Math.ceil(30 / bar) < 4 ? Math.ceil(30 / bar) : 4
 
-            let wradius = ((width - margin.left - margin.right) / ((length + 2) * (bar - 1) + length)) / 2;
-            let hradius = height * 0.8 / Math.ceil(maxCount / length) / 2;
+            let length = Math.ceil(30 / bar) < 3 ? Math.ceil(30 / bar) : 3
 
-            let radius = this.radiusMultiplier * Math.min(Math.min(wradius, hradius), 6);
-            let s = (0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
-            let padding = (0.9 * width - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2    
-            let baseX = d3.range(padding, width - padding, (width - 2 * padding - (2 * length) * radius) / (bar - 1));
-            let baseY = (height - Math.ceil(maxCount / length) * 2 * radius) / 2 + Math.ceil(maxCount / length) * 2 * radius - radius;
+            let padding = width
+
+            let wradius, hradius, radius, s, baseX, baseY
+
+            while (padding / (width) >= 0.18) {
+
+                length++
+
+                wradius = ((width - margin.left - margin.right) / ((length + 2) * (bar - 1) + length)) / 2;
+
+                hradius = 0.8 * height / Math.ceil(maxCount / length) / 2;
+
+                radius = this.radiusMultiplier * Math.min(Math.min(wradius, hradius), 6);
+
+                s = (0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((0.9 * width - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
+
+                padding = (0.8 * width - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
+
+                // console.log(width)
+                baseX = d3.range(padding, width - padding, (width - 2 * padding - (2 * length) * radius) / (bar - 1));
+
+
+
+                baseY = (height - Math.ceil(maxCount / length) * 2 * radius) / 2 + Math.ceil(maxCount / length) * 2 * radius - radius;
+
+            }
+
+
+
             let visibleUnits = this.units.filter(d => d.visible() === "1");
 
             let units = [];
@@ -1236,10 +1258,10 @@ class Unitvis extends Chart {
 
             let xstrmax
 
-            if(this.axis.xaxis.labelAngle){
+            if (this.axis.xaxis.labelAngle) {
                 xstrlen = breakdownValue.map(d => this.textSizef(textSize, 'Arial', d).width)
-                xstrmax = Math.abs(d3.max(xstrlen) * Math.sin(this.axis.xaxis.labelAngle * Math.PI/180))
-            }else{
+                xstrmax = Math.abs(d3.max(xstrlen) * Math.sin(this.axis.xaxis.labelAngle * Math.PI / 180))
+            } else {
                 xstrlen = breakdownValue.map(d => this.textSizef(textSize, 'Arial', d).height)
                 xstrmax = d3.max(xstrlen)
             }
@@ -1248,10 +1270,10 @@ class Unitvis extends Chart {
                 xtick.append("text")
                     .attr("fill", COLOR.TEXT)
                     .text(breakdownValue[iBar])
-                    .attr("transform", "translate(" + (baseX[iBar] + (length / 2 - 1) * radius) + "," + (baseY + radius +  xstrmax) + ") rotate(" + (this.axis.xaxis.labelAngle?? 0 ) + ")")
+                    .attr("transform", "translate(" + (baseX[iBar] + (length / 2 - 1) * radius) + "," + (baseY + radius + xstrmax) + ") rotate(" + (this.axis.xaxis.labelAngle ?? 0) + ")")
                     // .attr("x", baseX[iBar] + (length / 2 - 1) * radius)
                     // .attr("y", baseY + radius + textSize)
-                    .attr("font-size", this.axis.xaxis.labelFontSize?? textSize)
+                    .attr("font-size", this.axis.xaxis.labelFontSize ?? textSize)
                     .attr("text-anchor", "middle")
                     .attr("fill-opacity", 0)
                     // .attr("transform", "rotate(-65)")
@@ -1275,7 +1297,7 @@ class Unitvis extends Chart {
             svg.select(".content").append("text")
                 .attr("fill", COLOR.TEXT)
                 .text(breakdownField)
-                .attr("x", databreakdown.length % 2 === 0 ? baseX[Math.floor(databreakdown.length / 2) - 1] : baseX[Math.floor(databreakdown.length / 2)])
+                .attr("x", databreakdown.length % 2 === 0 ? baseX[Math.floor(databreakdown.length / 2) - 1] + (length / 2 - 1) * radius : baseX[Math.floor(databreakdown.length / 2)] + (length / 2 - 1) * radius)
                 .attr("y", Math.min(baseY + radius + 2.2 * xstrmax, height))
                 .attr("font-size", textSize)
                 .attr('text-anchor', 'middle')
@@ -1342,17 +1364,29 @@ class Unitvis extends Chart {
             // wradius -> calculated radius based on width
             // hradius -> calculated radius based on height
 
-            let length = Math.ceil(30 / bar) < 5 ? Math.ceil(30 / bar) : 5
+            let length = Math.ceil(30 / bar) < 4 ? Math.ceil(30 / bar) : 4
 
-            let wradius = d3.min([width - margin.left - margin.right, width]) / Math.ceil(maxCount / length) / 2;
-            let hradius = height / bar / (Math.ceil(length) + 1) / 2;
+            let wradius, hradius, radius, s, baseY
 
-            let radius = this.radiusMultiplier * 0.8 * Math.min(wradius, hradius);
-            let s = (height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
-            let padding = (height - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
+            let padding = height
 
-            let baseY = d3.range(padding, height - padding, (height - padding - (2 * length - 1) * radius - padding) / (bar - 1));
+            while (padding / height >= 0.22) {
 
+                length++
+
+                wradius = d3.min([width - margin.left - margin.right, width]) / Math.ceil(maxCount / length) / 2;
+                
+                hradius = height / bar / (Math.ceil(length) + 1) / 2;
+
+                radius = this.radiusMultiplier * 0.8 * Math.min(wradius, hradius);
+                
+                s = (height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2 < 1 ? 0.2 : Math.floor((height - 2 * (bar) * length * radius) / (radius) / (bar + 3) / 2)
+                
+                padding = (height - bar * length * 2 * radius - (bar - 1) * s * 2 * radius) / 2
+
+                baseY = d3.range(padding, height - padding, (height - padding - (2 * length - 1) * radius - padding) / (bar - 1));
+
+            }
 
             let yField = this.y;
 
@@ -1366,7 +1400,6 @@ class Unitvis extends Chart {
 
 
             let visibleUnits = this.units.filter(d => d.visible() === "1");
-
 
             let units = [];
             for (let i = 0; i < bar; i++) {
