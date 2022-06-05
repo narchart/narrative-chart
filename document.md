@@ -50,7 +50,7 @@
 
 ### What is Narrative Chart?
 
-**Narrative Chart** is an open-source visualization library specialized for authoring charts that facilitete data storytelling with a high-level action-oriented declarative grammar. The library is implemented in JavaScript and compatible with most modern web browsers.
+**Narrative Chart** is an open-source visualization library specialized for authoring charts that facilitate data storytelling with a high-level action-oriented declarative grammar. The library is implemented in JavaScript and compatible with most modern web browsers.
 
 ### Differences from other visualization libraries
 
