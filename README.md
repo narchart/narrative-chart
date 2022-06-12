@@ -1,6 +1,7 @@
 # Narrative Chart
 
 [![npm version](https://badge.fury.io/js/narchart.svg)](https://badge.fury.io/js/narchart)
+![workflow](https://github.com/narchart/narrative-chart/actions/workflows/build.yml/badge.svg)
 
 [![](/teasor.png)](https://narchart.github.io)
 
