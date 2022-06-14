@@ -20,7 +20,7 @@ export default class Chart extends Component {
     }
 
     render() {
-        let height = 640, width = 640;
+        let height = '100%', width = '100%';
         if (this.props.spec.chart) {
             let size = this.props.spec.chart.size;
             switch (size) {
@@ -45,7 +45,7 @@ export default class Chart extends Component {
             }
         }
         return (
-            <div id='frame' style={{ marginLeft: 60, marginTop: 60, height: height, width: width, borderStyle: 'solid', borderWidth: 1, borderColor: 'black' }}>
+            <div id='frame' style={{height: height, width: width, borderStyle: 'solid', borderWidth: 1, borderColor: 'black' }}>
                 <div id='demo-chart'
                     style={{
                         height: height,

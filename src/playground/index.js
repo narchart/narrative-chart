@@ -50,17 +50,6 @@ export default class Playground extends React.Component {
       spec: spec,
     })
   }
-  updateChart = () => {
-    if (this.state.status === 'video') {
-      this.setState({
-        specs: JSON.parse(document.getElementsByTagName('pre')[0].innerText)
-      })
-    } else {
-      this.setState({
-        spec: JSON.parse(document.getElementsByTagName('pre')[0].innerText)
-      })
-    }
-  }
   showGallary = (props) => {
     props.history.push('/gallary')
   }
@@ -97,8 +86,6 @@ export default class Playground extends React.Component {
                 <div className="header">
                   Narrative Chart
                   {specselector}
-                  <button style={{ marginLeft: '20px' }} onClick={this.updateChart}>update</button>
-
                 </div>
                 <div className='pannelWrapper'>
                   <div className='editPannel'>
