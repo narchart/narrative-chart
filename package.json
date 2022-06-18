@@ -1,6 +1,6 @@
 {
   "name": "narchart",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Narrative Chart",
   "main": "lib/index.js",
   "dependencies": {
