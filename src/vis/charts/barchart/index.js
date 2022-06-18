@@ -169,7 +169,7 @@ class BarChart extends Chart {
                 .attr("patternUnits", "objectBoundingBox")
                 .append("svg:image")
                 .attr("xlink:href", background.Background_Image.url)
-                .attr("preserveAspectRatio", "none")
+                .attr("preserveAspectRatio", "xMidYMid slice")
                 .attr("opacity", background.Background_Image.opacity ?? 1)
                 .attr("filter", background.Background_Image.grayscale ? "grayscale(" + background.Background_Image.grayscale + "%)" : "grayscale(0%)")
                 .attr("width", this.Wscaleratio * 640)
