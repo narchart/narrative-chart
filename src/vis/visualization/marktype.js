@@ -4,6 +4,7 @@ const MarkType = {
     POINT: 'point',
     UNIT: 'unit',
     ARC:'arc',
+    HBAR: 'hbar'
 }
 
 export default MarkType
