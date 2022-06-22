@@ -150,9 +150,7 @@ class HBarChart extends Chart {
         this._svg = d3.select(container)
             .select("svg")
             .append("g")
-            .attr("id", "chartAAA")
             .attr("transform", "translate(" + margin.left + "," + (margin.top + axisTextOffset_y) + ")");
-
 
 
         if (background.Background_Image) {
@@ -228,12 +226,9 @@ class HBarChart extends Chart {
 
             let axisX = d3.axisLeft(this.xScale);
 
-            //Drawing x-axis
             let axis_X = this.axis.append("g")
                 .attr("class", "axis_x")
-                // .attr('transform', `translate(50, 0)`)
                 .call(axisX);
-
 
             // specify color for axis elements
             // tick
