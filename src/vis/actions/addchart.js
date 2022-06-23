@@ -1,7 +1,6 @@
 import MarkType from '../visualization/marktype';
 import Action from './action';
-import { BarChart, LineChart, Scatterplot, Unitvis, PieChart } from '../charts';
-import AreaChart from '../charts/areachart';
+import { BarChart, LineChart, Scatterplot, Unitvis, PieChart, AreaChart } from '../charts';
 
 class AddChart extends Action {
     // mark represents chart type, leave_space represents if needs to reserve space for titles or captions in charts
