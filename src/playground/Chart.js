@@ -9,6 +9,7 @@ export default class Chart extends Component {
         this.vis = new NarrativeChart();
         this.vis.container(container);
         this.vis.generate(spec);
+        console.log(this.vis);
     }
 
     componentDidUpdate() {
@@ -17,6 +18,7 @@ export default class Chart extends Component {
         this.vis.container(container);
         this.vis.stop()
         this.vis.generate(spec);
+        console.log(this.vis);
     }
 
     render() {
@@ -39,7 +41,7 @@ export default class Chart extends Component {
                 case 'unitvis':
                     height = 720;
                     width = 680;
-                    break;               
+                    break;
                 default:
                     break;
             }

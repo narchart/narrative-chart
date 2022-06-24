@@ -4,7 +4,7 @@ import Parser from './parser';
 
 /**
  * @description main class for narrative chart
- * 
+ *
  * @class
  */
 class NarrativeChart {
@@ -30,7 +30,6 @@ class NarrativeChart {
         let spec = this._spec;
         let { dataspec, pipeline } = this.parser.parse(spec);
 
-        
         this._loader.load(dataspec) // STEP 1: data
             .then((loaded) => { // STEP 2: generate visualization
                 this._vis.container(this.container());

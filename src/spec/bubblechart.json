@@ -1,0 +1,141 @@
+{
+  "data": {
+    "url": "http://localhost:3000/spreadsheets/cars.csv",
+    "schema": [
+      {
+        "field": "Name",
+        "type": "categorical"
+      },
+      {
+        "field": "Miles per Gallon",
+        "type": "numerical"
+      },
+      {
+        "field": "Cylinders",
+        "type": "numerical"
+      },
+      {
+        "field": "Displacement",
+        "type": "numerical"
+      },
+      {
+        "field": "Horsepower",
+        "type": "numerical"
+      },
+      {
+        "field": "Weight",
+        "type": "numerical"
+      },
+      {
+        "field": "Acceleration",
+        "type": "numerical"
+      },
+      {
+        "field": "Year",
+        "type": "temporal"
+      },
+      {
+        "field": "Origin",
+        "type": "categorical"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "add": "config",
+      "mode": "light",
+      "emotion": "exciting"
+    },
+    {
+      "select": [
+        {
+          "field": "Horsepower",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Miles per Gallon",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Acceleration",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Weight",
+          "aggregate": "sum"
+        },
+        {
+          "field": "Name"
+        },
+        {
+          "field": "Origin"
+        }
+      ],
+      "groupby": [
+        {
+          "field": "Name"
+        }
+      ],
+      "filter": []
+    },
+    {
+      "add": "chart",
+      "mark": {
+        "type": "bubble",
+        "style": {
+          "stroke-color": "green",
+          "stroke-width": 0,
+          "stroke-opacity": 0.4,
+          "fill-opacity": 1
+        }
+      },
+      "style": {
+      }
+    },
+    {
+      "add": "group",
+      "actions": [
+        {
+          "add": "encoding",
+          "channel": "x",
+          "field": "Horsepower"
+        },
+        {
+          "add": "encoding",
+          "channel": "y",
+          "field": "Miles per Gallon"
+        }
+      ]
+    },
+    {
+      "add": "annotation",
+      "method": "circle",
+      "target": [
+        {
+          "field": "Name",
+          "value": "datsun 280-zx"
+        }
+      ],
+      "style": {
+        "color": "green",
+        "height": 10,
+        "width": 10
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "texture",
+      "target": [
+        {
+          "field": "Name",
+          "value": "datsun 280-zx"
+        }
+
+      ],
+      "style": {
+        "background-image": "http://localhost:3000/texture/circle.png"
+      }
+    }
+
+  ]
+}

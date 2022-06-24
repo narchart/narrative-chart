@@ -2,7 +2,7 @@ import MarkType from './visualization/marktype';
 
 /**
  * @description A visuaization class
- * 
+ *
  * @class
  */
 class Visualization {

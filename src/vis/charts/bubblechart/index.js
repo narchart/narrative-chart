@@ -11,18 +11,19 @@ const background = new Background();
 
 /**
  * @description A scatterplot chart is a chart type.
- * 
+ *
  * @class
  * @extends Chart
  */
 class Scatterplot extends Chart {
-    /** 
+    /**
      * @description Main function of visualizing scatterplot.
      * @returns {function} It represents the canvas that has been created, on which subsequent charts, titles, and other content expand.
      */
     visualize() {
+        console.log('visualize')
         let margin = this.margin()
-
+        console.log(background)
         this.Hscaleratio = this.height() / 640
         this.Wscaleratio = this.width() / 640
 
@@ -96,6 +97,7 @@ class Scatterplot extends Chart {
             d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'].color ?? "white").attr("fill-opacity", this.style()['background-color'].opacity ?? 1)
         }
         else if (this.style()['background-image']) {
+            console.log(this.style())
             let defs = d3.select(container).select("svg").append('svg:defs');
             defs.append("svg:pattern")
                 .attr("id", "chart-backgroundimage")
@@ -131,10 +133,11 @@ class Scatterplot extends Chart {
 
     /**
      * @description assigning identity and data information for each point mark
-     *      * 
+     *      *
      * @return {void}
-    */
+     */
     data() {
+        console.log('data')
         let processedData = this.processedData();
         processedData.forEach((d, i) => {
             let point = new Point();
@@ -147,9 +150,9 @@ class Scatterplot extends Chart {
 
     /**
      * @description The initial status of scatterplot vis
-     *      * 
+     *      *
      * @return {void}
-    */
+     */
     initvis() {
         let svg = this.svg();
         svg.append("g")
@@ -169,6 +172,7 @@ class Scatterplot extends Chart {
             "point_size": 300
         }
         var defs = svg.append('svg:defs');
+        console.log(this.markStyle()['background-image'])
         defs.append("svg:pattern")
             .attr("id", "point_image_background")
             .attr("width", config.point_size)
@@ -280,7 +284,7 @@ class Scatterplot extends Chart {
                 .attr("y2", 0);
 
             // specify color for axis elements
-            // tick 
+            // tick
             axis_X.selectAll(".tick")
                 .select("line")
                 .attr("stroke", COLOR.AXIS);
@@ -379,7 +383,7 @@ class Scatterplot extends Chart {
                 .call(axisY);
 
             // specify color for axis elements
-            // tick 
+            // tick
             axis_Y.selectAll(".tick")
                 .select("line")
                 .attr("stroke", COLOR.AXIS);
@@ -457,9 +461,9 @@ class Scatterplot extends Chart {
 
     /**
      * @description Using mark color to encode a data field
-     *      * 
+     *      *
      * @return {void}
-    */
+     */
     encodeColor(animation = {}) {
         if (this.color) {
             let color = this.color
@@ -479,10 +483,11 @@ class Scatterplot extends Chart {
 
     /**
      * @description Using mark size to encode a data field
-     *  
+     *
      * @return {void}
-    */
+     */
     encodeSize(animation = {}) {
+
         if (this.size) {
             let size = this.size;
             let width = this.width(),
@@ -535,22 +540,22 @@ class Scatterplot extends Chart {
 
     /**
      * @description Using the shape of mark to encode a data field
-     * 
+     *
      * @return {void}
-    */
+     */
     encodeShape(animation = {}) {
 
     }
 
     /**
      * @description allocating the encoding actions based on spec and then update the chart.
-     * 
+     *
      * @param {string} channel A encoding channel
      * @param {string} field A data field
      * @param {{delay: number, duration: number}} animation Animation parameters of the action.
-     * 
+     *
      * @return {void}
-    */
+     */
     addEncoding(channel, field, animation = {}, axis = {}) {
         if (!this[channel]) {
             this[channel] = field;
@@ -616,13 +621,13 @@ class Scatterplot extends Chart {
 
     /**
      * @description Modifying a current encoding channel and then update the chart.
-     * 
+     *
      * @param {string} channel A encoding channel
      * @param {string} field A data field
      * @param {{delay: number, duration: number}} animation Animation parameters of the action.
-     * 
+     *
      * @return {void}
-    */
+     */
     modifyEncoding(channel, field, animation = {}) {
         if (this[channel]) {
             this[channel] = field;
@@ -681,13 +686,13 @@ class Scatterplot extends Chart {
 
     /**
      * @description Removing an existing encoding action and update the chart
-     * 
+     *
      * @param {string} channel A encoding channel
      * @param {string} field A data field
      * @param {{delay: number, duration: number}} animation Animation parameters of the action.
-     * 
+     *
      * @return {void}
-    */
+     */
     removeEncoding(channel, animation = {}) {
         this[channel] = null;
         let svg = this.svg();
@@ -745,11 +750,11 @@ class Scatterplot extends Chart {
 
     /**
      * @description Adding fade animation to the chart
-     * 
+     *
      * @param {{delay: number, duration: number}} animation Animation parameters of the action.
-     * 
+     *
      * @return {void}
-    */
+     */
     animationFade(animation) {
         let svg = this.svg();
         svg.select(".content")
