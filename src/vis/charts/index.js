@@ -21,3 +21,7 @@ export {
 export {
     default as Bubblechart
 } from './bubblechart'
+
+export {
+    default as AreaChart
+} from "./areachart";

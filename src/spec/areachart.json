@@ -1,0 +1,107 @@
+{
+    "data": {
+      "url": "http://chart.datacalliope.com/covid19World.csv",
+      "schema": [
+        {
+          "field": "Date",
+          "type": "temporal",
+          "pictype": "time"
+        },
+        {
+          "field": "Country",
+          "type": "geographical",
+          "subtype": "world",
+          "pictype": "map"
+        },
+        {
+          "field": "Confirmed Cases",
+          "type": "numerical"
+        },
+        {
+          "field": "Recovered",
+          "type": "numerical"
+        },
+        {
+          "field": "Deaths",
+          "type": "numerical"
+        }
+      ]
+    },
+    "actions": [
+      {
+        "add": "config",
+        "mode": "light",
+        "emotion": "calm"
+      },
+      {
+        "select": [
+          {
+            "field": "Recovered",
+            "aggregate": "sum"
+          },
+          {
+            "field": "Confirmed Cases",
+            "aggregate": "sum"
+          },
+          {
+            "field": "Date"
+          }
+        ],
+        "groupby": [
+          {
+            "field": "Date"
+          }
+        ],
+        "filter": []
+      },
+      {
+        "add": "chart",
+        "mark": {
+          "type": "area",
+          "style": {
+            "stroke": "green",
+            "stroke-width": "3",
+            "point": true,
+            "point-radius": "15",
+            "point-fill": "blue",
+            "point-stroke": "yellow",
+            "point-stroke-width": "2",
+            "area-fill": "green"
+          }
+        }
+      },
+      {
+        "add": "group",
+        "actions": [
+          {
+            "add": "encoding",
+            "channel": "x",
+            "field": "Date"
+          },
+          {
+            "add": "encoding",
+            "channel": "y",
+            "field": "Recovered"
+          }
+        ],
+        "animation": {
+          "sync": false,
+          "duration": 2000
+        },
+        "leave_space": false
+      },
+      {
+        "add": "annotation",
+        "method": "texture",
+        "target": [
+            {
+                "field": "Date",
+                "value": "2020/3/6"
+            }
+        ],
+        "style": {
+          "background-image": "http://localhost:3000/icon/car1.jpg"
+        }
+      }
+    ]
+  }

@@ -4,7 +4,8 @@ const MarkType = {
     POINT: 'point',
     UNIT: 'unit',
     ARC:'arc',
-    BUBBLE:'bubble'
+    BUBBLE:'bubble',
+    AREA:'area'
 }
 
 export default MarkType
