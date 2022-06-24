@@ -87,7 +87,7 @@ import {NarrativeChart} from "narchart";
 ```
 
 (2) Then, build your [visualization specification](#visualization-specification).
-   
+
 ```
 var yourSpec = {...}
 ```
@@ -199,6 +199,7 @@ Choosing a mark to initialize the chart.
 | Line Chart | line | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image; |
 | Pie Chart | arc | inner-radius; outer-radius; text-radius; corner-radius; stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 | Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
+| Area Chart | area | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image;area-fill; |
 
 ```
 {
