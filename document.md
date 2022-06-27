@@ -609,7 +609,7 @@ Adding title or caption.
         "left-padding": int, // (optional)
         "top-padding": int, // (optional)
       },
-    "animation": {"duration": int, "type": string} // (optional)
+    "animation": {"duration": int, "type": "fade"/"typewritter"/"wipe" (default: "fade")} // (optional)
 
 }
 ```
@@ -630,7 +630,7 @@ Adding title or caption.
         "left-padding": int, // (optional)
         "top-padding": int, // (optional)
     },
-    "animation": { "duration": number }
+    "animation": { "duration": int, "type": "fade"/"typewritter"/"wipe" (default: "fade") } // (optional)
 }
 ```
 

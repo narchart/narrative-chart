@@ -89,12 +89,13 @@ class DataProcess extends Action {
         // ... only `agg` but no `groupby` ==> aggregate on the whole dataset
         // ... no `agg` but `groupby` ==> return the first value of matching records
         let processedData = data;
-        try {
-            processedData = this.aggregate(data, this._select, this._groupby);
-        } catch (error) {
-            console.error('Data Processing: Error In Group By:\n' + Error);
+        if(this._groupby.length) {
+            try {
+                processedData = this.aggregate(data, this._select, this._groupby);
+            } catch (error) {
+                console.error('Data Processing: Error In Group By:\n' + Error);
+            }
         }
-
         // Step 3: Select
         // select: only store cols being selected
         try {
