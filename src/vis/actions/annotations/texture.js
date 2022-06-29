@@ -4,6 +4,7 @@ import { PieChart } from '../../charts';
 import { Unitvis } from '../../charts';
 import { LineChart } from '../../charts';
 import { Scatterplot } from '../../charts';
+import AreaChart from '../../charts/areachart';
 
 /**
  * @description An annotator for filling texture.
@@ -290,7 +291,46 @@ class Texture extends Annotator {
                 .attr("y",data_y-150)
                 })
 
-            }else{
+            } else if (chart instanceof AreaChart){
+                svg.selectAll(".mark")
+                .filter(function(d) {
+                    if (target.length === 0) {
+                        return true
+                    }
+                    for (const item of target) {
+                        if (d[item.field] === item.value) {
+                            continue
+                        } else {
+                            return false
+                        }
+                    }
+                    return true
+                })
+                .transition()
+                .duration('duration' in animation ? animation['duration']: 0)
+                .attr("fill", (d, i) => {
+                        let dotRadius;
+                        focus_elements.nodes().forEach(one_element => {
+                            dotRadius = parseFloat(one_element.getAttribute("r"));
+                        })
+                        const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+
+                        let defs = svg.append('svg:defs');
+                        defs.append("svg:pattern")
+                            .attr("id", "linechart-texture-image-" + uid)
+                            .attr("width", 1)
+                            .attr("height", 1)
+                            .attr("patternUnits", "objectBoundingBox")
+                            .append("svg:image")
+                            .attr("xlink:href", style["background-image"])
+                            .attr("width", 2 * dotRadius)
+                            .attr("height", 2 * dotRadius)
+                            .attr("x", 0)
+                            .attr("y", 0);
+                        return "url(#linechart-texture-image-" + uid + ")"
+                    } 
+                )
+            } else{
                 var config = {
                     "texture_size" : 300
                 }
