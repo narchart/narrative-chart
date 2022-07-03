@@ -17,3 +17,7 @@ export {
 export {
     default as Unitvis
 } from "./unitvis";
+
+export {
+    default as areachart
+} from "./areachart";
