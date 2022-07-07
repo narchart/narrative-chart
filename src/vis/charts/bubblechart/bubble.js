@@ -1,17 +1,27 @@
-import Color from "../../visualization/color";
+import Color from '../../visualization/color';
 import Mark from '../mark';
 
 const COLOR = new Color();
 
-class Point extends Mark {
+class Bubble extends Mark {
     constructor() {
         super();
         this._x = 0;
         this._y = 0;
-        this._size = 0;
+        this._radius = 0;
         this._color = COLOR.DEFAULT;
+        this._visible = "1";
         this._opacity = 1;
+        this._unitgroup = {};
     }
+
+    unitgroup(key, value) {
+        if (!value && !key) {
+            return this._unitgroup;
+        }
+        this._unitgroup[key] = value;
+    }
+
 
     x(value) {
         if (!value) {
@@ -28,11 +38,11 @@ class Point extends Mark {
         this._y = value;
     }
 
-    size(value) {
+    radius(value) {
         if (!value) {
-            return this._size;
+            return this._radius;
         }
-        this._size = value;
+        this._radius = value;
     }
 
     color(value) {
@@ -40,6 +50,13 @@ class Point extends Mark {
             return this._color;
         }
         this._color = value;
+    }
+
+    visible(value) {
+        if (!value) {
+            return this._visible;
+        }
+        this._visible = value;
     }
 
     opacity(value) {
@@ -50,4 +67,4 @@ class Point extends Mark {
     }
 }
 
-export default Point;
+export default Bubble;

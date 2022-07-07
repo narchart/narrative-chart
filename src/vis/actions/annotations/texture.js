@@ -4,11 +4,12 @@ import { PieChart } from '../../charts';
 import { Unitvis } from '../../charts';
 import { LineChart } from '../../charts';
 import { Scatterplot } from '../../charts';
+import {Bubblechart} from '../../charts';
 import AreaChart from '../../charts/areachart';
 
 /**
  * @description An annotator for filling texture.
- * 
+ *
  * @class
  * @extends Annotator
  */
@@ -16,17 +17,17 @@ class Texture extends Annotator {
 
     /**
      * @description Fill target marks with texture.
-     * 
+     *
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{color: string}} style Style parameters of the annotation.
      * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
-     * 
+     *
      * @return {void}
      */
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
-        d3.selection.prototype.moveToFront = function() {  
+        d3.selection.prototype.moveToFront = function() {
             return this.each(function(){
                 this.parentNode.appendChild(this);
             });
@@ -46,7 +47,7 @@ class Texture extends Annotator {
         //     .attr("x", 0)
         //     .attr("y", 0);
 
-            
+
         const uid = Date.now().toString() + Math.random().toString(36).substring(2);
         let focus_elements = svg.selectAll(".mark")
         .filter(function (d) {
@@ -77,7 +78,7 @@ class Texture extends Annotator {
                 .attr("xlink:href", style["background-image"])
                 .attr("x", 0)
                 .attr("y", 0);
-    
+
             focus_elements.nodes().forEach(one_element => {
                 const nodeName = one_element.nodeName;
                 if (nodeName === "rect") {
@@ -95,7 +96,7 @@ class Texture extends Annotator {
                         .attr("width", e_width)
                         .attr("height", e_height)
                         .attr("fill", e_color)
-                    
+
                     const regBox = cover.node().getBBox();
 
                     svg.append("defs")
@@ -112,9 +113,9 @@ class Texture extends Annotator {
                 }
             })
 
-            focus_elements.style("fill", "url(#texture_background)"); 
+            focus_elements.style("fill", "url(#texture_background)");
 
-        } 
+        }
         else {
             if (chart instanceof Unitvis){
                 svg.selectAll(".mark")
@@ -148,7 +149,7 @@ class Texture extends Annotator {
                             .attr("x", 0)
                             .attr("y", 0);
                         return "url(#unit-texture-image-" + uid + ")"
-                    } 
+                    }
                 )
             }else if (chart instanceof LineChart){
                 svg.selectAll(".mark")
@@ -187,7 +188,7 @@ class Texture extends Annotator {
                             .attr("x", 0)
                             .attr("y", 0);
                         return "url(#linechart-texture-image-" + uid + ")"
-                    } 
+                    }
                 )
             }else if (chart instanceof Scatterplot){
                 svg.selectAll(".mark")
@@ -221,9 +222,9 @@ class Texture extends Annotator {
                             .attr("x", 0)
                             .attr("y", 0);
                         return "url(#scatterplot-texture-image-" + uid + ")"
-                    } 
+                    }
                 )
-            }else if (chart instanceof PieChart){    
+            }else if (chart instanceof PieChart){
                 var selectedMarks = svg.selectAll(".mark")
                 .filter(function(d) {
                     if (target.length === 0) {
@@ -244,14 +245,14 @@ class Texture extends Annotator {
                     const uid = Date.now().toString() + Math.random().toString(36).substring(2);
                     var image = new Image();
                     image.src = style["background-image"];
-                    image.id = uid;    
+                    image.id = uid;
 
                     let markWidth = focus_elements.node().getBBox().width;
                     let markHeight = focus_elements.node().getBBox().height;
-                    
+
                     var textureWidth, textureHeight, scaleWidth, scaleHeight
                     var configPieChart
-                    
+
                     image.onload = function(){
                         textureWidth = image.naturalWidth?image.naturalWidth:markWidth
                         textureHeight = image.naturalHeight?image.naturalHeight:markWidth
@@ -268,8 +269,8 @@ class Texture extends Annotator {
                                 "texture_size_height" : markHeight
                             }
                         }
-               
-                        var defsPieChart = svg.append('svg:defs');                   
+
+                        var defsPieChart = svg.append('svg:defs');
                         defsPieChart.append("svg:pattern")
                         .attr("id", "piechart-texture-image-" + uid)
                         .attr("width", 1)
@@ -328,8 +329,48 @@ class Texture extends Annotator {
                             .attr("x", 0)
                             .attr("y", 0);
                         return "url(#linechart-texture-image-" + uid + ")"
-                    } 
+                    }
                 )
+            }else if(chart instanceof Bubblechart){
+
+                svg.selectAll(".mark")
+                    .filter(function(d) {
+                        if (target.length === 0) {
+                            return true
+                        }
+                        for (const item of target) {
+                            if (d[item.field] === item.value) {
+                                continue
+                            } else {
+                                return false
+                            }
+                        }
+                        return true
+                    })
+                    .transition()
+                    .duration('duration' in animation ? animation['duration']: 0)
+                    .attr("fill", (d, i) => {
+                        let dotRadius;
+                        focus_elements.nodes().forEach(one_element => {
+                            dotRadius = parseFloat(one_element.getAttribute("r"));
+                        })
+
+                            const uid = Date.now().toString() + Math.random().toString(36).substring(2);
+                            let defs = svg.append('svg:defs');
+                            defs.append("svg:pattern")
+                                .attr("id", "unit-texture-image-" + uid)
+                                .attr("width", 1)
+                                .attr("height", 1)
+                                .attr("patternUnits", "objectBoundingBox")
+                                .append("svg:image")
+                                .attr("xlink:href", style["background-image"])
+                                .attr("width", 2 * dotRadius)
+                                .attr("height", 2 * dotRadius)
+                                .attr("x", 0)
+                                .attr("y", 0);
+                            return "url(#unit-texture-image-" + uid + ")"
+                        }
+                    )
             } else{
                 var config = {
                     "texture_size" : 300
@@ -346,7 +387,7 @@ class Texture extends Annotator {
                     .attr("height", config.texture_size)
                     .attr("x", 0)
                     .attr("y", 0);
-        
+
                 svg.selectAll(".mark")
                 .filter(function(d) {
                     if (target.length === 0) {
@@ -365,7 +406,7 @@ class Texture extends Annotator {
                 .duration('duration' in animation ? animation['duration']: 0)
                 .style("fill", "url(#texture_background)")
 
-            }      
+            }
         }
     }
 }

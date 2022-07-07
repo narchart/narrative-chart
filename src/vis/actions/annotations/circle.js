@@ -6,7 +6,7 @@ const COLOR = new Color();
 
 /**
  * @description An annotator for adding circle.
- * 
+ *
  * @class
  * @extends Annotator
  */
@@ -14,12 +14,12 @@ class Circle extends Annotator {
 
     /**
      * @description Add circles in target marks.
-     * 
+     *
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{color: string}} style Style parameters of the annotation.
      * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
-     * 
+     *
      * @return {void}
      */
     annotate(chart, target, style, animation) {
