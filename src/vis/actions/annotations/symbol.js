@@ -1,9 +1,9 @@
 import Annotator from './annotator';
-import { PieChart } from '../../charts';
+import { PieChart,Bubblechart } from '../../charts';
 
 /**
  * @description An annotator for drawing symbols.
- * 
+ *
  * @class
  * @extends Annotator
  */
@@ -11,12 +11,12 @@ class Symbol extends Annotator {
 
     /**
      * @description Draw symbols for target marks.
-     * 
+     *
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{color: string}} style Style parameters of the annotation.
      * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
-     * 
+     *
      * @return {void}
      */
     annotate(chart, target, style, animation) {
@@ -35,7 +35,7 @@ class Symbol extends Annotator {
                 }
                 return true
             });
-        
+
         // if the focus defined in the spec does not exist
         if (focus_elements.length === 0) {
             return;
@@ -52,7 +52,11 @@ class Symbol extends Annotator {
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
                 data_r = parseFloat(focus_element.getAttribute("r"));
-                offset_y = - data_r - height_icon;
+                if(chart instanceof Bubblechart){
+                    offset_y = - height_icon/2;
+                }else{
+                    offset_y = - data_r - height_icon;
+                }
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
                 data_x = bbox.x + bbox.width / 2;
@@ -94,7 +98,7 @@ class Symbol extends Annotator {
                     .attr("y", data_y + offset_y + customizeOffset_y)
 
             } else if ("type" in animation && animation["type"] === "wipe") {
-                // ensure that clip-paths for different symbols won't affect one another. 
+                // ensure that clip-paths for different symbols won't affect one another.
                 const uid = Date.now().toString() + Math.random().toString(36).substring(2);
                 const icon = svg.append("image")
                     .attr("class", "icon-img")
@@ -145,8 +149,8 @@ class Symbol extends Annotator {
                     .duration('duration' in animation ? animation['duration']: 0)
                     .attr("opacity", 1);
             }
-        }   
-            
+        }
+
     }
 }
 

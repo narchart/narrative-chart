@@ -1,6 +1,6 @@
 import MarkType from '../visualization/marktype';
 import Action from './action';
-import { BarChart, LineChart, Scatterplot, Unitvis, PieChart } from '../charts';
+import { BarChart, LineChart, Scatterplot, Unitvis, PieChart,Bubblechart } from '../charts';
 
 class AddChart extends Action {
     // mark represents chart type, leave_space represents if needs to reserve space for titles or captions in charts
@@ -32,8 +32,8 @@ class AddChart extends Action {
         chart.animation(this._animation);
         chart.style(this._style);
 
-        let Hscaleratio 
-        let Wscaleratio 
+        let Hscaleratio
+        let Wscaleratio
 
         if (vis._mark === "unit"){
             Hscaleratio = Math.min(vis._height/640, vis._width/640)
@@ -43,8 +43,8 @@ class AddChart extends Action {
             Wscaleratio = vis._width/640
         }
 
-        
-        chart.margin(this._leave_space ? 
+
+        chart.margin(this._leave_space ?
             {
                 "top": 130 * Hscaleratio,
                 "right": 20 * Wscaleratio,
@@ -56,7 +56,7 @@ class AddChart extends Action {
                 "bottom": 30 * Hscaleratio,
                 "left": 50 * Wscaleratio
             })
-            
+
         chart.data(vis._data);
         chart.processedData(vis._processedData)
         chart.container(vis._container);
@@ -75,6 +75,8 @@ class AddChart extends Action {
                 return new Unitvis();
             case MarkType.ARC:
                 return new PieChart();
+            case MarkType.BUBBLE:
+                return new Bubblechart();
             default:
                 return new Scatterplot();
         }
