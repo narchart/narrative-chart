@@ -1,0 +1,87 @@
+{
+  "data": {
+    "url": "http://localhost:3000/spreadsheets/sales.csv",
+    "schema": [
+      {
+        "field": "Year",
+        "type": "temporal"
+      },
+      {
+        "field": "Brand",
+        "type": "categorical"
+      },
+      {
+        "field": "Category",
+        "type": "categorical"
+      },
+      {
+        "field": "Sales",
+        "type": "numerical"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "add": "config",
+      "mode": "light",
+      "emotion": "exciting"
+    },
+    {
+      "select": [
+        {
+          "field": "Sales",
+          "aggregate": "min"
+        },
+        {
+          "field": "Brand"
+        },
+        {
+          "field": "Category"
+        }
+      ],
+      "groupby": [
+        {
+          "field": "Brand"
+        },
+        {
+          "field": "Category"
+        }
+      ],
+      "filter": []
+    },
+    {
+      "add": "chart",
+      "mark": {
+        "type": "hbar",
+        "style": {
+          "corner-radius": 2,
+          "bin-spacing": 0.5,
+          "stroke": "#FFBE32",
+          "stroke-width": 1,
+          "stroke-opacity": 1,
+          "fill-opacity": 1
+        }
+      }
+    },
+    {
+      "add": "group",
+      "actions": [
+        {
+          "add": "encoding",
+          "channel": "x",
+          "field": "Brand"
+        },
+        {
+          "add": "encoding",
+          "channel": "y",
+          "field": "Sales"
+        }
+      ]
+    },
+    {
+      "add": "encoding",
+      "channel": "color",
+      "field": "Category"
+    }
+  ]
+}

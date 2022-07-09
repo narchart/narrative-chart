@@ -3,8 +3,10 @@ const MarkType = {
     LINE: 'line',
     POINT: 'point',
     UNIT: 'unit',
-    ARC:'arc',
-    AREA:'area'
+    ARC: 'arc',
+    AREA: 'area',
+    HBAR: 'hbar'
+
 }
 
 export default MarkType

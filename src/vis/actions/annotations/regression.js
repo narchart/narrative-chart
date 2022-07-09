@@ -1,6 +1,6 @@
 import Annotator from './annotator';
 import Color from '../../visualization/color';
-import { Unitvis, LineChart, BarChart, Scatterplot } from '../../charts';
+import { Unitvis, LineChart, BarChart, Scatterplot, AreaChart } from '../../charts';
 
 
 const COLOR = new Color();
@@ -44,7 +44,7 @@ class Regression extends Annotator {
         if (focus_elements.empty()) return;
 
         // now only support linechart/barchart/scatterplot/unitvis
-        if (!(chart instanceof LineChart || chart instanceof BarChart || chart instanceof Scatterplot || chart instanceof Unitvis)) return;
+        if (!(chart instanceof LineChart || chart instanceof BarChart || chart instanceof Scatterplot || chart instanceof Unitvis|| chart instanceof AreaChart)) return;
 
         // step 1: get all focused elements position
         let positions = [];
