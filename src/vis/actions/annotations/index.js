@@ -3,10 +3,6 @@ export {
 } from "./arrow";
 
 export {
-    default as Coloredarea
-} from "./coloredarea";
-
-export {
     default as Circle
 } from "./circle";
 
@@ -49,10 +45,6 @@ export {
 export {
     default as Regression
 } from "./regression";
-
-export {
-    default as Separate
-} from "./separate";
 
 export {
     default as Show

@@ -1,6 +1,6 @@
 import Action from './action';
 import AnnotationType from '../visualization/annotationtype';
-import {Arrow, Coloredarea, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Hide, Label, Reference, Regression, Separate, Show, Symbol, Texture, Tooltip} from './annotations'
+import {Arrow, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Hide, Label, Reference, Regression, Show, Symbol, Texture, Tooltip} from './annotations'
 import {Bubblechart} from "../charts";
 class AddAnnotation extends Action {
     constructor(spec) {
@@ -41,8 +41,6 @@ class AddAnnotation extends Action {
         switch (type) {
             case AnnotationType.ARROW:
                 return new Arrow()
-            case AnnotationType.COLOREDAREA:
-                return new Coloredarea()
             case AnnotationType.CIRCLE:
                 return new Circle()
             case AnnotationType.CONTOUR:
@@ -65,8 +63,6 @@ class AddAnnotation extends Action {
                 return new Reference()
             case AnnotationType.REGRESSION:
                 return new Regression()
-            case AnnotationType.SEPARATE:
-                return new Separate()
             case AnnotationType.SHOW:
                 return new Show()
             case AnnotationType.SYMBOL:

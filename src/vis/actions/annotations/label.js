@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { Scatterplot, PieChart ,Bubblechart} from '../../charts';
+import { Scatterplot, PieChart , HBarChart,Bubblechart} from '../../charts';
 import Color from '../../visualization/color';
 
 const COLOR = new Color();
@@ -28,7 +28,7 @@ class Label extends Annotator {
         const yEncoding = chart.y;
 
         let focus_elements = svg.selectAll(".mark")
-            .filter(function(d) {
+            .filter(function (d) {
                 if (target.length === 0) {
                     return true
                 }
@@ -46,7 +46,7 @@ class Label extends Annotator {
         if (focus_elements.length === 0) {
             return;
         }
-        for(let focus_element of focus_elements.nodes()) {
+        for (let focus_element of focus_elements.nodes()) {
 
             // get node data info
             let formatData
@@ -57,24 +57,24 @@ class Label extends Annotator {
                 formatData = focus_element.__data__[style["field"]]
             } else if (chart instanceof Scatterplot) {
                 formatData = focus_element.__data__[yEncoding]
-            } else if (chart instanceof PieChart){
+            } else if (chart instanceof PieChart) {
                 formatData = focus_element.__data__.text();
             }
             else {
                 let data_d = parseFloat(focus_element.__data__[yEncoding]);
                 if ((data_d / 1000000) >= 1) {
                     let formatNum = data_d / 1000000
-                    formatData = formatNum.toFixed(2)+ "M";
+                    formatData = formatNum.toFixed(2) + "M";
                 } else if ((data_d / 1000) >= 1) {
                     let formatNum = data_d / 1000
-                    formatData = formatNum.toFixed(2)+ "K";
+                    formatData = formatNum.toFixed(2) + "K";
                 } else {
                     formatData = data_d.toFixed(2) + "";
                 }
             }
 
             // identify the position
-            let data_x, data_y, data_r, offset_y;
+            let data_x, data_y, data_r, offset_x, offset_y;
             const nodeName = focus_element.nodeName;
             let arc_angle;
 
@@ -87,19 +87,30 @@ class Label extends Annotator {
                 }else{
                     offset_y = - data_r - 10;
                 }
+                offset_x = 0;
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
-                data_x = bbox.x + bbox.width / 2;
-                data_y = bbox.y;
-                offset_y = -10;
+                if (chart instanceof HBarChart) {
+                    data_x = bbox.x;
+                    data_y = bbox.y + bbox.height / 2;
+                    // TODO - the offset should be determinded by size of label
+                    offset_x = 25;
+                    offset_y = 5;
+                } else {
+                    data_x = bbox.x + bbox.width / 2;
+                    data_y = bbox.y;
+                    offset_x = 0;
+                    offset_y = -10;
+                }
+
             } else { // currently only support pie
-                if(chart instanceof PieChart){
+                if (chart instanceof PieChart) {
                     let data_temp = focus_element.__data__;
                     data_x = data_temp.textX();
                     data_y = data_temp.textY();
-                    arc_angle = (focus_element.__data__.angleStart() + focus_element.__data__.angleEnd())/2
+                    arc_angle = (focus_element.__data__.angleStart() + focus_element.__data__.angleEnd()) / 2
                     offset_y = 0;
-                }else{
+                } else {
                     return;
                 }
             }
@@ -109,7 +120,7 @@ class Label extends Annotator {
             // draw text
             svg.append("text")
                 .attr("class", "text")
-                .attr("x", data_x + customizeOffset_x)
+                .attr("x", data_x + offset_x + customizeOffset_x)
                 .attr("y", data_y + offset_y + customizeOffset_y)
                 .text(formatData)
                 .attr("font-size", style["font-size"] || 12)
@@ -117,13 +128,13 @@ class Label extends Annotator {
                 .attr("fill", style["font-color"] || COLOR.TEXT)
                 .attr("font-weight", style["font-weight"] || 400)
                 .attr("font-style", style["font-style"] || "normal")
-                .attr("text-anchor", (chart instanceof PieChart) ? (arc_angle > Math.PI ? "end":"start"):"middle")
+                .attr("text-anchor", (chart instanceof PieChart) ? (arc_angle > Math.PI ? "end" : "start") : "middle")
                 .attr("alignment-baseline", "Alphabetic")
                 .attr("fill-opacity", 0)
                 .transition()
-                .duration('duration' in animation ? animation['duration']: 0)
+                .duration('duration' in animation ? animation['duration'] : 0)
                 .attr("fill-opacity", 1);
-    }
+        }
 
     }
 }

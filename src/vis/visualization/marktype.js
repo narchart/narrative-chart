@@ -3,7 +3,9 @@ const MarkType = {
     LINE: 'line',
     POINT: 'point',
     UNIT: 'unit',
-    ARC:'arc',
+    ARC: 'arc',
+    AREA: 'area',
+    HBAR: 'hbar',
     BUBBLE:'bubble'
 }
 
