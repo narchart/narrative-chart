@@ -34,11 +34,17 @@
         },
         {
           "field": "Brand"
+        },
+        {
+          "field": "Category"
         }
       ],
       "groupby": [
         {
           "field": "Brand"
+        },
+        {
+          "field": "Category"
         }
       ],
       "filter": []
@@ -48,10 +54,10 @@
       "mark": {
         "type": "hbar",
         "style": {
-          "corner-radius": 8,
+          "corner-radius": 2,
           "bin-spacing": 0.5,
           "stroke": "#FFBE32",
-          "stroke-width": 3,
+          "stroke-width": 1,
           "stroke-opacity": 1,
           "fill-opacity": 1
         }
@@ -68,12 +74,14 @@
         {
           "add": "encoding",
           "channel": "y",
-          "field": "Sales",
-          "animation": {
-            "duration": 2000
-          }
+          "field": "Sales"
         }
       ]
+    },
+    {
+      "add": "encoding",
+      "channel": "color",
+      "field": "Category"
     }
   ]
 }

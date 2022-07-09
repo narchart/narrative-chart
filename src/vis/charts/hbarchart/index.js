@@ -32,13 +32,6 @@ class HBarChart extends Chart {
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
-        // this._svg = d3.select(this.container())
-        //         .append("svg")
-        //         .attr("width", this.width() + margin.left + margin.right)
-        //         .attr("height", this.height() + margin.top + margin.bottom)
-        //         .append("g")
-        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
         this.cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
         this.binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
         this.stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
@@ -157,7 +150,9 @@ class HBarChart extends Chart {
         this._svg = d3.select(container)
             .select("svg")
             .append("g")
+            .attr("id", "chartAAA")
             .attr("transform", "translate(" + margin.left + "," + (margin.top + axisTextOffset_y) + ")");
+
 
 
         if (background.Background_Image) {
@@ -211,10 +206,6 @@ class HBarChart extends Chart {
 
     }
 
-
-
-
-
     /**
     * @description Using X-axis to encode a data field.
     *
@@ -226,17 +217,23 @@ class HBarChart extends Chart {
             const processedData = this.processedData();
             const xEncoding = this.x;
 
+            const labelPadding = 20, fontsize = 16;
+
             /** set the ranges */
             this.xScale = d3.scaleBand()
+                // .range([0, this.height() - this.margin.top - this.margin.bottom])
                 .range([0, height])
                 .domain(processedData.map(d => d[xEncoding]))
                 .padding(this.binSpacing);
 
             let axisX = d3.axisLeft(this.xScale);
 
+            //Drawing x-axis
             let axis_X = this.axis.append("g")
                 .attr("class", "axis_x")
+                // .attr('transform', `translate(50, 0)`)
                 .call(axisX);
+
 
             // specify color for axis elements
             // tick
@@ -246,19 +243,32 @@ class HBarChart extends Chart {
             axis_X.selectAll(".domain")
                 .attr("stroke", COLOR.AXIS);
             // tick label
-            axis_X.selectAll(".tick")
-                .selectAll("text")
+            let mgLeft = this.margin().left;
+            axis_X.selectAll(".tick text")
                 .attr("fill", COLOR.AXIS)
                 .attr("font-size", axis['labelFontSize'] || 10)
                 .attr("text-anchor", "end")
                 .attr("transform", `rotate(-${axis['labelAngle'] || 45} 0 10)`)
-
+                .html("")
+                .append('tspan').text(function (d) {
+                    return d;
+                })
+                .each(function () {
+                    //label ellipse
+                    var boxWidth = this.getBBox().width;
+                    console.log(boxWidth);
+                    var self = d3.select(this);
+                    var text = self.text();
+                    while (boxWidth > mgLeft - labelPadding && text.length > 0) {
+                        text = text.slice(0, -1);
+                        self.text(text + '...');
+                        boxWidth = this.getBBox().width;
+                    }
+                });
 
             // axix-label
-            const labelPadding = 36, fontsize = 16;
-
             axis_X.append("text")
-                .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
+                .attr("transform", `translate(${0 - this.margin().left + labelPadding}, ${height / 2}) rotate(-90)`)
                 .attr("text-anchor", "middle")
                 .attr("font-size", fontsize)
                 .attr("fill", COLOR.AXIS)
@@ -402,36 +412,7 @@ class HBarChart extends Chart {
             d3.selectAll(".rects").remove();
 
             /** process data */
-            // get series
-            let seriesData = {};
-            data.forEach(d => {
-                if (seriesData[d[colorEncoding]]) {
-                    seriesData[d[colorEncoding]].push(d);
-                } else {
-                    seriesData[d[colorEncoding]] = [d];
-                }
-            });
-            let series = Object.keys(seriesData);
-            let seriesDict = {}
-            series.forEach(d => seriesDict[d] = 0)
-
-            // adjust data structure to fit stackdata
-            const processedData = this.processedData()
-            let processedDict = {}
-            processedData.forEach((d, i) => {
-                let temp = {}
-                temp[d[colorEncoding]] = d[yEncoding]
-                processedDict[d[yEncoding]] = { ...processedDict[d[yEncoding]], ...temp }
-            })
-            let stackProcessedData = []
-            for (let key in processedDict) {
-                let temp2 = {}
-                temp2[yEncoding] = key
-                stackProcessedData.push({ ...seriesDict, ...temp2, ...processedDict[key] })
-            }
-            let stackData = d3.stack().keys(series)(stackProcessedData);
-
-
+            let stackData = prcessStackData(data, this.processedData(), colorEncoding, yEncoding, xEncoding);
 
             /** set the ranges */
             let xScale = d3.scaleBand()
@@ -456,22 +437,13 @@ class HBarChart extends Chart {
                 .data(d => d)
                 .enter().append("rect")
                 .attr("class", "mark")
-                // .attr("y", d => {
-                //     d[yEncoding] = d.data[yEncoding]
-                //     return xScale(d.data[yEncoding])
-                // })
-                // .attr("x", d => xScale(d[1]))
-                // .attr("height", yScale.bandwidth())
-                // .attr("width", d => Math.abs(xScale(d[1]) - xScale(d[0])))
-                // .attr("y", d => yScale(d[this.y]))
-                // .attr("x", 0)
+                .attr("x", d => yScale(d[0]))
                 .attr("y", d => {
                     d[xEncoding] = d.data[xEncoding]
                     return xScale(d.data[xEncoding])
                 })
-                .attr("x", d => yScale(d[1]))
+                .attr("width", d => Math.abs(yScale(d[1]) - yScale(d[0])))
                 .attr("height", xScale.bandwidth())
-                .attr("width", d => yScale(d[this.x]))
                 .attr("rx", this.cornerRadius)
                 .attr("ry", this.cornerRadius)
                 .attr("fill-opacity", this.fillOpacity)
@@ -483,6 +455,38 @@ class HBarChart extends Chart {
                 .transition()
                 .duration('duration' in animation ? animation['duration'] : 0)
                 .attr("fill", (d, i) => COLOR.CATEGORICAL[i % COLOR.CATEGORICAL.length]);
+        }
+
+        function prcessStackData(orgiData, processedData, colorEncoding, yEncoding, xEncoding) {
+            // get series
+            let seriesData = {};
+            orgiData.forEach(d => {
+                if (seriesData[d[colorEncoding]]) {
+                    seriesData[d[colorEncoding]].push(d);
+                } else {
+                    seriesData[d[colorEncoding]] = [d];
+                }
+            });
+            let series = Object.keys(seriesData);
+            let seriesDict = {};
+            series.forEach(d => seriesDict[d] = 0);
+
+            // adjust data structure to fit stackdata
+            // const processedData = this.processedData();
+            let processedDict = {};
+            processedData.forEach((d, i) => {
+                let temp = {};
+                temp[d[colorEncoding]] = d[yEncoding];
+                processedDict[d[xEncoding]] = { ...processedDict[d[xEncoding]], ...temp };
+            });
+            let stackProcessedData = [];
+            for (let key in processedDict) {
+                let temp2 = {};
+                temp2[xEncoding] = key;
+                stackProcessedData.push({ ...seriesDict, ...temp2, ...processedDict[key] });
+            }
+            let stackData = d3.stack().keys(series)(stackProcessedData);
+            return stackData;
         }
     }
 
@@ -501,7 +505,7 @@ class HBarChart extends Chart {
             switch (channel) {
                 case "x":
                     changeX = true;
-                    this.encodeX();
+                    this.encodeX(axis);
                     break;
                 case "y":
                     changeY = true;
@@ -513,7 +517,7 @@ class HBarChart extends Chart {
                 default:
                     console.log("no channel select");
             }
-
+            //drawing the bar rect
             if ((this.x && this.y) && (changeX || changeY)) {
                 this.content.append("g")
                     .attr("class", "rects")
@@ -534,13 +538,11 @@ class HBarChart extends Chart {
                     .attr("stroke-opacity", this.strokeOpacity);
                 if ('duration' in animation) {
                     this.animationGrowTogether(animation);
-                }
-                else {
+                } else {
                     this.content.selectAll(".mark")
                         // .attr("x", d => this.xScale(d[this.x]))
                         .attr("width", d => this.yScale(d[this.y]))
                 }
-
             }
         }
     }
