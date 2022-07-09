@@ -1,36 +1,36 @@
 import * as d3 from 'd3';
 import Color from '../../visualization/color';
 import Annotator from './annotator';
-import { PieChart } from '../../charts';
+import { PieChart,Bubblechart } from '../../charts';
 
 const COLOR = new Color();
 
 /**
  * @description An annotator for drawing contour.
- * 
+ *
  * @class
  * @extends Annotator
  */
 class Contour extends Annotator {
     /**
      * @description Annotate targeted elements with contour.
-     * 
+     *
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{color: string}} style Style parameters of the annotation.
      * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
-     * 
+     *
      * @return {void}
      */
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
         // method to move the specific element to the top layer
-        d3.selection.prototype.moveToFront = function() {  
+        d3.selection.prototype.moveToFront = function() {
             return this.each(function(){
                 this.parentNode.appendChild(this);
             });
         };
-        
+
         const focus_elements = svg.selectAll(".mark")
             .filter(function(d) {
                 if (target.length === 0) {
@@ -54,21 +54,21 @@ class Contour extends Annotator {
                 const _width = parseFloat(one_element.getAttribute("width"));
                 const _height = parseFloat(one_element.getAttribute("height"));
 
-                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2; 
+                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2;
 
                 function draw_rect(x, y, w, h, r) {
                     let retval;
                     retval  = "M" + (x + r) + "," + y;
                     retval += "h" + (w - 2*r);
-                    retval += "a" + r + "," + r + " 0 0 1 " + r + "," + r; 
+                    retval += "a" + r + "," + r + " 0 0 1 " + r + "," + r;
                     retval += "v" + (h - 2*r);
                     retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + r;
                     retval += "h" + (2*r - w);
                     retval += "a" + r + "," + r + " 0 0 1 " + -r + "," + -r;
                     retval += "v" + (2*r - h);
-                    retval += "a" + r + "," + r + " 0 0 1 " + r + "," + -r; 
+                    retval += "a" + r + "," + r + " 0 0 1 " + r + "," + -r;
                     retval += "z";
-                    
+
                     return retval;
 
                 }
@@ -87,7 +87,7 @@ class Contour extends Annotator {
                     .attr("stroke-linecap", "square"); // to make sure the path can be closed completely
                 if ("type" in animation && animation["type"] === "wipe") {
                     let pathLength;
-                    
+
                     contour_rect.attr("stroke-dasharray", function() {
                                     return pathLength = this.getTotalLength();
                                 })
@@ -110,8 +110,10 @@ class Contour extends Annotator {
 
                 d_contour_circle.arc(_x, _y , _r, 0, 360)
 
-                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2; 
-
+                let d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2;
+                if(chart instanceof Bubblechart){
+                    d_width = d_width ? d_width : 2;
+                }
                 const contour_circle = svg.append("path")
                     .attr("d", d_contour_circle)
                     .attr("fill", "none")
@@ -123,7 +125,7 @@ class Contour extends Annotator {
                         }
                     })
                     .attr("stroke-width", d_width);
-                
+
                 if ("type" in animation && animation["type"] === "wipe") {
                     let pathLength;
                     contour_circle.attr("stroke-dasharray", function() {
@@ -141,7 +143,7 @@ class Contour extends Annotator {
                 }
             } else if(chart instanceof PieChart){
                 const d_contour_arc = one_element.getAttribute("d");
-                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2; 
+                const d_width = style['stroke-width'] ?? chart.markStyle()["stroke-width"] ?? 2;
                 const contour_arc = svg.append("path")
                     .attr("d", d_contour_arc)
                     .attr("fill", "none")
@@ -157,7 +159,7 @@ class Contour extends Annotator {
                     .attr("stroke-linecap", "square"); // to make sure the path can be closed completely
                 if ("type" in animation && animation["type"] === "wipe") {
                     let pathLength;
-                    
+
                     contour_arc.attr("stroke-dasharray", function() {
                                     return pathLength = this.getTotalLength();
                                 })
@@ -174,7 +176,7 @@ class Contour extends Annotator {
             } else{
                 return;
             }
-        }) 
+        })
 
     }
 }

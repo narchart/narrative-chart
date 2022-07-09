@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { PieChart } from '../../charts';
+import { PieChart,Bubblechart } from '../../charts';
 import Color from '../../visualization/color';
 import * as d3 from 'd3';
 
@@ -7,7 +7,7 @@ const COLOR = new Color();
 
 /**
  * @description An annotator for adding tooltip
- * 
+ *
  * @class
  * @extends Annotator
  */
@@ -17,14 +17,14 @@ class Tooltip extends Annotator {
 
     /**
      * @description Add the text into the tooltip and Automatic break the text line.
-     * 
+     *
      * @param {container} container The svg used to contain the tooltip
-     * @param {text} text The text in tooltip 
+     * @param {text} text The text in tooltip
      * @param {number} textSize The font size of text in tooltip
      * @param {number} maxWidth The maximum width of tooltip.
      * @param {number} x The x coordinate of the mark which needs to add tooltip .
      * @param {number} y The y coordinate of the mark which needs to add tooltip .
-     * 
+     *
      * @return {void}
      */
 
@@ -94,12 +94,12 @@ class Tooltip extends Annotator {
 
     /**
      * @description Add a tooltip above a mark
-     * 
+     *
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{text: text}} style Style parameters of the annotation.
      * @param {{delay: number, type: string}} animation Animation parameters of the annotation.
-     * 
+     *
      * @return {void}
      */
 
@@ -123,7 +123,7 @@ class Tooltip extends Annotator {
                 }
                 return true
             });
-        
+
         // if the focus defined in the spec does not exist
         if (focus_elements.length === 0) {
             return;
@@ -177,7 +177,12 @@ class Tooltip extends Annotator {
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
                 data_r = parseFloat(focus_element.getAttribute("r"));
-                offset_y = - data_r - 5;
+                if(chart instanceof Bubblechart){
+                    offset_y=0;
+                }else{
+                    offset_y = - data_r - 10;
+                }
+
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
                 data_x = bbox.x + bbox.width / 2;
@@ -195,7 +200,7 @@ class Tooltip extends Annotator {
                     continue
                 }
 
-               
+
             } else { // currently only support piechart
                  if(chart instanceof PieChart){
                     let data_temp = focus_element.__data__;
@@ -269,7 +274,7 @@ class Tooltip extends Annotator {
                     const uid =  Math.random().toString(36).substring(2);
 
                     let bbox = toolTipSvg.node().getBBox();
-                    
+
 
                     toolTipSvg.append("defs")
                         .attr("class", "tooltip_defs")
@@ -280,16 +285,16 @@ class Tooltip extends Annotator {
                         .attr('y', bbox.y)
                         .attr('width', 0)
                         .attr('height', bbox.height)
-                        
+
 
                     toolTipSvg.attr("clip-path", "url(#clip_tooltip" + uid + ")");
-                    
+
                     toolTipSvg.selectAll("#clip_tooltip" + uid + " rect")
                         .attr("width", 0)
                         .transition()
                         .duration('duration' in animation ? animation['duration'] : 0)
                         .ease(d3.easeLinear)
-                        .attr("width", bbox.width);                    
+                        .attr("width", bbox.width);
 
                     break;
 
