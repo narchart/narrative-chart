@@ -1,6 +1,7 @@
 import MarkType from '../visualization/marktype';
 import Action from './action';
-import { BarChart, LineChart, Scatterplot, Unitvis, PieChart, AreaChart } from '../charts';
+import { BarChart, LineChart, Scatterplot, Unitvis, PieChart, AreaChart, HBarChart } from '../charts';
+
 
 class AddChart extends Action {
     // mark represents chart type, leave_space represents if needs to reserve space for titles or captions in charts
@@ -27,6 +28,7 @@ class AddChart extends Action {
         let chart = vis.chart();
         chart.height(vis._height);
         chart.width(vis._width);
+        chart.margin(vis._margin);
         chart.markAnimation(this._mark_animation);
         chart.markStyle(this._mark_style);
         chart.animation(this._animation);
@@ -46,15 +48,15 @@ class AddChart extends Action {
 
         chart.margin(this._leave_space ?
             {
-                "top": 130 * Hscaleratio,
-                "right": 20 * Wscaleratio,
-                "bottom": 30 * Hscaleratio,
-                "left": 60 * Wscaleratio
+                "top": vis._margin.top ? vis._margin.top : 130 * Hscaleratio,
+                "right": vis._margin.right ? vis._margin.right : 20 * Wscaleratio,
+                "bottom": vis._margin.bottom ? vis._margin.bottom : 30 * Hscaleratio,
+                "left": vis._margin.left ? vis._margin.left : 60 * Wscaleratio
             } : {
-                "top": 20 * Hscaleratio,
-                "right": 10 * Wscaleratio,
-                "bottom": 30 * Hscaleratio,
-                "left": 50 * Wscaleratio
+                "top": vis._margin.top ? vis._margin.top : 20 * Hscaleratio,
+                "right": vis._margin.right ? vis._margin.right : 10 * Wscaleratio,
+                "bottom": vis._margin.bottom ? vis._margin.bottom : 30 * Hscaleratio,
+                "left": vis._margin.left ? vis._margin.left : 50 * Wscaleratio
             })
 
         chart.data(vis._data);
@@ -69,6 +71,8 @@ class AddChart extends Action {
                 return new Scatterplot();
             case MarkType.BAR:
                 return new BarChart();
+            case MarkType.HBAR:
+                return new HBarChart();
             case MarkType.LINE:
                 return new LineChart();
             case MarkType.UNIT:

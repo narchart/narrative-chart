@@ -10,12 +10,12 @@ const offset = 65;
 
 
 /**
- * @description A bar chart is a chart type.
+ * @description A Horizontal bar chart is a chart type.
  *
  * @class
  * @extends Chart
  */
-class BarChart extends Chart {
+class HBarChart extends Chart {
 
 
     /**
@@ -31,13 +31,6 @@ class BarChart extends Chart {
 
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
-
-        // this._svg = d3.select(this.container())
-        //         .append("svg")
-        //         .attr("width", this.width() + margin.left + margin.right)
-        //         .attr("height", this.height() + margin.top + margin.bottom)
-        //         .append("g")
-        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
         this.cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
         this.binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
@@ -157,7 +150,9 @@ class BarChart extends Chart {
         this._svg = d3.select(container)
             .select("svg")
             .append("g")
+            .attr("id", "chartAAA")
             .attr("transform", "translate(" + margin.left + "," + (margin.top + axisTextOffset_y) + ")");
+
 
 
         if (background.Background_Image) {
@@ -212,211 +207,33 @@ class BarChart extends Chart {
     }
 
     /**
-     * @description Draw Axis for bar chart.
-     *
-     * @return {void}
-     */
-    drawAxis() {
-        if (this.x && this.y) {
-            let x = this.x,
-                y = this.y;
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height() - offset;
-            let fontsize = 16, strokeWidth = 2;
-            const padding = fontsize,
-                triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
-
-            let axis = svg.select('.axis');
-            svg.select(".axis_x").remove();
-            svg.select(".axis_y").remove();
-
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", padding - 1)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("fill", COLOR.TEXT)
-                .text(x || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", COLOR.AXIS);
-            axis.append("line")
-                .attr("x1", -strokeWidth / 2)
-                .attr("x2", width)
-                .attr("y1", height)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", COLOR.AXIS);
-            axis.append("text")
-                .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .attr("fill", COLOR.TEXT)
-                .text(y || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", COLOR.AXIS);
-            axis.append("line")
-                .attr("y1", 0)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", COLOR.AXIS);
-        }
-
-    }
-
-    /**
-     * @description Draw bars with xy encoding.
-     *
-     * @return {void}
-     */
-    encodeXY() {
-        if (this.x && this.y) {
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height() - offset;
-            const processedData = this.processedData();
-            const xEncoding = this.x,
-                yEncoding = this.y;
-
-            /** set the ranges */
-            let xScale = d3.scaleBand()
-                .range([0, width - 12])
-                .domain(processedData.map(d => d[xEncoding]))
-                .padding(this.binSpacing);
-
-            let yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(processedData, d => d[yEncoding])])
-                .nice();
-
-            /** draw axis */
-            let axis = svg.append("g")
-                .attr("class", "axis"),
-                content = svg.append("g")
-                    .attr("class", "content")
-                    .attr("chartWidth", width)
-                    .attr("chartHeight", height);
-
-            let axisX = d3.axisBottom(xScale);
-            let axisY = d3.axisLeft(yScale)
-                .ticks(5)
-                .tickSize(0, 0, 0)
-                .tickPadding(5)
-                .tickFormat(function (d) {
-                    if ((d / 1000000) >= 1) {
-                        d = d / 1000000 + "M";
-                    } else if ((d / 1000) >= 1) {
-                        d = d / 1000 + "K";
-                    }
-                    return d;
-                });
-
-            axis.append("g")
-                .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
-                .call(axisX);
-
-            axis.append("g")
-                .attr("class", "axis_y")
-                .call(axisY);
-
-            // specify color for axis elements
-            // tick
-            axis.selectAll(".tick line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS);
-
-            // draw y axis path
-            axis.selectAll(".axis_y")
-                .append("line")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", 0)
-                .attr("y2", height);
-
-            axis.selectAll(".axis_y .tick text")
-                .attr("transform", "translate(3, 0)");
-
-            // axix-label
-            const labelPadding = 24, fontsize = 16;
-
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + offset - 5)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(xEncoding);
-
-            axis.append("text")
-                .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
-                .attr("text-anchor", "middle")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(yEncoding);
-
-            /** draw grid */
-            axis.selectAll(".axis_y .tick line")
-                .attr("class", "gridline")
-                .attr("stroke", d => {
-                    if (d === 0) return 0;
-                    else return COLOR.DIVIDER;
-                });
-
-            /* draw rects */
-            content.append("g")
-                .attr("class", "rects")
-                .selectAll("rect")
-                .data(processedData)
-                .enter().append("rect")
-                .attr("class", "mark")
-                .attr("x", d => xScale(d[xEncoding]))
-                .attr("y", d => yScale(d[yEncoding]))
-                .attr("width", xScale.bandwidth())
-                .attr("height", d => height - yScale(d[yEncoding]))
-                .attr("fill", COLOR.DEFAULT);
-        }
-    }
-
-    /**
     * @description Using X-axis to encode a data field.
     *
     * @return {void}
     */
     encodeX(axis = {}) {
         if (this.x) {
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height() - offset;
+            let height = this.height() - offset;
             const processedData = this.processedData();
             const xEncoding = this.x;
 
+            const labelPadding = 20, fontsize = 16;
+
             /** set the ranges */
             this.xScale = d3.scaleBand()
-                .range([0, width - 12])
+                // .range([0, this.height() - this.margin.top - this.margin.bottom])
+                .range([0, height])
                 .domain(processedData.map(d => d[xEncoding]))
                 .padding(this.binSpacing);
 
-            let axisX = d3.axisBottom(this.xScale);
+            let axisX = d3.axisLeft(this.xScale);
 
+            //Drawing x-axis
             let axis_X = this.axis.append("g")
                 .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
+                // .attr('transform', `translate(50, 0)`)
                 .call(axisX);
+
 
             // specify color for axis elements
             // tick
@@ -426,24 +243,37 @@ class BarChart extends Chart {
             axis_X.selectAll(".domain")
                 .attr("stroke", COLOR.AXIS);
             // tick label
-            axis_X.selectAll(".tick")
-                .selectAll("text")
+            let mgLeft = this.margin().left;
+            axis_X.selectAll(".tick text")
                 .attr("fill", COLOR.AXIS)
                 .attr("font-size", axis['labelFontSize'] || 10)
                 .attr("text-anchor", "end")
                 .attr("transform", `rotate(-${axis['labelAngle'] || 45} 0 10)`)
+                .html("")
+                .append('tspan').text(function (d) {
+                    return d;
+                })
+                .each(function () {
+                    //label ellipse
+                    var boxWidth = this.getBBox().width;
+                    console.log(boxWidth);
+                    var self = d3.select(this);
+                    var text = self.text();
+                    while (boxWidth > mgLeft - labelPadding && text.length > 0) {
+                        text = text.slice(0, -1);
+                        self.text(text + '...');
+                        boxWidth = this.getBBox().width;
+                    }
+                });
 
             // axix-label
-            const fontsize = 16;
-
             axis_X.append("text")
-                .attr("x", width / 2)
-                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + offset - 5)
+                .attr("transform", `translate(${0 - this.margin().left + labelPadding}, ${height / 2}) rotate(-90)`)
                 .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
                 .attr("fill", COLOR.AXIS)
                 .text(xEncoding);
+
         }
     }
 
@@ -452,8 +282,9 @@ class BarChart extends Chart {
     *
     * @return {void}
     */
-    encodeY() {
+    encodeY(axis = {}) {
         if (this.y) {
+            let svg = this.svg();
             let width = this.width(),
                 height = this.height() - offset;
             const processedData = this.processedData();
@@ -489,11 +320,11 @@ class BarChart extends Chart {
             //     .nice();
 
             this.yScale = d3.scaleLinear()
-                .range([height, 0])
+                .range([0, width])
                 .domain([0, d3.max(this.bardata, d => d[yEncoding])])
                 .nice();
 
-            let axisY = d3.axisLeft(this.yScale)
+            let axisY = d3.axisBottom(this.yScale)
                 .ticks(5)
                 .tickSize(0, 0, 0)
                 .tickPadding(5)
@@ -508,6 +339,7 @@ class BarChart extends Chart {
 
             let axis_Y = this.axis.append("g")
                 .attr("class", "axis_y")
+                .attr('transform', `translate(0, ${height})`)
                 .call(axisY);
 
             // specify color for axis elements
@@ -520,25 +352,30 @@ class BarChart extends Chart {
             // tick label
             axis_Y.selectAll(".tick")
                 .selectAll("text")
-                .attr("fill", COLOR.AXIS);
+                .attr("fill", COLOR.AXIS)
+                .attr("font-size", axis['labelFontSize'] || 10)
+                .attr("text-anchor", "end")
+                .attr("transform", `rotate(-${axis['labelAngle'] || 45} 0 10)`)
 
             // draw y axis path
             axis_Y.selectAll(".axis_y .tick")
                 .append("line")
                 .attr("x1", 0)
                 .attr("y1", 0)
-                .attr("x2", width)
-                .attr("y2", 0);
+                .attr("x2", 0)
+                .attr("y2", 0 - height);
 
             axis_Y.selectAll(".axis_y .tick text")
                 .attr("transform", "translate(3, 0)");
 
             // axix-label
-            const labelPadding = 24, fontsize = 16;
+            const fontsize = 16;
 
             axis_Y.append("text")
-                .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
+                .attr("x", width / 2)
+                .attr("y", svg.selectAll(".axis_y").select("path").node().getBBox().height + offset - 35)
                 .attr("text-anchor", "middle")
+                .attr("dominant-baseline", "hanging")
                 .attr("font-size", fontsize)
                 .attr("fill", COLOR.AXIS)
                 .text(yEncoding);
@@ -552,6 +389,7 @@ class BarChart extends Chart {
                 });
         }
     }
+
 
     /**
      * @description Coloring bars with color encoding.
@@ -574,45 +412,16 @@ class BarChart extends Chart {
             d3.selectAll(".rects").remove();
 
             /** process data */
-            // get series
-            let seriesData = {};
-            data.forEach(d => {
-                if (seriesData[d[colorEncoding]]) {
-                    seriesData[d[colorEncoding]].push(d);
-                } else {
-                    seriesData[d[colorEncoding]] = [d];
-                }
-            });
-            let series = Object.keys(seriesData);
-            let seriesDict = {}
-            series.forEach(d => seriesDict[d] = 0)
-
-            // adjust data structure to fit stackdata
-            const processedData = this.processedData()
-            let processedDict = {}
-            processedData.forEach((d, i) => {
-                let temp = {}
-                temp[d[colorEncoding]] = d[yEncoding]
-                processedDict[d[xEncoding]] = { ...processedDict[d[xEncoding]], ...temp }
-            })
-            let stackProcessedData = []
-            for (let key in processedDict) {
-                let temp2 = {}
-                temp2[xEncoding] = key
-                stackProcessedData.push({ ...seriesDict, ...temp2, ...processedDict[key] })
-            }
-            let stackData = d3.stack().keys(series)(stackProcessedData);
-
-
+            let stackData = prcessStackData(data, this.processedData(), colorEncoding, yEncoding, xEncoding);
 
             /** set the ranges */
             let xScale = d3.scaleBand()
-                .range([0, width - 12])
+                .range([0, height])
                 .domain(data.map(d => d[xEncoding]))
                 .padding(this.binSpacing);
 
             let yScale = d3.scaleLinear()
-                .range([height, 0])
+                .range([0, width])
                 .domain([0, d3.max(stackData[stackData.length - 1], d => d[1])])
                 .nice();
 
@@ -628,13 +437,13 @@ class BarChart extends Chart {
                 .data(d => d)
                 .enter().append("rect")
                 .attr("class", "mark")
-                .attr("x", d => {
+                .attr("x", d => yScale(d[0]))
+                .attr("y", d => {
                     d[xEncoding] = d.data[xEncoding]
                     return xScale(d.data[xEncoding])
                 })
-                .attr("y", d => yScale(d[1]))
-                .attr("width", xScale.bandwidth())
-                .attr("height", d => Math.abs(yScale(d[1]) - yScale(d[0])))
+                .attr("width", d => Math.abs(yScale(d[1]) - yScale(d[0])))
+                .attr("height", xScale.bandwidth())
                 .attr("rx", this.cornerRadius)
                 .attr("ry", this.cornerRadius)
                 .attr("fill-opacity", this.fillOpacity)
@@ -646,6 +455,38 @@ class BarChart extends Chart {
                 .transition()
                 .duration('duration' in animation ? animation['duration'] : 0)
                 .attr("fill", (d, i) => COLOR.CATEGORICAL[i % COLOR.CATEGORICAL.length]);
+        }
+
+        function prcessStackData(orgiData, processedData, colorEncoding, yEncoding, xEncoding) {
+            // get series
+            let seriesData = {};
+            orgiData.forEach(d => {
+                if (seriesData[d[colorEncoding]]) {
+                    seriesData[d[colorEncoding]].push(d);
+                } else {
+                    seriesData[d[colorEncoding]] = [d];
+                }
+            });
+            let series = Object.keys(seriesData);
+            let seriesDict = {};
+            series.forEach(d => seriesDict[d] = 0);
+
+            // adjust data structure to fit stackdata
+            // const processedData = this.processedData();
+            let processedDict = {};
+            processedData.forEach((d, i) => {
+                let temp = {};
+                temp[d[colorEncoding]] = d[yEncoding];
+                processedDict[d[xEncoding]] = { ...processedDict[d[xEncoding]], ...temp };
+            });
+            let stackProcessedData = [];
+            for (let key in processedDict) {
+                let temp2 = {};
+                temp2[xEncoding] = key;
+                stackProcessedData.push({ ...seriesDict, ...temp2, ...processedDict[key] });
+            }
+            let stackData = d3.stack().keys(series)(stackProcessedData);
+            return stackData;
         }
     }
 
@@ -668,7 +509,7 @@ class BarChart extends Chart {
                     break;
                 case "y":
                     changeY = true;
-                    this.encodeY()
+                    this.encodeY(axis)
                     break;
                 case "color":
                     this.encodeColor(animation);
@@ -676,7 +517,7 @@ class BarChart extends Chart {
                 default:
                     console.log("no channel select");
             }
-
+            //drawing the bar rect
             if ((this.x && this.y) && (changeX || changeY)) {
                 this.content.append("g")
                     .attr("class", "rects")
@@ -684,10 +525,10 @@ class BarChart extends Chart {
                     .data(this.bardata)
                     .enter().append("rect")
                     .attr("class", "mark")
-                    .attr("x", d => this.xScale(d[this.x]))
-                    .attr("y", this.height() - offset)
-                    .attr("width", this.xScale.bandwidth())
-                    .attr("height", 0)
+                    .attr("y", d => this.xScale(d[this.x]))
+                    .attr("x", 0)
+                    .attr("height", this.xScale.bandwidth())
+                    .attr("width", 0)
                     .attr("fill", this.fill)
                     .attr("rx", this.cornerRadius)
                     .attr("ry", this.cornerRadius)
@@ -697,13 +538,11 @@ class BarChart extends Chart {
                     .attr("stroke-opacity", this.strokeOpacity);
                 if ('duration' in animation) {
                     this.animationGrowTogether(animation);
-                }
-                else {
+                } else {
                     this.content.selectAll(".mark")
-                        .attr("y", d => this.yScale(d[this.y]))
-                        .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
+                        // .attr("x", d => this.xScale(d[this.x]))
+                        .attr("width", d => this.yScale(d[this.y]))
                 }
-
             }
         }
     }
@@ -740,10 +579,10 @@ class BarChart extends Chart {
                                 .data(this.bardata)
                                 .enter().append("rect")
                                 .attr("class", "mark")
-                                .attr("x", d => this.xScale(d[this.x]))
-                                .attr("y", this.height() - offset)
-                                .attr("width", this.xScale.bandwidth())
-                                .attr("height", 0)
+                                .attr("y", d => this.xScale(d[this.x]))
+                                .attr("x", 0)
+                                .attr("height", this.xScale.bandwidth())
+                                .attr("width", 0)
                                 .attr("fill", this.fill)
                                 .attr("rx", this.cornerRadius)
                                 .attr("ry", this.cornerRadius)
@@ -757,8 +596,7 @@ class BarChart extends Chart {
                             }
                             else {
                                 this.content.selectAll(".mark")
-                                    .attr("y", d => this.yScale(d[this.y]))
-                                    .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
+                                    .attr("width", d => this.yScale(d[this.y]))
                             }
                         })
                     break;
@@ -770,8 +608,7 @@ class BarChart extends Chart {
                     }
                     else {
                         this.content.selectAll(".mark")
-                            .attr("y", d => this.yScale(d[this.y]))
-                            .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
+                            .attr("width", d => this.yScale(d[this.y]))
                     }
                     break;
                 case 'color':
@@ -850,36 +687,6 @@ class BarChart extends Chart {
     }
 
     /**
-     * @description Adding grow(one by one) animation to the chart
-     *
-     * @param {{delay: number, duration: number}} animation Animation parameters of the action.
-     *
-     * @return {void}
-    */
-    animationGrow(animation) {
-        let processedData = this.processedData();
-        //let barduration = animation['duration']/processedData.length
-        let unitnum = d3.sum(processedData, item => item[this.y]);
-        let unitduration = animation['duration'] / unitnum;
-        let duration = 0;
-        let transDelay = d3.scaleBand()
-            .range([0, animation['duration']])
-            .domain(processedData.map(d => d[this.x]))
-
-        this.content.selectAll(".mark")
-            .data(this.bardata)
-            .transition()
-            //.duration(barduration)
-            .duration(d => { duration = d[this.y] * unitduration; return duration })
-            .ease(d3.easeLinear)
-            .attr("y", d => this.yScale(d[this.y]))
-            .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
-            //.delay((d, i) => {return (i*barduration)})
-            .delay(d => { return transDelay(d[this.x]) })
-        //.delay((d, i) => {if(i===0){delay = 0}else{delay = delay + durationlist[i-1];};return delay})
-    }
-
-    /**
       * @description Adding grow(together) animation to the chart
       *
       * @param {{delay: number, duration: number}} animation Animation parameters of the action.
@@ -893,8 +700,8 @@ class BarChart extends Chart {
             //.duration(barduration)
             .duration(animation['duration'])
             .ease(d3.easeLinear)
-            .attr("y", d => this.yScale(d[this.y]))
-            .attr("height", d => this.height() - offset - this.yScale(d[this.y]))
+            // .attr("x", d => this.xScale(d[this.x]))
+            .attr("width", d => this.yScale(d[this.y]))
     }
 
     /**
@@ -914,4 +721,4 @@ class BarChart extends Chart {
     };
 
 }
-export default BarChart;
+export default HBarChart;

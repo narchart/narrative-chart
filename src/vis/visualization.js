@@ -2,7 +2,7 @@ import MarkType from './visualization/marktype';
 
 /**
  * @description A visuaization class
- * 
+ *
  * @class
  */
 class Visualization {
@@ -15,6 +15,7 @@ class Visualization {
         this._mark = MarkType.POINT;
         this._chart = {};
         this._pipeline = null;
+        this._margin = {};
     }
 
     container(value) {
@@ -36,6 +37,13 @@ class Visualization {
             return this._height;
         }
         this._height = value;
+    }
+
+    margin(value) {
+        if (!value) {
+            return this._margin;
+        }
+        this._margin = value;
     }
 
     data(value) {

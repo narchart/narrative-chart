@@ -3,6 +3,10 @@ export {
 } from "./barchart";
 
 export {
+    default as HBarChart
+} from "./hbarchart";
+
+export {
     default as LineChart
 } from "./linechart";
 
