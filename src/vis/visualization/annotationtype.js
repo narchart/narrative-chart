@@ -11,7 +11,6 @@ export default {
     LABEL: 'label',
     REFERENCE: 'reference',
     REGRESSION: 'regression',
-    SEPARATE: 'separate',
     SHOW: 'show',
     SYMBOL: 'symbol',
     TEXTURE: 'texture',
