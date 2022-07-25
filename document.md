@@ -200,6 +200,7 @@ Choosing a mark to initialize the chart.
 | Pie Chart | arc | inner-radius; outer-radius; text-radius; corner-radius; stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 | Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 | Area Chart | area | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image;area-fill; |
+| Bubble Chart | bubble | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 
 ```
 {
@@ -247,6 +248,8 @@ Encoding channels to design the chart.
 | Line Chart | color | categorical |
 | Pie Chart | theta | numerical |
 | Pie Chart | color | categorical |
+| Bubble Chart | size | numerical |
+| Bubble Chart | color | categorical |
 
 Add Encoding
 
