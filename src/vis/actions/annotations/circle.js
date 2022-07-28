@@ -1,12 +1,13 @@
 import Annotator from './annotator'
 import Color from '../../visualization/color';
 import * as d3 from 'd3';
+import { HBarChart } from '../../charts';
 
 const COLOR = new Color();
 
 /**
  * @description An annotator for adding circle.
- * 
+ *
  * @class
  * @extends Annotator
  */
@@ -14,17 +15,17 @@ class Circle extends Annotator {
 
     /**
      * @description Add circles in target marks.
-     * 
+     *
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{color: string}} style Style parameters of the annotation.
      * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
-     * 
+     *
      * @return {void}
      */
     annotate(chart, target, style, animation) {
         let animationType;
-        if(animation) {
+        if (animation) {
             animationType = animation.type || "fade";
         }
         let svg = chart.svg();
@@ -162,8 +163,14 @@ class Circle extends Annotator {
                 let radiusX = style["width"] || defaultR,
                     radiusY = style["height"] || defaultR,
                     width = item.getAttribute("width"),
+                    height = item.getAttribute("height"),
                     circleX = Number(item.getAttribute("x")) + width / 2,
                     circleY = item.getAttribute("y");
+
+                if (chart instanceof HBarChart) {
+                    circleX = width;
+                    circleY = Number(item.getAttribute("y")) + height / 2;
+                }
 
                 let arc = d3.arc()
                     .innerRadius(9)

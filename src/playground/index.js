@@ -61,6 +61,7 @@ export default class Playground extends React.Component {
       <option value="scatterplot">scatterplot</option>
       <option value="linechart">linechart</option>
       <option value="barchart">barchart</option>
+      <option value="hbarchart">hbarchart</option>
       <option value="piechart">piechart</option>
       <option value="unitvis">unitvis</option>
       <option value="areachart">areachart</option>
@@ -105,4 +106,3 @@ export default class Playground extends React.Component {
     )
   }
 }
-

@@ -181,6 +181,11 @@ Operating a SQL-like action to query data from the spreadsheet.
 			"field": field(categorical),
 			"value": value
 		},
+        {
+			"field": field(numerical),
+            "op": equal/inequal/greater/less
+			"value": value
+		},
 		...
 	]
 }
