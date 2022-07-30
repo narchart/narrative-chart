@@ -74,7 +74,7 @@ class Label extends Annotator {
             }
 
             // identify the position
-            let data_x, data_y, data_r, offset_x, offset_y;
+            let data_x, data_y, data_r, offset_x = 0, offset_y = 0;
             const nodeName = focus_element.nodeName;
             let arc_angle;
 
