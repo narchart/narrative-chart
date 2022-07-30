@@ -1,7 +1,7 @@
 import Action from './action';
 import AnnotationType from '../visualization/annotationtype';
 import {Arrow, Circle, Contour, Desaturate, Distribution, Fade, Fill, Glow, Hide, Label, Reference, Regression, Show, Symbol, Texture, Tooltip} from './annotations'
-import {Bubblechart} from "../charts";
+
 class AddAnnotation extends Action {
     constructor(spec) {
         super(spec);
@@ -27,14 +27,8 @@ class AddAnnotation extends Action {
         let target = this._target;
         let style = this._style;
         let animation = this._animation;
-        const DURATION = chart.duration||0;
-        if(chart instanceof Bubblechart){
-            setTimeout(()=>{
-                annotator.annotate(chart, target, style, animation);
-            },DURATION)
-        }else{
-            annotator.annotate(chart, target, style, animation);
-        }
+
+        annotator.annotate(chart, target, style, animation);
     }
 
     _type2annotator(type) {

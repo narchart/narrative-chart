@@ -611,15 +611,6 @@ class Bubblechart extends Chart {
         let changecolor = false;
         let changelayout = false;
 
-        if (this.x) {
-            this.encodeX();
-            changelayout = true
-        }
-
-        if (this.y) {
-            this.encodeY();
-            changelayout = true
-        }
 
         if (this.size) {
             this.encodeSize();

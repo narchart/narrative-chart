@@ -66,10 +66,7 @@
         {
           "add": "encoding",
           "channel": "size",
-          "field": "Sales",
-          "animation": {
-            "duration": 2000
-          }
+          "field": "Sales"
         }
       ]
     }
