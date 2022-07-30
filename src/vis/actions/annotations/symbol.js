@@ -44,7 +44,7 @@ class Symbol extends Annotator {
         for (let focus_element of focus_elements.nodes()) {
 
             // identify the position
-            let data_x, data_y, data_r, offset_x, offset_y;
+            let data_x, data_y, data_r, offset_x = 0, offset_y = 0;
             const width_icon = style["width"] || 20;
             const height_icon = style["width"] || style["height"] || 20;
             const nodeName = focus_element.nodeName;

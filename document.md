@@ -145,14 +145,14 @@ Initializing the basic configuration of the chart.
 	"mode": "light"/"dark", // (default: "light")
 	"emotion": "none"/"calm"/"exciting"/"positive"/"negative"/"serious"/"playful"/"trustworthy"/"disturbing", // (default: "none")
     "background-image": {
-                    "url" : image-url, 
+                    "url" : image-url,
                     "opacity": float // (optional)
-                    "grayscale": int // (optional) 
-                    }, 
+                    "grayscale": int // (optional)
+                    },
     "background-color": {
-                    "color" : string, 
+                    "color" : string,
                     "opacity": float // (optional)
-                    },                     
+                    },
     "width": 640, // (optional)
     "height": 640 // (optional)
 }
@@ -181,6 +181,11 @@ Operating a SQL-like action to query data from the spreadsheet.
 			"field": field(categorical),
 			"value": value
 		},
+        {
+			"field": field(numerical),
+            "op": equal/inequal/greater/less
+			"value": value
+		},
 		...
 	]
 }
@@ -196,10 +201,11 @@ Choosing a mark to initialize the chart.
 |:--|:--|:--|
 | Scatterplot | point | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image;|
 | Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; corner-radius; bin-spacing; background-image;|
+| Horizontal Bar Chart | bar | stroke; stroke-width; stroke-opacity; fill; fill-opacity; corner-radius; bin-spacing; background-image;|
 | Line Chart | line | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image; |
 | Pie Chart | arc | inner-radius; outer-radius; text-radius; corner-radius; stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 | Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
-| Area Chart | area | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image;area-fill; |
+| Area Chart | area | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image;area-fill;area-fill-opacity; |
 | Bubble Chart | bubble | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 
 ```
@@ -209,17 +215,17 @@ Choosing a mark to initialize the chart.
         "type": "point"/"line"/"bar"/"unit"/"arc",
         "style": { ... }, // (optional)
         "animation": { "type": type }, // (optional)
-    } 
+    }
     "style": {
     "background-image": {
-                    "url" : image-url, 
+                    "url" : image-url,
                     "opacity": float, // (optional)
-                    "grayscale": int // (optional) 
+                    "grayscale": int // (optional)
                     } ,
     "background-color": {
-                    "color" : string, 
+                    "color" : string,
                     "opacity": float // (optional)
-                    }, 
+                    },
     "mask-image": image-url, // (optional)
     },
     "animation": { ... }
@@ -243,11 +249,16 @@ Encoding channels to design the chart.
 | Bar Chart | x | categorical |
 | Bar Chart | y | numerical |
 | Bar Chart | color | categorical |
+| Horizontal Bar Chart | x | categorical |
+| Horizontal Bar Chart | y | numerical |
+| Horizontal Bar Chart | color | categorical |
 | Line Chart | x | temporal |
 | Line Chart | y | numerical |
 | Line Chart | color | categorical |
 | Pie Chart | theta | numerical |
 | Pie Chart | color | categorical |
+| Area Chart | x | temporal |
+| Area Chart | y | numerical |
 | Bubble Chart | size | numerical |
 | Bubble Chart | color | categorical |
 
@@ -306,9 +317,9 @@ Annotating certain data marks in the chart by changing the marks' graphical appe
     "style": {
         ...
     },
-    "animation": { 
+    "animation": {
         "type": "fade"/"fly"/"wipe" // (default: "fade"),
-        "duration": number 
+        "duration": number
     }
 }
 ```
@@ -546,7 +557,7 @@ Annotating certain data marks in the chart by changing the marks' graphical appe
     },
     "animation": { "duration": number, "type": string}
 
-    
+
 }
 ```
 
@@ -657,7 +668,7 @@ Adding an image anywhere on the canvas.
 
 #### 7. Group
 
-Assigning multiple actions to a group. 
+Assigning multiple actions to a group.
 
 ```
 {
@@ -665,7 +676,7 @@ Assigning multiple actions to a group.
     "actions": [
         ...
     ],
-    "animation": { 
+    "animation": {
       "sync": bool // (default: false)
       "duration": int // (default: 0)
     }
@@ -955,7 +966,7 @@ Use yarn to start the playground
 yarn start
 ```
 
-### How to create a new chart? 
+### How to create a new chart?
 
 1. Create a new folder named with the chart name (e.g., ``newchart``) in the directory ``src/vis/charts``.
 2. Create a class ``NewChart`` from a parent class called ``Chart`` in the folder.
@@ -977,7 +988,7 @@ content.append("g")
     ...
 ```
 
-### How to create a new annotation? 
+### How to create a new annotation?
 
 1. Create a new js file named with the annotation name (e.g., ``newannotation.js``) in the directory ``src/vis/actions/annotations``.
 2. Create a class ``NewAnnotation`` from a parent class called ``Annotator``.

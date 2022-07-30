@@ -312,6 +312,7 @@ class AreaChart extends Chart {
         const dotOpacity = this.markStyle()['point'] ? 1 : 0;
 
         const areaFill = this.markStyle()['area-fill'] ? this.markStyle()['area-fill'] : COLOR.DEFAULT;
+        const areaFillPacity = this.markStyle()['area-fill-opacity'] ? this.markStyle()['area-fill-opacity'] : 1;
 
 
         var config = {
@@ -329,7 +330,7 @@ class AreaChart extends Chart {
             .attr("y", 0);
 
         const area = d3.area()
-            .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
+            .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding]) / 2)
             .y0(height)
             .y1(d => yScale(d[yEncoding]))
 
@@ -355,6 +356,7 @@ class AreaChart extends Chart {
             .attr("opacity", 1)
             .append("path")
             .attr("fill", areaFill) // color for the area
+            .attr("fill-opacity", areaFillPacity) // opacity of the area
             .attr("d", area(processedData))
             .attr("class", "area");
 
@@ -375,7 +377,7 @@ class AreaChart extends Chart {
             })
             .attr("cy", d => yScale(d[yEncoding]))
             .attr("fill", (d, i) => {
-       
+
                 if (this.markStyle()['background-image']) {
 
                     let defs = content.append('svg:defs');
