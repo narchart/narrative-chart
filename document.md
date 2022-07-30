@@ -206,6 +206,7 @@ Choosing a mark to initialize the chart.
 | Pie Chart | arc | inner-radius; outer-radius; text-radius; corner-radius; stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 | Unitvis | unit | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 | Area Chart | area | stroke; stroke-width; point; point-radius; point-fill; point-stroke; point-stroke-width; background-image;area-fill;area-fill-opacity; |
+| Bubble Chart | bubble | stroke; stroke-width; stroke-opacity; fill; fill-opacity; background-image; |
 
 ```
 {
@@ -258,6 +259,8 @@ Encoding channels to design the chart.
 | Pie Chart | color | categorical |
 | Area Chart | x | temporal |
 | Area Chart | y | numerical |
+| Bubble Chart | size | numerical |
+| Bubble Chart | color | categorical |
 
 Add Encoding
 

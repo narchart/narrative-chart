@@ -27,6 +27,7 @@ class AddAnnotation extends Action {
         let target = this._target;
         let style = this._style;
         let animation = this._animation;
+
         annotator.annotate(chart, target, style, animation);
     }
 

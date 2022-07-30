@@ -1,0 +1,91 @@
+{
+  "data": {
+    "url": "http://localhost:3000/spreadsheets/sales.csv",
+    "schema": [
+      {
+        "field": "Year",
+        "type": "categorical"
+      },
+      {
+        "field": "Brand",
+        "type": "categorical"
+      },
+      {
+        "field": "Category",
+        "type": "categorical"
+      },
+      {
+        "field": "Sales",
+        "type": "numerical"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "add": "config",
+      "mode": "light"
+    },
+    {
+      "select": [
+        {
+          "field": "Year"
+        },
+        {
+          "field": "Brand"
+        },
+        {
+          "field": "Category"
+        },
+        {
+          "field": "Sales",
+          "aggregate": "sum"
+        }
+      ],
+      "groupby": [
+        {
+          "field": "Category"
+        }
+      ]
+    },
+    {
+      "add": "chart",
+      "mark": {
+        "type": "bubble",
+        "style": {
+          "stroke-color": "blue",
+          "stroke-opacity": 1,
+          "stroke-width": 0,
+          "fill-opacity": 1
+        }
+      },
+      "style": {}
+    },
+    {
+      "add": "group",
+      "actions": [
+        {
+          "add": "encoding",
+          "channel": "size",
+          "field": "Sales"
+        }
+      ]
+    }
+  ,
+    {
+      "add": "annotation",
+      "method": "tooltip",
+      "target": [
+        {
+          "field": "Category",
+          "value": "Compact"
+        }
+      ],
+      "text": "138k",
+      "style": {
+        "font-size": 14,
+        "tooltip-color": "black"
+      }
+    }
+
+  ]
+}
