@@ -1,45 +1,64 @@
 {
   "data": {
-    "url": "http://localhost:3000/spreadsheets/sales.csv",
+    "url": "https://narchart.github.io/editor/spreadsheets/deadstartup.csv",
     "schema": [
       {
-        "field": "Year",
+        "field": "industry",
+        "type": "categorical"
+      },
+      {
+        "field": "funded status",
+        "type": "categorical"
+      },
+      {
+        "field": "cause of failure",
+        "type": "categorical"
+      },
+      {
+        "field": "broken year",
         "type": "temporal"
       },
       {
-        "field": "Brand",
-        "type": "categorical"
-      },
-      {
-        "field": "Category",
-        "type": "categorical"
-      },
-      {
-        "field": "Sales",
+        "field": "survival time",
         "type": "numerical"
+      },
+      {
+        "field": "location",
+        "type": "categorical"
       }
     ]
   },
-
   "actions": [
     {
       "add": "config",
-      "mode": "light",
-      "emotion": "exciting"
+      "mode": "dark",
+      "emotion": "disturbing"
     },
     {
       "select": [
         {
-          "field": "Sales",
-          "aggregate": "min"
+          "field": "survival time",
+          "aggregate": "average"
         },
         {
-          "field": "Brand"
+          "field": "location"
+        },
+        {
+          "field": "funded status"
+        },
+        {
+          "field": "broken year"
+        },
+        {
+          "field": "industry"
+        },
+        {
+          "field": "cause of failure"
         }
       ],
       "groupby": [
         {
-          "field": "Brand"
+          "field": "funded status"
         }
       ],
       "filter": []
@@ -49,13 +68,46 @@
       "mark": {
         "type": "bar",
         "style": {
-          "corner-radius": 8,
-          "bin-spacing": 0.5,
-          "stroke": "#FFBE32",
-          "stroke-width": 3,
-          "stroke-opacity": 1,
-          "fill-opacity": 1
+          "bin-spacing": 0.3,
+          "corner-radius": 3,
+          "stroke-width": 1,
+          "stroke": "white"
         }
+      },
+      "style": {
+        "background-image": {
+          "url": "https://upload.wikimedia.org/wikipedia/commons/4/47/PNG_transparency_demonstration_1.png"
+        },
+        "background-color": {
+          "color": "gray"
+        }
+      }
+    },
+    {
+      "add": "title",
+      "text": "Dead startups in China",
+      "style": {
+        "font-color": "#FE5C34",
+        "font-size": 37,
+        "font-family": "Georgia",
+        "font-style": "italic",
+        "position": "top-left"
+      },
+      "animation": {
+        "duration": 1000
+      }
+    },
+    {
+      "add": "caption",
+      "text": "We collected data from itjuzi.com and analyzed the startups in China died between 2010 and 2019. Companies that go public have the longest mean survival time.",
+      "style": {
+        "font-color": "#FE5C34",
+        "font-size": 15,
+        "position": "top-left",
+        "top-padding": 5
+      },
+      "animation": {
+        "duration": 1000
       }
     },
     {
@@ -64,73 +116,60 @@
         {
           "add": "encoding",
           "channel": "x",
-          "field": "Brand"
+          "field": "funded status"
         },
         {
           "add": "encoding",
           "channel": "y",
-          "field": "Sales"
+          "field": "survival time"
         }
-      ]
+      ],
+      "animation": {
+        "duration": 1000
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "fade",
+      "target": [],
+      "animation": {
+        "duration": 1000
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "fill",
+      "target": [
+        {
+          "field": "funded status",
+          "value": "Public"
+        }
+      ],
+      "style": {
+        "color": "#ABABAB"
+      },
+      "animation": {
+        "duration": 1000
+      }
     },
     {
       "add": "annotation",
       "method": "label",
       "target": [
         {
-          "field": "Brand",
-          "value": "Ford"
+          "field": "funded status",
+          "value": "Public"
         }
       ],
       "style": {
+        "text": "3409",
+        "font-color": "#FF4B19",
         "font-size": 20,
-        "font-family": "sans-serif",
-        "font-color": "red",
-        "font-weight": 300,
+        "font-weight": "bold",
         "font-style": "italic"
-      }
-    },
-    {
-      "add": "annotation",
-      "method": "symbol",
-      "target": [
-        {
-          "field": "Brand",
-          "value": "Ford"
-        }
-      ],
-      "style": {
-        "icon-url": "http://localhost:3000/icon/rank-1.png",
-        "width": 20
-      }
-    },
-    {
-      "add": "annotation",
-      "method": "circle",
-      "target": [
-        {
-          "field": "Brand",
-          "value": "Hyundai"
-        }
-      ],
-      "style": {
-        "width": 30,
-        "height": 20,
-        "color": "red"
-      }
-    },
-    {
-      "add": "annotation",
-      "method": "texture",
-      "target": [
-        {
-          "field": "Brand",
-          "value": "Hyundai"
-        }
-        
-      ],
-      "style": {
-        "background-image": "http://localhost:3000/texture/circle.png"
+      },
+      "animation": {
+        "duration": 1000
       }
     }
   ]
