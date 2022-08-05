@@ -141,7 +141,7 @@ class Chart {
     modifyEncoding(channel, field, animation = {}) { }
 
     removeEncoding(channel, field, animation = {}) { }
-
+    
 }
 
 export default Chart;

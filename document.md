@@ -41,6 +41,7 @@
     - [Examples](#examples)
       - [1. Without Animations](#1-without-animations)
       - [2. With Animations](#2-with-animations)
+    - [8. Meta Actions](#8-meta-actions)
   - [Development](#development)
     - [Playground](#playground)
     - [How to create a new chart?](#how-to-create-a-new-chart)
@@ -683,11 +684,9 @@ Assigning multiple actions to a group.
 }
 ```
 
-
 ### Animations
 
 Narrative Chart supports animated transitions between actions by specifying "duration", which represents per-action duration in milliseconds.
-
 
 
 ### Examples
@@ -939,6 +938,18 @@ Narrative Chart supports animated transitions between actions by specifying "dur
             }
         }
     ]
+}
+```
+
+### 8. Meta Actions
+
+Save chart as an image.
+
+```
+{
+    "save": "chart",
+    "name": image_name, (optional)
+    "format": png (optional)
 }
 ```
 

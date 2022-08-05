@@ -1,6 +1,6 @@
 import Pipeline from './pipeline';
 import Translator from './translator';
-import { Configure, AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddTitle, AddCaption, AddImage} from './actions';
+import { Configure, AddAnnotation, AddChart, AddEncoding, ModifyEncoding, RemoveEncoding, DataProcess, AddTitle, AddCaption, AddImage, SaveChart} from './actions';
 
 /**
  * @description A parser for parsing visuaization specifications
@@ -114,10 +114,12 @@ class Parser {
             action = new ModifyEncoding(actionspec);
         } else if ('remove' in actionspec) {
             action = new RemoveEncoding(actionspec);
-        }
-        else if ('select' in actionspec || 'groupby' in actionspec || 'filter' in actionspec) {
+        } else if ('select' in actionspec || 'groupby' in actionspec || 'filter' in actionspec) {
             // data processing
             action = new DataProcess(actionspec);
+        } else if ('save' in actionspec) {
+            // save chart image
+            action = new SaveChart(actionspec);
         }
         return action;
     }
