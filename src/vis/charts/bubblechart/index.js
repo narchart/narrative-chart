@@ -494,7 +494,8 @@ class Bubblechart extends Chart {
                     changecolor = true
                     break;
                 default:
-                    console.log('no channel select')
+                    // console.log('no channel select')
+                    break;
             }
 
             if (changecolor) {
@@ -560,7 +561,8 @@ class Bubblechart extends Chart {
                     changecolor = true
                     break;
                 default:
-                    console.log('no channel select')
+                    // console.log('no channel select')
+                    break;
             }
 
             if (changecolor) {
