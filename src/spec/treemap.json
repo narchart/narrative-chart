@@ -1,0 +1,186 @@
+{
+  "data": {
+    "url": "http://localhost:3000/spreadsheets/sales.csv",
+    "schema": [
+      {
+        "field": "Year",
+        "type": "temporal"
+      },
+      {
+        "field": "Brand",
+        "type": "categorical"
+      },
+      {
+        "field": "Category",
+        "type": "categorical"
+      },
+      {
+        "field": "Sales",
+        "type": "numerical"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "add": "config",
+      "mode": "light"
+    },
+    {
+      "select": [
+        {
+          "field": "Sales",
+          "aggregate": "count"
+        },
+        {
+          "field": "Brand"
+        }
+      ],
+      "groupby": [
+        {
+          "field": "Brand"
+        }
+      ],
+      "filter": []
+    },
+    {
+      "add": "chart",
+      "mark": {
+        "type": "tree",
+        "style": {
+          "corner-radius": 10,
+          "stroke-width": 1,
+          "stroke": "white"
+        }
+      }
+    },
+    {
+      "add": "title",
+      "text": "Sales",
+      "style": {
+        "font-color": "#FE5C34",
+        "font-size": 37,
+        "font-family": "Georgia",
+        "font-style": "italic",
+        "position": "top-left"
+      }
+    },
+    {
+      "add": "caption",
+      "text": "We collected data from xxx.com and analyzed xxx between 2010 and 2019.",
+      "style": {
+        "font-color": "#FE5C34",
+        "font-size": 15,
+        "position": "top-left",
+        "top-padding": 5
+      }
+    },
+    {
+      "add": "encoding",
+      "channel": "x",
+      "field": "Sales"
+    },
+    {
+      "add": "encoding",
+      "channel": "color",
+      "field": "Brand"
+    },
+    {
+      "add": "annotation",
+      "method": "fill",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Ford"
+        }
+      ],
+      "style": {
+        "color": "#CCABAB"
+      },
+      "animation": {
+        "duration": 1000
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "arrow",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Ford"
+        }
+      ],
+      "animation": {
+        "duration": 1000
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "contour",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Ford"
+        }
+      ],
+      "style": {
+        "color": "orange"
+      },
+      "animation": {
+        "duration": 1000
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "label",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Ford"
+        }
+      ],
+      "style": {
+        "text": "Ford: 20%",
+        "font-color": "black",
+        "font-size": 20,
+        "font-weight": "bold"
+      },
+      "animation": {
+        "duration": 1000
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "tooltip",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Ford"
+        }
+      ],
+      "text": "Car name: Ford",
+      "style": {
+        "font-size": 11,
+        "font-weight": "bold",
+        "font-color": "white",
+        "tooltip-color": "#FE268E"
+      }
+    },
+    {
+      "add": "annotation",
+      "method": "texture",
+      "target": [
+        {
+          "field": "Brand",
+          "value": "Ford"
+        }
+      ],
+      "style": {
+        "background-image": "https://narchart.github.io/editor/background/pie_background2.png"
+      }
+    },
+    {
+      "remove": "encoding",
+      "channel": "color"
+    }
+  ]
+}

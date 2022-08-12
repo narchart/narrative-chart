@@ -1,5 +1,6 @@
 import Color from '../../visualization/color';
 import Annotator from './annotator'
+import { TreeMap } from '../../charts';
 
 const COLOR = new Color();
 
@@ -54,6 +55,9 @@ class Glow extends Annotator {
             .filter(function(d) {
                 if (target.length === 0) {
                     return true
+                }
+                if (chart instanceof TreeMap) {
+                    d = d.data
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {

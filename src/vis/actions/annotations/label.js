@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { Scatterplot, PieChart, HBarChart } from '../../charts';
+import { Scatterplot, PieChart, HBarChart, TreeMap } from '../../charts';
 import Color from '../../visualization/color';
 
 const COLOR = new Color();
@@ -31,6 +31,9 @@ class Label extends Annotator {
             .filter(function (d) {
                 if (target.length === 0) {
                     return true
+                }
+                if (chart instanceof TreeMap) {
+                    d = d.data
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
@@ -91,6 +94,11 @@ class Label extends Annotator {
                     // TODO - the offset should be determinded by size of label
                     offset_x = 25;
                     offset_y = 5;
+                } else if (chart instanceof TreeMap) {
+                    data_x = focus_element.__data__.x0
+                    data_y = focus_element.__data__.y0
+                    offset_x = 10;
+                    offset_y = style["font-size"] || 12;
                 } else {
                     data_x = bbox.x + bbox.width / 2;
                     data_y = bbox.y;
@@ -112,6 +120,12 @@ class Label extends Annotator {
 
             const customizeOffset_x = style["offset-x"] || 0;
             const customizeOffset_y = style["offset-y"] || 0;
+            let text_anchor = "middle"
+            if (chart instanceof PieChart) {
+                text_anchor = arc_angle > Math.PI ? "end" : "start"
+            } else if (chart instanceof TreeMap) {
+                text_anchor = ""
+            }
             // draw text
             svg.append("text")
                 .attr("class", "text")
@@ -123,12 +137,13 @@ class Label extends Annotator {
                 .attr("fill", style["font-color"] || COLOR.TEXT)
                 .attr("font-weight", style["font-weight"] || 400)
                 .attr("font-style", style["font-style"] || "normal")
-                .attr("text-anchor", (chart instanceof PieChart) ? (arc_angle > Math.PI ? "end" : "start") : "middle")
+                .attr("text-anchor", text_anchor)
                 .attr("alignment-baseline", "Alphabetic")
                 .attr("fill-opacity", 0)
                 .transition()
                 .duration('duration' in animation ? animation['duration'] : 0)
                 .attr("fill-opacity", 1);
+            
         }
 
     }

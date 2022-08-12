@@ -1,6 +1,6 @@
 import Annotator from './annotator'
 import Color from '../../visualization/color';
-import { PieChart } from '../../charts';
+import { PieChart,TreeMap } from '../../charts';
 import * as d3 from 'd3';
 
 const COLOR = new Color();
@@ -29,6 +29,9 @@ class Arrow extends Annotator {
             .filter(function (d) {
                 if (target.length === 0) {
                     return true
+                }
+                if (chart instanceof TreeMap) {
+                    d = d.data
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
@@ -84,9 +87,15 @@ class Arrow extends Annotator {
                 data_y = parseFloat(one_element.getAttribute("cy"));
                 offset = 0// parseFloat(one_element.getAttribute("r")) / 1.414; // √2 ~ 1.414
             } else if (nodeName === "rect") {
-                offset = 0 // parseFloat(one_element.getAttribute("width")) / 2;
-                data_x = parseFloat(one_element.getAttribute("x")) + parseFloat(one_element.getAttribute("width")) / 2;
-                data_y = parseFloat(one_element.getAttribute("y"));
+                if (chart instanceof TreeMap) {
+                    offset = 0 // parseFloat(one_element.getAttribute("width")) / 2;
+                    data_x = parseFloat(one_element.getAttribute("x")) + parseFloat(one_element.getAttribute("width")) * 7/8;
+                    data_y = parseFloat(one_element.getAttribute("y")) + parseFloat(one_element.getAttribute("height"))* 7/8;
+                } else {
+                    offset = 0 // parseFloat(one_element.getAttribute("width")) / 2;
+                    data_x = parseFloat(one_element.getAttribute("x")) + parseFloat(one_element.getAttribute("width")) / 2;
+                    data_y = parseFloat(one_element.getAttribute("y"));
+                }
             } else { // currently only support piechart
                 if(chart instanceof PieChart){
                     pie_arrow_points = arrow_points;
