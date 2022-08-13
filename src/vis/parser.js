@@ -70,9 +70,11 @@ class Parser {
                     
                 } else {
                     let action = this.parse_action(actionspec);
-                    action.delay(delay);
-                    actions_to_add.push(action);
-                    delay += action.duration();
+                    if (action) {
+                        action.delay(delay);
+                        actions_to_add.push(action);
+                        delay += action.duration();
+                    } 
                 }
                 for (const action of actions_to_add) {
                     pipeline.add(action)
