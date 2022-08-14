@@ -6,6 +6,7 @@ const MarkType = {
     ARC: 'arc',
     AREA: 'area',
     HBAR: 'hbar',
+    BUBBLE: 'bubble',
     TREE: 'tree'
 }
 

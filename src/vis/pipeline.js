@@ -34,7 +34,7 @@ class Pipeline {
                 delayTime = 0
             }
             if (action instanceof AddAnnotation) { 
-                delayTime += 100 // TODO: add a small time period for waiting movement of marks (fix in the future)
+                delayTime += 1000 // waiting 1 second before showing annotation movement of marks (fix in the future)
             }
             this._timers.push(d3.timeout(function(){
                 // Code to run after the pause

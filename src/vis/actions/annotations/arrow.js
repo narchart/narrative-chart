@@ -1,25 +1,25 @@
 import Annotator from './annotator'
 import Color from '../../visualization/color';
-import { PieChart,TreeMap } from '../../charts';
+import { PieChart,Bubblechart,TreeMap } from '../../charts';
 import * as d3 from 'd3';
 
 const COLOR = new Color();
 
 /**
  * @description An annotator for drawing arrow.
- * 
+ *
  * @class
  * @extends Annotator
  */
 class Arrow extends Annotator {
     /**
      * @description place arrows nearby targeted elements.
-     * 
+     *
      * @param {Chart} chart src/vis/charts/chart.js
      * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
      * @param {{color: string}} style Style parameters of the annotation.
      * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
-     * 
+     *
      * @return {void}
      */
     annotate(chart, target, style, animation) {
@@ -62,7 +62,7 @@ class Arrow extends Annotator {
 
         let pie_arrow_points;
 
-        // scale on x and y 
+        // scale on x and y
         let scale_x, scale_y;
         if ('width' in style && 'height' in style) {
             scale_x = style['width'] / 36;
@@ -77,15 +77,18 @@ class Arrow extends Annotator {
             scale_x = 1;
             scale_y = 1;
         }
- 
+
         focus_elements.nodes().forEach((one_element) => {
             // identify the position to place the arrow
             let data_x, data_y, offset, offset_x, offset_y, center_x, center_y;
             const nodeName = one_element.nodeName;
-            if (nodeName === "circle") { // get center 
+            if (nodeName === "circle") { // get center
                 data_x = parseFloat(one_element.getAttribute("cx"));
                 data_y = parseFloat(one_element.getAttribute("cy"));
                 offset = 0// parseFloat(one_element.getAttribute("r")) / 1.414; // √2 ~ 1.414
+                if(chart instanceof Bubblechart){
+                    offset=parseFloat(one_element.getAttribute("r"))/3;
+                }
             } else if (nodeName === "rect") {
                 if (chart instanceof TreeMap) {
                     offset = 0 // parseFloat(one_element.getAttribute("width")) / 2;
@@ -109,7 +112,7 @@ class Arrow extends Annotator {
 
                     // scale
                     pie_arrow_points = pie_arrow_points.map((point) => [scale_x * point[0], scale_y * point[1]]);
-                    
+
                     // rotate
                     const _rev45 = (45 * Math.PI / 180);
                     const _tan = (center_x - data_x) / (center_y - data_y);
@@ -123,7 +126,7 @@ class Arrow extends Annotator {
                     }
                     alpha += _rev45;
                     pie_arrow_points = pie_arrow_points.map((point) => [Math.cos(alpha) * point[0] - Math.sin(alpha) * point[1], Math.sin(alpha) * point[0] + Math.cos(alpha) * point[1]]);
-                    
+
                     // translate
                     offset = 0;
                     offset_x = (outer_r * 0.8) * (data_x > center_x ? 1 : -1) * Math.sin(Math.atan(Math.abs(_tan)));
@@ -164,7 +167,7 @@ class Arrow extends Annotator {
                     .duration('duration' in animation ? animation['duration']: 0)
                     .attr("transform", "translate(0, 0)");
             } else if ("type" in animation && animation["type"] === "wipe") {
-                // ensure that clip-paths for different arrows won't affect one another. 
+                // ensure that clip-paths for different arrows won't affect one another.
                 const uid = Date.now().toString() + Math.random().toString(36).substring(2);
 
                 const arrow = svg.append("path")
@@ -178,7 +181,7 @@ class Arrow extends Annotator {
                             return COLOR.ANNOTATION;
                         }
                     });
-                
+
                 const arrowBox = arrow.node().getBBox();
 
                 if (!(chart instanceof PieChart)) {
@@ -193,7 +196,7 @@ class Arrow extends Annotator {
                     .transition()
                     .duration('duration' in animation ? animation['duration']: 0)
                     .attr("x", arrowBox.x)
-                    .attr("y", arrowBox.y) 
+                    .attr("y", arrowBox.y)
                     .attr("height", arrowBox.height)
                     .attr("width", arrowBox.width);
                 } else {
@@ -210,7 +213,7 @@ class Arrow extends Annotator {
                                 .transition()
                                 .duration('duration' in animation ? animation['duration']: 0)
                                 .attr("x", arrowBox.x)
-                                .attr("y", arrowBox.y) 
+                                .attr("y", arrowBox.y)
                                 .attr("height", arrowBox.height)
                                 .attr("width", arrowBox.width);
                         } else {
@@ -240,7 +243,7 @@ class Arrow extends Annotator {
                                 .attr("width", 0)
                                 .transition()
                                 .duration('duration' in animation ? animation['duration']: 0)
-                                .attr("y", arrowBox.y) 
+                                .attr("y", arrowBox.y)
                                 .attr("height", arrowBox.height)
                                 .attr("width", arrowBox.width);
                         } else {

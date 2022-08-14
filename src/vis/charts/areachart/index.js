@@ -127,11 +127,13 @@ class AreaChart extends Chart {
     */
     initvis() {
         let svg = this.svg();
+        let processedData = this.processedData();
         let width = this.width() - 12,
             height = this.height() - offset;
+        this.axis().data(processedData);
+        this.axis().width(width);
+        this.axis().height(height);
 
-        svg.append("g")
-            .attr("class", "axis");
         svg.append("g")
             .attr("class", "content")
             .attr("chartWidth", width)
@@ -143,67 +145,20 @@ class AreaChart extends Chart {
      *
      * @return {void}
      */
-    encodeX(axis = {}) {
-        let processedData = this.processedData();
+    encodeX(axisStyle = {}) {
+        
         if (this.x) {
-            let svg = this.svg();
-            let width = this.width() - 12,
-                height = this.height() - offset;
             const xEncoding = this.x;
-            let axisClass = svg.select(".axis");
 
-            /** set the ranges */
-            let xScale = d3.scaleBand()
+            /** range */
+            let width = this.width() - 12;
+            this.xScale = d3.scaleBand()
                 .range([0, width])
-                .domain(processedData.map(d => d[xEncoding]));
+                .domain(this.processedData().map(d => d[xEncoding]));
 
-            let axis_X = axisClass.append("g")
-                .attr("class", "axis_X");
-
-            let axisX = d3.axisBottom(xScale)
-                .ticks(5)
-                .tickSize(5)
-                .tickPadding(5)
-                .tickFormat(function (d) {
-                    var date = d.split('/')
-                    return date[1] + '/' + date[2];
-                });
-
-            axis_X.append("g")
-                .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
-                .call(axisX);
-
-            // specify color for axis elements
-            // tick
-            axis_X.selectAll(".tick line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis_X.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis_X.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS)
-                .attr("font-size", axis['labelFontSize'] ? axis['labelFontSize'] : 10)
-                .attr("text-anchor", axis['labelAngle'] ? "end" : "middle")
-                .attr("transform", `rotate(-${axis['labelAngle'] ? axis['labelAngle'] : 0} 0 0)`);
-
-            /* draw labels */
-            const labelPadding = 24, fontsize = 16;
-
-            axis_X.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(xEncoding);
-
-        }
-        else {
-
+            /* axis */
+            this.axis().xScale(this.xScale);
+            this.axis().addTemporalX(xEncoding, axisStyle); 
         }
     }
 
@@ -212,79 +167,20 @@ class AreaChart extends Chart {
      *
      * @return {void}
      */
-    encodeY() {
-        let processedData = this.processedData();
+    encodeY(axisStyle = {}) {
         if (this.y) {
-            let svg = this.svg();
-            let width = this.width() - 12,
-                height = this.height() - offset;
             const yEncoding = this.y;
-            let axis = svg.select(".axis");
 
-            /** set the ranges */
-            let yScale = d3.scaleLinear()
-                .range([height, 10])
-                .domain([0, d3.max(processedData, d => d[yEncoding])])
-                .nice();
+            /* range */
+            const height = this.height() - offset;
+            this.yScale = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(this.processedData(), d => d[yEncoding])])
+            .nice();
 
-            let axis_Y = axis.append("g")
-                .attr("class", "axis_Y");
-
-            /** draw axis */
-            let axisY = d3.axisLeft(yScale)
-                .ticks(5)
-                .tickSize(0, 0, 0)
-                .tickPadding(5)
-                .tickFormat(function (d) {
-                    if ((d / 1000000) >= 1) {
-                        d = d / 1000000 + "M";
-                    } else if ((d / 1000) >= 1) {
-                        d = d / 1000 + "K";
-                    }
-                    return d;
-                });
-
-            axis_Y.append("g")
-                .attr("class", "axis_y")
-                .call(axisY);
-
-            // specify color for axis elements
-            // tick
-            axis_Y.selectAll(".tick line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis_Y.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis_Y.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS);
-
-            /** draw grid */
-            axis_Y.selectAll(".axis_y")
-                .selectAll("line")
-                .attr("stroke", d => {
-                    if (d === 0) return COLOR.AXIS;
-                    else return COLOR.DIVIDER;
-                })
-                .attr("class", "gridline")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", width)
-                .attr("y2", 0)
-                .attr("opacity", 1);
-
-            /* draw labels */
-            const labelPadding = 24, fontsize = 16;
-            axis_Y.append("text")
-                .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
-                .attr("text-anchor", "middle")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(yEncoding);
-
-        }
-        else {
+            /* axis */
+            this.axis().yScale(this.yScale);
+            this.axis().addY("Numerical", yEncoding, axisStyle);
 
         }
     }
@@ -312,6 +208,7 @@ class AreaChart extends Chart {
         const dotOpacity = this.markStyle()['point'] ? 1 : 0;
 
         const areaFill = this.markStyle()['area-fill'] ? this.markStyle()['area-fill'] : COLOR.DEFAULT;
+        const areaFillPacity = this.markStyle()['area-fill-opacity'] ? this.markStyle()['area-fill-opacity'] : 1;
 
 
         var config = {
@@ -329,7 +226,7 @@ class AreaChart extends Chart {
             .attr("y", 0);
 
         const area = d3.area()
-            .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding])/2)
+            .x(d => xScale(d[xEncoding]) + xScale(processedData[1][xEncoding]) / 2)
             .y0(height)
             .y1(d => yScale(d[yEncoding]))
 
@@ -355,6 +252,7 @@ class AreaChart extends Chart {
             .attr("opacity", 1)
             .append("path")
             .attr("fill", areaFill) // color for the area
+            .attr("fill-opacity", areaFillPacity) // opacity of the area
             .attr("d", area(processedData))
             .attr("class", "area");
 
@@ -375,7 +273,7 @@ class AreaChart extends Chart {
             })
             .attr("cy", d => yScale(d[yEncoding]))
             .attr("fill", (d, i) => {
-       
+
                 if (this.markStyle()['background-image']) {
 
                     let defs = content.append('svg:defs');
@@ -501,16 +399,16 @@ class AreaChart extends Chart {
      *
      * @return {void}
      */
-    addEncoding(channel, field, animation = {}, axis = {}) {
+    addEncoding(channel, field, animation = {}, axisStyle = {}) {
         if (!this[channel]) {
             this[channel] = field;
 
             switch (channel) {
                 case "x":
-                    this.encodeX(axis);
+                    this.encodeX(axisStyle);
                     break;
                 case "y":
-                    this.encodeY();
+                    this.encodeY(axisStyle);
                     this.encodeLine();
                     this.animationWipe(animation);
                     break;
@@ -564,10 +462,10 @@ class AreaChart extends Chart {
                     if (channel === 'x') {
                         this.svg().selectAll(".areaGroup").remove();
                         this.svg().selectAll(".circleGroup").remove();
-                        this.svg().selectAll(".axis_X").remove();
+                        this.axis().removeX();
                     }
                     if (channel === 'y') {
-                        this.svg().selectAll(".axis_Y").remove();
+                        this.axis().removeY();
                     }
                     if (channel === 'color') {
                         this.svg().selectAll(".areaGroup").remove();
@@ -658,10 +556,10 @@ class AreaChart extends Chart {
                 this.svg().selectAll(".areaGroup").remove();
                 this.svg().selectAll(".circleGroup").remove();
                 if (channel === 'x') {
-                    this.svg().selectAll(".axis_X").remove();
+                    this.axis().removeX();
                 }
                 if (channel === 'y') {
-                    this.svg().selectAll(".axis_Y").remove();
+                    this.axis().removeY();
                 }
                 if (channel === 'color') {
                     this.encodeX();

@@ -68,6 +68,8 @@ class Scatterplot extends Chart {
             .append("g")
             .attr("transform", "translate(" + margin.left + "," + (margin.top + marginTopOffset) + ")");
 
+        
+
         if (background.Background_Image) {
             let defs = d3.select(container).select("svg").append('svg:defs');
             defs.append("svg:pattern")
@@ -152,11 +154,9 @@ class Scatterplot extends Chart {
     */
     initvis() {
         let svg = this.svg();
-        svg.append("g")
-            .attr("class", "axis");
-        const widthOffset = 21;
+        const widthOffset = 21, heightOffset = 36;
         let width = this.width() - widthOffset,
-            height = this.height();
+            height = this.height() - heightOffset;
         let initX = width / 2;
         let initY = height / 2;
 
@@ -178,6 +178,10 @@ class Scatterplot extends Chart {
             .attr("xlink:href", this.markStyle()['background-image'])
             .attr("x", 0)
             .attr("y", 0);
+        
+        this.axis().data(this.points);
+        this.axis().width(width);
+        this.axis().height(height);
 
         let content = svg.append("g")
             .attr("class", "content")
@@ -225,92 +229,27 @@ class Scatterplot extends Chart {
      *
      * @return {void}
      */
-    encodeX(animation = {}, axis = {}) {
+    encodeX(animation = {}, axisStyle = {}) {
         if (this.x) {
+            const xEncoding = this.x;
+
+            /* range */
             const widthOffset = 21, heightOffset = 36;
-            let svg = this.svg();
             let width = this.width() - widthOffset,
                 height = this.height() - heightOffset;
-            const xEncoding = this.x;
-            let axisContent = svg.select(".axis")
+            this.xScale = d3.scaleLinear()
+            .range([0, width])
+            .domain([0, d3.max(this.points, d => d[xEncoding])])
+            .nice();
 
-            // set the ranges
-            let xScale = d3.scaleLinear()
-                .range([0, width])
-                .domain([0, d3.max(this.points, d => d[xEncoding])])
-                .nice();
-
-            let axis_X = axisContent.append("g")
-                .attr("class", "axis_X");
-
-            let axisX = d3.axisBottom(xScale)
-                .ticks(5)
-                .tickPadding(5)
-                .tickFormat(function (d) {
-                    if ((d / 1000000) >= 1) {
-                        d = d / 1000000 + "M";
-                    } else if ((d / 1000) >= 1) {
-                        d = d / 1000 + "K";
-                    }
-                    return d;
-                });
-
-            axis_X.append("g")
-                .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
-                .call(axisX)
-
-            axis_X.selectAll(".axis_x .tick")
-                .append("line")
-                .attr("stroke", d => {
-                    if ((d !== 0) || (!this.y)) { return COLOR.DIVIDER; }
-                })
-                .attr("class", "gridline")
-                .attr("x1", 0)
-                .attr("y1", -height)
-                .attr("x2", 0)
-                .attr("y2", 0);
-
-            axis_X.append("line")
-                .attr("stroke", COLOR.DIVIDER)
-                .attr("class", "gridline")
-                .attr("x1", width)
-                .attr("y1", height)
-                .attr("x2", width)
-                .attr("y2", 0);
-
-            // specify color for axis elements
-            // tick 
-            axis_X.selectAll(".tick")
-                .select("line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis_X.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis_X.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS)
-                .attr("font-size", axis['labelFontSize'] || 10)
-                .attr("text-anchor", "middle")
-                .attr("transform", `rotate(-${axis['labelAngle'] || 0} 0 10)`);
-
-            /* draw labels */
-            const labelPadding = 24, fontsize = 16;
-
-            axis_X.append("text")
-                .attr("x", width / 2)
-                .attr("y", height + svg.selectAll(".axis_x").select("path").node().getBBox().height + labelPadding)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(xEncoding);
+            /* axis */
+            this.axis().xScale(this.xScale);
+            this.axis().addX("Numerical", xEncoding, axisStyle); 
 
             /* points */
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
             this.points.forEach((d) => {
-                d.x(xScale(d[xEncoding]));
+                d.x(this.xScale(d[xEncoding]));
                 d.size(circleSize);
                 d.color(COLOR.DEFAULT)
             })
@@ -321,22 +260,6 @@ class Scatterplot extends Chart {
                 })
             }
         }
-        else {
-            let defaultX = this.width() / 2;
-            this.points.forEach((d) => {
-                d.x(defaultX);
-            })
-            if (this.y) {
-                this.svg().select(".axis_Y")
-                    .append("line")
-                    .attr("stroke", COLOR.DIVIDER)
-                    .attr("class", "gridline")
-                    .attr("x1", 0)
-                    .attr("y1", this.height() - 9.5)
-                    .attr("x2", this.width())
-                    .attr("y2", this.height() - 9.5);
-            }
-        }
     }
 
     /**
@@ -344,86 +267,25 @@ class Scatterplot extends Chart {
      *
      * @return {void}
      */
-    encodeY(animation = {}, axis = {}) {
+    encodeY(animation = {}, axisStyle = {}) {
         if (this.y) {
+            const yEncoding = this.y;
+
+            /* range */
             const widthOffset = 21, heightOffset = 36;
-            let svg = this.svg();
             let width = this.width() - widthOffset,
                 height = this.height() - heightOffset;
-            const yEncoding = this.y;
-            let axisContent = svg.select(".axis")
+            this.yScale = d3.scaleLinear()
+            .range([height, 0])
+            .domain([0, d3.max(this.points, d => d[yEncoding])])
+            .nice();
 
-            // set the ranges
-            let yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(this.points, d => d[yEncoding])])
-                .nice();
-
-            let axis_Y = axisContent.append("g")
-                .attr("class", "axis_Y");
-
-            let axisY = d3.axisLeft(yScale)
-                .ticks(5)
-                .tickPadding(5)
-                .tickFormat(function (d) {
-                    if ((d / 1000000) >= 1) {
-                        d = d / 1000000 + "M";
-                    } else if ((d / 1000) >= 1) {
-                        d = d / 1000 + "K";
-                    }
-                    return d;
-                });
-
-            axis_Y.append("g")
-                .attr("class", "axis_y")
-                .call(axisY);
-
-            // specify color for axis elements
-            // tick 
-            axis_Y.selectAll(".tick")
-                .select("line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis_Y.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis_Y.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS)
-                .attr("font-size", axis['labelFontSize'] || 10)
-                .attr("transform", `rotate(-${axis['labelAngle'] || 0} -10 0)`);
-
-            // for grid line
-            axis_Y.selectAll(".axis_y .tick")
-                .append("line")
-                .attr("stroke", d => {
-                    if ((d !== 0) || (!this.x)) { return COLOR.DIVIDER; }
-                })
-                .attr("class", "gridline")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", width)
-                .attr("y2", 0);
-
-            axis_Y.append("line")
-                .attr("stroke", COLOR.DIVIDER)
-                .attr("class", "gridline")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", width)
-                .attr("y2", 0);
-
-            /* draw labels */
-            const labelPadding = 24, fontsize = 16;
-
-            axis_Y.append("text")
-                .attr("transform", `translate(${-labelPadding - svg.selectAll(".axis_y").select("path").node().getBBox().width}, ${height / 2}) rotate(-90)`)
-                .attr("text-anchor", "middle")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(yEncoding);
+            /* axis */
+            this.axis().yScale(this.yScale)
+            this.axis().addY("Numerical", yEncoding, axisStyle);
 
             /* points */
+            let yScale = this.axis().yScale();
             const circleSize = Math.min(Math.ceil(Math.sqrt(height * width) / 50), 7);
             this.points.forEach((d) => {
                 d.y(yScale(d[yEncoding]));
@@ -435,22 +297,6 @@ class Scatterplot extends Chart {
                 this.points.forEach((d) => {
                     d.x(defaultX);
                 })
-            }
-        }
-        else {
-            let defaultY = this.height() / 2;
-            this.points.forEach((d) => {
-                d.y(defaultY);
-            })
-            if (this.x) {
-                this.svg().select(".axis_X")
-                    .append("line")
-                    .attr("stroke", COLOR.DIVIDER)
-                    .attr("class", "gridline")
-                    .attr("x1", 0)
-                    .attr("y1", 0)
-                    .attr("x2", 0)
-                    .attr("y2", this.height());
             }
         }
     }
@@ -551,7 +397,7 @@ class Scatterplot extends Chart {
      * 
      * @return {void}
     */
-    addEncoding(channel, field, animation = {}, axis = {}) {
+    addEncoding(channel, field, animation = {}, axisStyle = {}) {
         if (!this[channel]) {
             this[channel] = field;
 
@@ -563,11 +409,11 @@ class Scatterplot extends Chart {
             switch (channel) {
                 case 'x':
                     changeX = true
-                    this.encodeX(animation, axis)
+                    this.encodeX(animation, axisStyle)
                     break;
                 case 'y':
                     changeY = true
-                    this.encodeY(animation, axis)
+                    this.encodeY(animation, axisStyle)
                     break;
                 case 'size':
                     changesize = true
@@ -635,12 +481,12 @@ class Scatterplot extends Chart {
             switch (channel) {
                 case 'x':
                     changeX = true
-                    this.svg().selectAll(".axis_X").remove();
+                    this.axis().removeX();
                     this.encodeX(animation);
                     break;
                 case 'y':
                     changeY = true
-                    this.svg().selectAll(".axis_Y").remove();
+                    this.axis().removeY();
                     this.encodeY(animation);
                     break;
                 case 'size':
@@ -690,7 +536,6 @@ class Scatterplot extends Chart {
     */
     removeEncoding(channel, animation = {}) {
         this[channel] = null;
-        let svg = this.svg();
 
         let changeX = false;
         let changeY = false;
@@ -700,12 +545,12 @@ class Scatterplot extends Chart {
         switch (channel) {
             case 'x':
                 changeX = true
-                svg.selectAll(".axis_X").remove();
+                this.axis().removeX();
                 this.encodeX(animation)
                 break;
             case 'y':
                 changeY = true
-                svg.selectAll(".axis_Y").remove();
+                this.axis().removeY();
                 this.encodeY(animation)
                 break;
             case 'size':
