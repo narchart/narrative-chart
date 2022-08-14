@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import Axis from './axis';
 
 /**
  * @description The parent class for charts
@@ -11,13 +12,14 @@ class Chart {
         this._svg = d3.select(this._container).append("svg")
         this._width = 0;
         this._height = 0;
+        this._margin = {};
+        this._axis = null;
         this._data = [];
         this._processedData = [];
         this._mark_animation = {};
         this._mark_style = {};
         this._animation = {};
         this._style = {};
-        this._margin = {};
     }
 
     container(value) {
@@ -30,6 +32,18 @@ class Chart {
 
     svg() {
         return this._svg;
+    }
+
+    axis() {
+        if (this._axis === null) {
+            this._svg.append("g").attr("class", "axis");
+            this._axis = new Axis(this._svg.select(".axis"))
+        }
+        return this._axis;
+    }
+
+    background() {
+        //TODO: background image
     }
 
     margin(value) {
@@ -124,8 +138,6 @@ class Chart {
 
     visualize() { }
 
-    drawAxis() { }
-
     encodeXY(animation = {}) { }
 
     encodeTheta(animation = {}) { }
@@ -136,12 +148,12 @@ class Chart {
 
     encodeShape(animation = {}) { }
 
-    addEncoding(channel, field, animation = {}, axis = {}) { }
+    addEncoding(channel, field, animation = {}, axisStyle = {}) { }
 
     modifyEncoding(channel, field, animation = {}) { }
 
     removeEncoding(channel, field, animation = {}) { }
-
+    
 }
 
 export default Chart;

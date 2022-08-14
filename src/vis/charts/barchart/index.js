@@ -32,13 +32,6 @@ class BarChart extends Chart {
         this.width(this.width() - margin.left - margin.right);
         this.height(this.height() - margin.top - margin.bottom);
 
-        // this._svg = d3.select(this.container())
-        //         .append("svg")
-        //         .attr("width", this.width() + margin.left + margin.right)
-        //         .attr("height", this.height() + margin.top + margin.bottom)
-        //         .append("g")
-        // .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
         this.cornerRadius = this.markStyle()['corner-radius'] ? this.markStyle()['corner-radius'] : 0;
         this.binSpacing = this.markStyle()['bin-spacing'] ? this.markStyle()['bin-spacing'] : 0.5;
         this.stroke = this.markStyle()['stroke'] ? this.markStyle()['stroke'] : COLOR.DEFAULT;
@@ -101,8 +94,10 @@ class BarChart extends Chart {
             this.fill = COLOR.DEFAULT
         }
 
-        this.axis = svg.append("g")
-            .attr("class", "axis")
+        let width = this.width(),
+            height = this.height() - offset;
+        this.axis().width(width);
+        this.axis().height(height);
         this.content = svg.append("g")
             .attr("class", "content")
             .attr("chartWidth", this.width())
@@ -248,238 +243,23 @@ class BarChart extends Chart {
     }
 
     /**
-     * @description Draw Axis for bar chart.
-     *
-     * @return {void}
-     */
-    drawAxis() {
-        if (this.x && this.y) {
-            let x = this.x,
-                y = this.y;
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height() - offset;
-            let fontsize = 16, strokeWidth = 2;
-            const padding = fontsize,
-                triangleSize = Math.ceil(Math.sqrt(height * width) / 10);
-
-            let axis = svg.select('.axis');
-            svg.select(".axis_x").remove();
-            svg.select(".axis_y").remove();
-
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", padding - 1)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("fill", COLOR.TEXT)
-                .text(x || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(${width - triangleSize / 25 * 2}, ${height})rotate(90)`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", COLOR.AXIS);
-            axis.append("line")
-                .attr("x1", -strokeWidth / 2)
-                .attr("x2", width)
-                .attr("y1", height)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", COLOR.AXIS);
-            axis.append("text")
-                .attr("transform", `translate(${-padding}, ${height / 2}) rotate(-90)`)
-                .attr("font-size", fontsize)
-                .attr("text-anchor", "middle")
-                .attr("fill", COLOR.TEXT)
-                .text(y || "Count");
-            axis.append("path")
-                .attr("class", "triangle")
-                .attr("transform", `translate(0, ${triangleSize / 25 * 2})`)
-                .attr("d", d3.symbol().type(d3.symbolTriangle).size(triangleSize))
-                .attr("fill", COLOR.AXIS);
-            axis.append("line")
-                .attr("y1", 0)
-                .attr("y2", height)
-                .attr("stroke-width", strokeWidth)
-                .attr("stroke", COLOR.AXIS);
-        }
-
-    }
-
-    /**
-     * @description Draw bars with xy encoding.
-     *
-     * @return {void}
-     */
-    encodeXY() {
-        if (this.x && this.y) {
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height() - offset;
-            const processedData = this.processedData();
-            const xEncoding = this.x,
-                yEncoding = this.y;
-
-            /** set the ranges */
-            let xScale = d3.scaleBand()
-                .range([0, width - 12])
-                .domain(processedData.map(d => d[xEncoding]))
-                .padding(this.binSpacing);
-
-            let yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(processedData, d => d[yEncoding])])
-                .nice();
-
-            /** draw axis */
-            let axis = svg.append("g")
-                .attr("class", "axis"),
-                content = svg.append("g")
-                    .attr("class", "content")
-                    .attr("chartWidth", width)
-                    .attr("chartHeight", height);
-
-            let axisX = d3.axisBottom(xScale);
-            let axisY = d3.axisLeft(yScale)
-                .ticks(5)
-                .tickSize(0, 0, 0)
-                .tickPadding(5)
-                .tickFormat(function (d) {
-                    if ((d / 1000000) >= 1) {
-                        d = d / 1000000 + "M";
-                    } else if ((d / 1000) >= 1) {
-                        d = d / 1000 + "K";
-                    }
-                    return d;
-                });
-
-            axis.append("g")
-                .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
-                .call(axisX);
-
-            axis.append("g")
-                .attr("class", "axis_y")
-                .call(axisY);
-
-            // specify color for axis elements
-            // tick
-            axis.selectAll(".tick line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS);
-
-            // draw y axis path
-            axis.selectAll(".axis_y")
-                .append("line")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", 0)
-                .attr("y2", height);
-
-            axis.selectAll(".axis_y .tick text")
-                .attr("transform", "translate(3, 0)");
-
-            // axix-label
-            const labelPadding = 24, fontsize = 16;
-
-            axis.append("text")
-                .attr("x", width / 2)
-                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + offset - 5)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(xEncoding);
-
-            axis.append("text")
-                .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
-                .attr("text-anchor", "middle")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(yEncoding);
-
-            /** draw grid */
-            axis.selectAll(".axis_y .tick line")
-                .attr("class", "gridline")
-                .attr("stroke", d => {
-                    if (d === 0) return 0;
-                    else return COLOR.DIVIDER;
-                });
-
-            /* draw rects */
-            content.append("g")
-                .attr("class", "rects")
-                .selectAll("rect")
-                .data(processedData)
-                .enter().append("rect")
-                .attr("class", "mark")
-                .attr("x", d => xScale(d[xEncoding]))
-                .attr("y", d => yScale(d[yEncoding]))
-                .attr("width", xScale.bandwidth())
-                .attr("height", d => height - yScale(d[yEncoding]))
-                .attr("fill", COLOR.DEFAULT);
-        }
-    }
-
-    /**
     * @description Using X-axis to encode a data field.
     *
     * @return {void}
     */
-    encodeX(axis = {}) {
+    encodeX(axisStyle = {}) {
         if (this.x) {
-            let svg = this.svg();
-            let width = this.width(),
-                height = this.height() - offset;
+            let width = this.width();
             const processedData = this.processedData();
             const xEncoding = this.x;
 
-            /** set the ranges */
+            /** ranges */
             this.xScale = d3.scaleBand()
                 .range([0, width - 12])
                 .domain(processedData.map(d => d[xEncoding]))
                 .padding(this.binSpacing);
-
-            let axisX = d3.axisBottom(this.xScale);
-
-            let axis_X = this.axis.append("g")
-                .attr("class", "axis_x")
-                .attr('transform', `translate(0, ${height})`)
-                .call(axisX);
-
-            // specify color for axis elements
-            // tick
-            axis_X.selectAll(".tick line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis_X.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis_X.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS)
-                .attr("font-size", axis['labelFontSize'] || 10)
-                .attr("text-anchor", "end")
-                .attr("transform", `rotate(-${axis['labelAngle'] || 45} 0 10)`)
-
-            // axix-label
-            const fontsize = 16;
-
-            axis_X.append("text")
-                .attr("x", width / 2)
-                .attr("y", svg.selectAll(".axis_x").select("path").node().getBBox().height + offset - 5)
-                .attr("text-anchor", "middle")
-                .attr("dominant-baseline", "hanging")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(xEncoding);
+            this.axis().xScale(this.xScale)
+            this.axis().addX("Categorical", xEncoding, axisStyle);
         }
     }
 
@@ -488,17 +268,16 @@ class BarChart extends Chart {
     *
     * @return {void}
     */
-    encodeY() {
+    encodeY(axisStyle={}) {
         if (this.y) {
-            let width = this.width(),
-                height = this.height() - offset;
-            const processedData = this.processedData();
+            let height = this.height() - offset;
             const yEncoding = this.y;
 
             let obj = {};
             this.bardata = [];
 
             if (this.x) {
+                const processedData = this.processedData();
                 processedData.forEach(item => {
                     if (obj.hasOwnProperty(item[this.x])) {
                         obj[item[this.x]] = obj[item[this.x]] + item[this.y]
@@ -513,79 +292,16 @@ class BarChart extends Chart {
                     temp[this.y] = obj[key]
                     this.bardata.push(temp)
                 }
+                /** set the ranges */
+                this.yScale = d3.scaleLinear()
+                    .range([height, 0])
+                    .domain([0, d3.max(this.bardata, d => d[yEncoding])])
+                    .nice();
+
+                this.axis().data(this.bardata);
+                this.axis().yScale(this.yScale)
+                this.axis().addY("Numerical", yEncoding, axisStyle);
             }
-            else {
-                console.log("encode x lacks")
-            }
-
-            /** set the ranges */
-            // this.yScale = d3.scaleLinear()
-            //     .range([height, 0])
-            //     .domain([0, d3.max(processedData, d => d[yEncoding])])
-            //     .nice();
-
-            this.yScale = d3.scaleLinear()
-                .range([height, 0])
-                .domain([0, d3.max(this.bardata, d => d[yEncoding])])
-                .nice();
-
-            let axisY = d3.axisLeft(this.yScale)
-                .ticks(5)
-                .tickSize(0, 0, 0)
-                .tickPadding(5)
-                .tickFormat(function (d) {
-                    if ((d / 1000000) >= 1) {
-                        d = d / 1000000 + "M";
-                    } else if ((d / 1000) >= 1) {
-                        d = d / 1000 + "K";
-                    }
-                    return d;
-                });
-
-            let axis_Y = this.axis.append("g")
-                .attr("class", "axis_y")
-                .call(axisY);
-
-            // specify color for axis elements
-            // tick
-            axis_Y.selectAll(".tick line")
-                .attr("stroke", COLOR.AXIS);
-            // domain path
-            axis_Y.selectAll(".domain")
-                .attr("stroke", COLOR.AXIS);
-            // tick label
-            axis_Y.selectAll(".tick")
-                .selectAll("text")
-                .attr("fill", COLOR.AXIS);
-
-            // draw y axis path
-            axis_Y.selectAll(".axis_y .tick")
-                .append("line")
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", width)
-                .attr("y2", 0);
-
-            axis_Y.selectAll(".axis_y .tick text")
-                .attr("transform", "translate(3, 0)");
-
-            // axix-label
-            const labelPadding = 24, fontsize = 16;
-
-            axis_Y.append("text")
-                .attr("transform", `translate(${-labelPadding}, ${height / 2}) rotate(-90)`)
-                .attr("text-anchor", "middle")
-                .attr("font-size", fontsize)
-                .attr("fill", COLOR.AXIS)
-                .text(yEncoding);
-
-            /** draw grid */
-            axis_Y.selectAll(".axis_y .tick line")
-                .attr("class", "gridline")
-                .attr("stroke", d => {
-                    if (d === 0) return 0;
-                    else return COLOR.DIVIDER;
-                });
         }
     }
 
@@ -764,8 +480,8 @@ class BarChart extends Chart {
                     })
                         .then(() => {
                             this.svg().selectAll(".rects").remove();
-                            this.svg().selectAll(".axis_x").remove();
-                            this.svg().selectAll(".axis_y").remove();
+                            this.axis().removeX();
+                            this.axis().removeY();
                         })
                         .then(() => {
                             this.encodeX();
@@ -837,7 +553,7 @@ class BarChart extends Chart {
             })
                 .then(() => {
                     this.svg().selectAll(".rects").remove();
-                    this.svg().selectAll(".axis_x").remove();
+                    this.axis().removeX();
                 })
         }
         if (channel === 'y') {

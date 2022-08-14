@@ -292,7 +292,6 @@ class HBarChart extends Chart {
                 .each(function () {
                     //label ellipse
                     var boxWidth = this.getBBox().width;
-                    console.log(boxWidth);
                     var self = d3.select(this);
                     var text = self.text();
                     while (boxWidth > mgLeft - labelPadding && text.length > 0) {
@@ -345,9 +344,9 @@ class HBarChart extends Chart {
                     this.bardata.push(temp)
                 }
             }
-            else {
-                console.log("encode x lacks")
-            }
+            // else {
+            //     console.log("encode x lacks")
+            // }
 
             /** set the ranges */
             // this.yScale = d3.scaleLinear()
@@ -551,7 +550,8 @@ class HBarChart extends Chart {
                     this.encodeColor(animation);
                     break;
                 default:
-                    console.log("no channel select");
+                    // console.log("no channel select");
+                    break;
             }
             //drawing the bar rect
             if ((this.x && this.y) && (changeX || changeY)) {
@@ -651,7 +651,8 @@ class HBarChart extends Chart {
                     this.encodeColor(animation)
                     break;
                 default:
-                    console.log("no channel select")
+                    // console.log("no channel select")
+                    break;
             }
         }
     }

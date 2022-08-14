@@ -1642,7 +1642,7 @@ class Unitvis extends Chart {
      * @return {void}
     */
 
-    addEncoding(channel, field, animation = {}, axis = {}) {
+    addEncoding(channel, field, animation = {}, axisStyle = {}) {
         if (!this[channel]) {
             this[channel] = field;
             this.delay = animation.delay
@@ -1653,12 +1653,12 @@ class Unitvis extends Chart {
 
             switch (channel) {
                 case 'x':
-                    this.axis.xaxis = axis
+                    this.axis.xaxis = axisStyle
                     this.encodeX();
                     changelayout = true
                     break;
                 case 'y':
-                    this.axis.yaxis = axis
+                    this.axis.yaxis = axisStyle
                     this.encodeY();
                     changelayout = true
                     break;

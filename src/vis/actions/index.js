@@ -37,3 +37,7 @@ export {
 export {
     default as RemoveEncoding
 } from "./removeencoding";
+
+export {
+    default as SaveChart
+} from "./savechart";

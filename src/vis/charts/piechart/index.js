@@ -510,7 +510,7 @@ class PieChart extends Chart {
      *
      * @return {void}
      */
-    addEncoding(channel, field, animation = {}, axis = {}) {
+    addEncoding(channel, field, animation = {}) {
         if(!this[channel]) {
             this[channel] = field;
             let changeTheta = false;

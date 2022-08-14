@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { Scatterplot, PieChart, HBarChart } from '../../charts';
+import { Scatterplot, PieChart , HBarChart,Bubblechart} from '../../charts';
 import Color from '../../visualization/color';
 
 const COLOR = new Color();
@@ -74,7 +74,7 @@ class Label extends Annotator {
             }
 
             // identify the position
-            let data_x, data_y, data_r, offset_x, offset_y;
+            let data_x, data_y, data_r, offset_x = 0, offset_y = 0;
             const nodeName = focus_element.nodeName;
             let arc_angle;
 
@@ -82,7 +82,12 @@ class Label extends Annotator {
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
                 data_r = parseFloat(focus_element.getAttribute("r"));
-                offset_y = - data_r - 10;
+                if(chart instanceof Bubblechart){
+                    offset_y =  style["font-size"]/2
+                }else{
+                    offset_y = - data_r - 10;
+                }
+                offset_x = 0;
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
                 if (chart instanceof HBarChart) {

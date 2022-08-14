@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { PieChart, HBarChart } from '../../charts';
+import { PieChart,Bubblechart,HBarChart } from '../../charts';
 
 /**
  * @description An annotator for drawing symbols.
@@ -44,7 +44,7 @@ class Symbol extends Annotator {
         for (let focus_element of focus_elements.nodes()) {
 
             // identify the position
-            let data_x, data_y, data_r, offset_x, offset_y;
+            let data_x, data_y, data_r, offset_x = 0, offset_y = 0;
             const width_icon = style["width"] || 20;
             const height_icon = style["width"] || style["height"] || 20;
             const nodeName = focus_element.nodeName;
@@ -52,7 +52,12 @@ class Symbol extends Annotator {
                 data_x = parseFloat(focus_element.getAttribute("cx"));
                 data_y = parseFloat(focus_element.getAttribute("cy"));
                 data_r = parseFloat(focus_element.getAttribute("r"));
-                offset_y = - data_r - height_icon;
+                if(chart instanceof Bubblechart){
+                    offset_y = - height_icon/2;
+                }else{
+                    offset_y = - data_r - height_icon;
+                }
+                offset_x = 0;
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
                 if (chart instanceof HBarChart) {
