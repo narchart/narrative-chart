@@ -14,13 +14,8 @@ class AddTitle extends Action {
 
         if ('animation' in spec) {
             this._animation = spec.animation;
-            if (!this._animation.delay)
-                this._animation.delay = 0;
-
-            if (!this._animation.duration)
-                this._animation.duration = -1;
         } else {
-            this._animation = { "delay": 0, "duration": -1 }
+            this._animation = { "duration": 0 }
         }
     }
 

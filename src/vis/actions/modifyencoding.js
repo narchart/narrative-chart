@@ -7,7 +7,7 @@ class ModifyEncoding extends Action {
         this.field = spec.field;
         if ('animation' in spec) { this._animation = spec.animation }
         else {
-            this._animation = { "delay": 0, "duration": 0 }
+            this._animation = { "duration": 0 }
         }
     }
 

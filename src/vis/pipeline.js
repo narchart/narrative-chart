@@ -30,11 +30,9 @@ class Pipeline {
         this.actions().forEach(action => {
             if ('delay' in action.animation()) {
                 delayTime = action.animation()['delay']
-            } else {
-                delayTime = 0
             }
             if (action instanceof AddAnnotation) { 
-                delayTime += 1000 // waiting 1 second before showing annotation movement of marks (fix in the future)
+                delayTime += 200 // waiting 0.2 second before showing annotation movement of marks (fix in the future)
             }
             this._timers.push(d3.timeout(function(){
                 // Code to run after the pause

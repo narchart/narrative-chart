@@ -316,75 +316,7 @@ class Axis {
             .text(encoding);
     }
 
-    addCategoricalY(encoding, style = {}) { 
-        let width = this.width();
-        let height = this.height();
-        let yScale = this.yScale();
-
-        let axisY = d3.axisLeft(yScale)
-            .ticks(5)
-            .tickSize(0, 0, 0)
-            .tickPadding(5)
-            .tickFormat(function (d) {
-                if ((d / 1000000) >= 1) {
-                    d = d / 1000000 + "M";
-                } else if ((d / 1000) >= 1) {
-                    d = d / 1000 + "K";
-                }
-                return d;
-            });
-
-        let axis_Y = this.content.append("g")
-            .attr("class", "axis_y")
-            .attr('transform', `translate(0, ${height})`)
-            .call(axisY);
-
-        // specify color for axis elements
-        // tick
-        axis_Y.selectAll(".tick line")
-            .attr("stroke", COLOR.AXIS);
-        // domain path
-        axis_Y.selectAll(".domain")
-            .attr("stroke", COLOR.AXIS);
-        // tick label
-        axis_Y.selectAll(".tick")
-            .selectAll("text")
-            .attr("fill", COLOR.AXIS)
-            .attr("font-size", style['labelFontSize'] || 10)
-            .attr("text-anchor", "end")
-            .attr("transform", `rotate(-${style['labelAngle'] || 45} 0 10)`)
-
-        // draw y axis path
-        axis_Y.selectAll(".axis_y .tick")
-            .append("line")
-            .attr("x1", 0)
-            .attr("y1", 0)
-            .attr("x2", 0)
-            .attr("y2", 0 - height);
-
-        axis_Y.selectAll(".axis_y .tick text")
-            .attr("transform", "translate(3, 0)");
-
-        // axix-label
-        const fontsize = 16;
-
-        axis_Y.append("text")
-            .attr("x", width / 2)
-            .attr("y", 30) // svg.selectAll(".axis_y").select("path").node().getBBox().height
-            .attr("text-anchor", "middle")
-            .attr("dominant-baseline", "hanging")
-            .attr("font-size", fontsize)
-            .attr("fill", COLOR.AXIS)
-            .text(encoding);
-
-        /** draw grid */
-        axis_Y.selectAll(".axis_y .tick line")
-            .attr("class", "gridline")
-            .attr("stroke", d => {
-                if (d === 0) return 0;
-                else return COLOR.DIVIDER;
-            });
-    }
+    addCategoricalY(encoding, style = {}) { }
 
     addTemporalY(encoding, style = {}) { }
 
