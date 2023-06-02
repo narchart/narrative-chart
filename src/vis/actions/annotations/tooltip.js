@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { PieChart,Bubblechart } from '../../charts';
+import { PieChart,Bubblechart,TreeMap } from '../../charts';
 import Color from '../../visualization/color';
 import * as d3 from 'd3';
 
@@ -114,6 +114,9 @@ class Tooltip extends Annotator {
                 if (target.length === 0) {
                     return true
                 }
+                if (chart instanceof TreeMap) {
+                    d = d.data
+                }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
                         continue
@@ -185,21 +188,25 @@ class Tooltip extends Annotator {
 
             } else if (nodeName === "rect") {
                 const bbox = focus_element.getBBox();
-                data_x = bbox.x + bbox.width / 2;
-                data_y = bbox.y;
-                offset_y = -5;
+                if (chart instanceof TreeMap) {
+                    data_x = bbox.x + bbox.width / 2;
+                    data_y = bbox.y + bbox.height / 2;
+                    offset_y = 0;
+                } else {
+                    data_x = bbox.x + bbox.width / 2;
+                    data_y = bbox.y;
+                    offset_y = -5;
 
-                // filter out the rect marks which height is 0 ( for stacked bar charts)
-                if(bbox.height===0){
-                    continue
+                    // filter out the rect marks which height is 0 ( for stacked bar charts)
+                    if(bbox.height===0){
+                        continue
+                    }
+
+                    // filter out the rect marks which are not the top mark in each bar ( for stacked bar charts)
+                    if(RectsCoordinates[data_x] !== data_y){
+                        continue
+                    }
                 }
-
-                // filter out the rect marks which are not the top mark in each bar ( for stacked bar charts)
-
-                if(RectsCoordinates[data_x] !== data_y){
-                    continue
-                }
-
 
             } else { // currently only support piechart
                  if(chart instanceof PieChart){

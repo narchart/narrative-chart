@@ -1,11 +1,6 @@
 import * as d3 from 'd3';
 import Annotator from './annotator';
-import { PieChart } from '../../charts';
-import { Unitvis } from '../../charts';
-import { LineChart } from '../../charts';
-import { Scatterplot } from '../../charts';
-import {Bubblechart} from '../../charts';
-import AreaChart from '../../charts/areachart';
+import { PieChart,Unitvis,LineChart,Scatterplot,AreaChart,Bubblechart,TreeMap } from '../../charts';
 
 /**
  * @description An annotator for filling texture.
@@ -53,6 +48,9 @@ class Texture extends Annotator {
         .filter(function (d) {
             if (target.length === 0) {
                 return true
+            }
+            if (chart instanceof TreeMap) {
+                d = d.data
             }
             for (const item of target) {
                 if (d[item.field] === item.value) {
@@ -117,24 +115,24 @@ class Texture extends Annotator {
 
         }
         else {
-            if (chart instanceof Unitvis){
+            if (chart instanceof Unitvis) {
                 svg.selectAll(".mark")
-                .filter(function(d) {
-                    if (target.length === 0) {
-                        return true
-                    }
-                    for (const item of target) {
-                        if (d[item.field] === item.value) {
-                            continue
-                        } else {
-                            return false
+                    .filter(function (d) {
+                        if (target.length === 0) {
+                            return true
                         }
-                    }
-                    return true
-                })
-                .transition()
-                .duration('duration' in animation ? animation['duration']: 0)
-                .attr("fill", (d, i) => {
+                        for (const item of target) {
+                            if (d[item.field] === item.value) {
+                                continue
+                            } else {
+                                return false
+                            }
+                        }
+                        return true
+                    })
+                    .transition()
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("fill", (d, i) => {
                         const uid = Date.now().toString() + Math.random().toString(36).substring(2);
                         let defs = svg.append('svg:defs');
                         defs.append("svg:pattern")
@@ -151,24 +149,24 @@ class Texture extends Annotator {
                         return "url(#unit-texture-image-" + uid + ")"
                     }
                 )
-            }else if (chart instanceof LineChart){
+            } else if (chart instanceof LineChart){
                 svg.selectAll(".mark")
-                .filter(function(d) {
-                    if (target.length === 0) {
-                        return true
-                    }
-                    for (const item of target) {
-                        if (d[item.field] === item.value) {
-                            continue
-                        } else {
-                            return false
+                    .filter(function (d) {
+                        if (target.length === 0) {
+                            return true
                         }
-                    }
-                    return true
-                })
-                .transition()
-                .duration('duration' in animation ? animation['duration']: 0)
-                .attr("fill", (d, i) => {
+                        for (const item of target) {
+                            if (d[item.field] === item.value) {
+                                continue
+                            } else {
+                                return false
+                            }
+                        }
+                        return true
+                    })
+                    .transition()
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("fill", (d, i) => {
                         let dotRadius;
                         focus_elements.nodes().forEach(one_element => {
                             dotRadius = parseFloat(one_element.getAttribute("r"));
@@ -192,22 +190,22 @@ class Texture extends Annotator {
                 )
             }else if (chart instanceof Scatterplot){
                 svg.selectAll(".mark")
-                .filter(function(d) {
-                    if (target.length === 0) {
-                        return true
-                    }
-                    for (const item of target) {
-                        if (d[item.field] === item.value) {
-                            continue
-                        } else {
-                            return false
+                    .filter(function (d) {
+                        if (target.length === 0) {
+                            return true
                         }
-                    }
-                    return true
-                })
-                .transition()
-                .duration('duration' in animation ? animation['duration']: 0)
-                .attr("fill", (d, i) => {
+                        for (const item of target) {
+                            if (d[item.field] === item.value) {
+                                continue
+                            } else {
+                                return false
+                            }
+                        }
+                        return true
+                    })
+                    .transition()
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("fill", (d, i) => {
                         let defsScatterplot = svg.append('svg:defs');
                         const uid = Date.now().toString() + Math.random().toString(36).substring(2);
                         defsScatterplot.append("svg:pattern")
@@ -226,19 +224,19 @@ class Texture extends Annotator {
                 )
             }else if (chart instanceof PieChart){
                 var selectedMarks = svg.selectAll(".mark")
-                .filter(function(d) {
-                    if (target.length === 0) {
-                        return true
-                    }
-                    for (const item of target) {
-                        if (d[item.field] === item.value) {
-                            continue
-                        } else {
-                            return false
+                    .filter(function (d) {
+                        if (target.length === 0) {
+                            return true
                         }
-                    }
-                    return true
-                })
+                        for (const item of target) {
+                            if (d[item.field] === item.value) {
+                                continue
+                            } else {
+                                return false
+                            }
+                        }
+                        return true
+                    })
                 .transition()
                 .duration('duration' in animation ? animation['duration']: 0)
                 .style("fill", (d,i) => {
@@ -288,8 +286,8 @@ class Texture extends Annotator {
                     let data_temp = one_element.__data__;
                     let data_x = data_temp.centroidX();
                     let data_y = data_temp.centroidY();
-                selectedMarks.attr("x",data_x-150)
-                .attr("y",data_y-150)
+                    selectedMarks.attr("x", data_x - 150)
+                        .attr("y", data_y - 150)
                 })
 
             }else if(chart instanceof Bubblechart){
@@ -335,22 +333,22 @@ class Texture extends Annotator {
 
             } else if (chart instanceof AreaChart){
                 svg.selectAll(".mark")
-                .filter(function(d) {
-                    if (target.length === 0) {
-                        return true
-                    }
-                    for (const item of target) {
-                        if (d[item.field] === item.value) {
-                            continue
-                        } else {
-                            return false
+                    .filter(function (d) {
+                        if (target.length === 0) {
+                            return true
                         }
-                    }
-                    return true
-                })
-                .transition()
-                .duration('duration' in animation ? animation['duration']: 0)
-                .attr("fill", (d, i) => {
+                        for (const item of target) {
+                            if (d[item.field] === item.value) {
+                                continue
+                            } else {
+                                return false
+                            }
+                        }
+                        return true
+                    })
+                    .transition()
+                    .duration('duration' in animation ? animation['duration'] : 0)
+                    .attr("fill", (d, i) => {
                         let dotRadius;
                         focus_elements.nodes().forEach(one_element => {
                             dotRadius = parseFloat(one_element.getAttribute("r"));
@@ -371,8 +369,52 @@ class Texture extends Annotator {
                             .attr("y", 0);
                         return "url(#linechart-texture-image-" + uid + ")"
                     }
-                )
-            } else{
+                    )
+            } else if (chart instanceof TreeMap) { 
+                let focus_elements = svg.selectAll(".mark")
+                .filter(function(d) {
+                    if (target.length === 0) {
+                        return true
+                    }
+                    if (chart instanceof TreeMap) {
+                        d = d.data
+                    }
+                    for (const item of target) {
+                        if (d[item.field] === item.value) {
+                            continue
+                        } else {
+                            return false
+                        }
+                    }
+                    return true
+                })
+                if (focus_elements.nodes().length === 0) {
+                    return 
+                }
+                let node = focus_elements.nodes()[0]
+                let bbox = node.getBBox()
+                var config = {
+                    "texture_size": bbox.width
+                }
+                var defs = svg.append('svg:defs');
+                defs.append("svg:pattern")
+                    .attr("id", "texture_background")
+                    .attr("width", config.texture_size)
+                    .attr("height", config.texture_size)
+                    .attr("patternUnits", "userSpaceOnUse")
+                    .append("svg:image")
+                    .attr("xlink:href", style["background-image"])
+                    .attr("preserveAspectRatio","xMidYMid slice")
+                    .attr("width", config.texture_size)
+                    .attr("height", bbox.height)
+                    .attr("x", 0)
+                    .attr("y", 0);
+                
+                focus_elements.transition()
+                    .duration('duration' in animation ? animation['duration']: 0)
+                    .style("fill", "url(#texture_background)")
+                
+            } else {                
                 var config = {
                     "texture_size" : 300
                 }

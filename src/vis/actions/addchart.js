@@ -1,6 +1,6 @@
 import MarkType from '../visualization/marktype';
 import Action from './action';
-import { BarChart, LineChart, Scatterplot, Unitvis, PieChart, AreaChart, HBarChart,Bubblechart } from '../charts';
+import { BarChart, LineChart, Scatterplot, Unitvis, PieChart, AreaChart, HBarChart,Bubblechart,TreeMap  } from '../charts';
 
 
 class AddChart extends Action {
@@ -83,6 +83,8 @@ class AddChart extends Action {
                 return new Bubblechart();
             case MarkType.AREA:
                 return new AreaChart();
+            case MarkType.TREE:
+                return new TreeMap();
             default:
                 return new Scatterplot();
         }

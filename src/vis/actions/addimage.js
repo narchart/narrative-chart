@@ -27,6 +27,7 @@ class AddImage extends Action {
         let y = 'y' in this._style ? this._style['y'] : 0;
         let height = 'height' in this._style ? this._style['height'] : 100;
         let width = 'width' in this._style ? this._style['width'] : 100;
+        let opacity = 'opacity' in this._style ? this._style['opacity'] : 1;
         svg.append("svg:image")
             .attr('x', x)
             .attr('y', y)
@@ -36,7 +37,7 @@ class AddImage extends Action {
             .attr("opacity", 0)
             .transition()
             .duration('duration' in this._animation ? this._animation['duration']: 0)
-            .attr("opacity", 1);
+            .attr("opacity", opacity);
     }
 }
 

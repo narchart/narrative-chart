@@ -1,7 +1,7 @@
 import * as d3 from 'd3';
 import Color from '../../visualization/color';
 import Annotator from './annotator';
-import { PieChart,Bubblechart } from '../../charts';
+import { PieChart,Bubblechart,TreeMap } from '../../charts';
 
 const COLOR = new Color();
 
@@ -35,6 +35,9 @@ class Contour extends Annotator {
             .filter(function(d) {
                 if (target.length === 0) {
                     return true
+                }
+                if (chart instanceof TreeMap) {
+                    d = d.data
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
@@ -72,9 +75,13 @@ class Contour extends Annotator {
                     return retval;
 
                 }
+                let corner_radius = 'corner-radius' in chart.markStyle() ? chart.markStyle()['corner-radius'] : 0
+                if (chart instanceof TreeMap) {
+                    corner_radius = 0
+                }
                 const contour_rect = svg
                     .append("path")
-                    .attr("d", draw_rect(_x, _y, _width, _height, 'corner-radius' in chart.markStyle() ? chart.markStyle()['corner-radius'] : 0))
+                    .attr("d", draw_rect(_x, _y, _width, _height, corner_radius))
                     .attr("fill", "none")
                     .attr("stroke", function() {
                         if ('color' in style) {

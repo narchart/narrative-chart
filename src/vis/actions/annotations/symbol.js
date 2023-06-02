@@ -1,5 +1,5 @@
 import Annotator from './annotator';
-import { PieChart,Bubblechart,HBarChart } from '../../charts';
+import { PieChart,Bubblechart,HBarChart,TreeMap} from '../../charts';
 
 /**
  * @description An annotator for drawing symbols.
@@ -25,6 +25,9 @@ class Symbol extends Annotator {
             .filter(function (d) {
                 if (target.length === 0) {
                     return true
+                }
+                if (chart instanceof TreeMap) {
+                    d = d.data
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {
@@ -64,6 +67,11 @@ class Symbol extends Annotator {
                     data_x = bbox.width;
                     data_y = bbox.y + bbox.height / 2;
                     offset_x = 10;
+                    offset_y = -10;
+                } else if (chart instanceof TreeMap) { 
+                    data_x = bbox.x + bbox.width / 2;
+                    data_y = bbox.y + bbox.height / 2;
+                    offset_x = 0;
                     offset_y = -10;
                 } else {
                     data_x = bbox.x + bbox.width / 2;

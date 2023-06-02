@@ -66,6 +66,7 @@ export default class Playground extends React.Component {
       <option value="unitvis">unitvis</option>
       <option value="areachart">areachart</option>
       <option value="bubblechart">bubblechart</option>
+      <option value="treemap">treemap</option>
     </select>
 
     let specselector;

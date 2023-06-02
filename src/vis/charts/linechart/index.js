@@ -90,30 +90,66 @@ class LineChart extends Chart {
             d3.select("#svgBackGrnd").remove()
         }
                                 
-        if(this.style()['background-color']){
-            d3.select("#chartBackGrnd").attr("fill", this.style()['background-color'].color ?? "white").attr("fill-opacity", this.style()['background-color'].opacity ?? 1)
-        } 
-        else if (this.style()['background-image']){
+        if (this.style()['background-image'] || this.style()['background-color']) {
             let defs = d3.select(container).select("svg").append('svg:defs');
-            defs.append("svg:pattern")
-                .attr("id", "chart-backgroundimage")
-                .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 500*this.Hscaleratio: chartbackgroundsize.height)
+            let pattern = defs.append("svg:pattern")
+            .attr("id", "chart-backgroundimage")
+            .attr("width", chartbackgroundsize.width)
+            .attr("height", margin.top === 130 * this.Hscaleratio ? 500 * this.Hscaleratio : chartbackgroundsize.height)
                 .attr("patternUnits", "userSpaceOnUse")
-                .append("svg:image")
+            
+            if (this.style()['background-color']) {
+                pattern.append("svg:rect")
+                    .attr("width",chartbackgroundsize.width)
+                    .attr("height",margin.top === 130 * this.Hscaleratio ? 505 * this.Hscaleratio : chartbackgroundsize.height)
+                    .attr("fill", this.style()['background-color'].color ?? "white")
+                    .attr("fill-opacity", this.style()['background-color'].opacity ?? 1)
+            } 
+
+            if (this.style()['background-image']) {
+                let preserveAspectRatio = "xMidYMid slice"
+                if (this.style()["background-image"].fit) {
+                    switch (this.style()["background-image"].fit) {
+                        case "fitMid":
+                            preserveAspectRatio = "xMidYMid slice"
+                            break;
+                        case "fitLeft":
+                            preserveAspectRatio = "xMinYMin slice"
+                            break;
+                        case "fitRight":
+                            preserveAspectRatio = "xMaxYMax slice"
+                            break;
+                        case "fitUp":
+                            preserveAspectRatio = "xMinYMin slice"
+                            break;
+                        case "fitDown":
+                            preserveAspectRatio = "xMaxYMax slice"
+                            break;
+                        case "origin":
+                            preserveAspectRatio = "xMidYMid meet"
+                            break;
+                        case "stretch":
+                            preserveAspectRatio = "none"
+                            break;
+                        default:
+                            break
+                    }
+                }
+                pattern.append("svg:image")
                 .attr("xlink:href", this.style()["background-image"].url)
-                .attr("preserveAspectRatio", "xMidYMid slice")
+                .attr("preserveAspectRatio", preserveAspectRatio)
                 .attr("opacity", this.style()["background-image"].opacity ?? 1)
                 .attr("filter", this.style()["background-image"].grayscale ? "grayscale(" + this.style()["background-image"].grayscale + "%)" : "grayscale(0%)")
                 .attr("width", chartbackgroundsize.width)
-                .attr("height", margin.top === 130*this.Hscaleratio? 500*this.Hscaleratio: chartbackgroundsize.height)
+                .attr("height", margin.top === 130 * this.Hscaleratio ? 500 * this.Hscaleratio : chartbackgroundsize.height)
                 .attr("x", 0)
                 .attr("y", 0);
-                d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
-        }
-        else {
+            }
+
+            d3.select("#chartBackGrnd").attr("fill", "url(#chart-backgroundimage)")
+        } else {
             d3.select("#chartBackGrnd").attr("fill-opacity", 0)
-        }   
+        }
 
         this.initvis();
 

@@ -1,6 +1,8 @@
 import * as d3 from 'd3';
 import Color from '../../visualization/color';
 import Annotator from './annotator'
+import { TreeMap } from '../../charts';
+
 
 const COLOR = new Color();
 
@@ -30,9 +32,12 @@ class Fill extends Annotator {
             });
         };
         svg.selectAll(".mark")
-            .filter(function(d) {
+            .filter(function (d) {
                 if (target.length === 0) {
                     return true
+                }
+                if (chart instanceof TreeMap) {
+                    d = d.data
                 }
                 for (const item of target) {
                     if (d[item.field] === item.value) {

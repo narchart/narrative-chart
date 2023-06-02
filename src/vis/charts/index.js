@@ -29,3 +29,7 @@ export {
 export {
     default as AreaChart
 } from "./areachart";
+
+export {
+    default as TreeMap
+} from "./treemap";
