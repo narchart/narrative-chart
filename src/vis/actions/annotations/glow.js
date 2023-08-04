@@ -25,7 +25,8 @@ class Glow extends Annotator {
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
         var defs = svg.append("defs");
-        var filteredTarget = target;
+        var dataTarget = target;
+        var axisTarget = target;
         var filter = defs.append("filter")
             .attr("id", "drop-shadow")
             .attr("height", "150%");
@@ -52,9 +53,26 @@ class Glow extends Annotator {
         feMerge.append("feMergeNode")
             .attr("in", "FillPaint");
 
+        // points in target: {"field": field, "value": value}
+        dataTarget = target.filter(function(item) {
+            if ('field' in item && 'value' in item) {
+              return true; // Returning false excludes axis objects from the new array
+            } else {
+              return false; 
+            }
+          });
+        //  axis in target: {"axis": x, "axis": y}
+        axisTarget = target.filter(function(item) {
+            if ('axis' in item) {
+              return true; // Returning false excludes axis objects from the new array
+            } else {
+              return false; 
+            }
+          });
+
         // target is the axis(s) 
-        if (target.length !== 0) {
-            target.forEach(function(item) {
+        if (axisTarget.length !== 0) {
+            axisTarget.forEach(function(item) {
                 if ('axis' in item) {
                   // Handle cases that contain "axis"
                   if(item.axis === "x"){
@@ -140,22 +158,15 @@ class Glow extends Annotator {
                   }
                 }
             })
-            filteredTarget = target.filter(function(item) {
-                if ('axis' in item) {
-                  return false; // Returning false excludes axis objects from the new array
-                } else {
-                  return true; 
-                }
-              });
         }
 
         // target is the point(s) 
         svg.selectAll(".mark")
             .filter(function(d) {
-                if (filteredTarget.length === 0) {
+                if (dataTarget.length === 0) {
                     return true
                 }
-                for (const item of filteredTarget) {
+                for (const item of dataTarget) {
                     if (d[item.field] === item.value) {
                         continue
                     } else {
