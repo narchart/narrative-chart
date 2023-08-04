@@ -25,8 +25,6 @@ class Glow extends Annotator {
     annotate(chart, target, style, animation) {
         let svg = chart.svg();
         var defs = svg.append("defs");
-        var dataTarget = target;
-        var axisTarget = target;
         var filter = defs.append("filter")
             .attr("id", "drop-shadow")
             .attr("height", "150%");
@@ -54,7 +52,7 @@ class Glow extends Annotator {
             .attr("in", "FillPaint");
 
         // points in target: {"field": field, "value": value}
-        dataTarget = target.filter(function(item) {
+        var dataTarget = target.filter(function(item) {
             if ('field' in item && 'value' in item) {
               return true; // Returning false excludes axis objects from the new array
             } else {
@@ -62,7 +60,7 @@ class Glow extends Annotator {
             }
           });
         //  axis in target: {"axis": x, "axis": y}
-        axisTarget = target.filter(function(item) {
+        var axisTarget = target.filter(function(item) {
             if ('axis' in item) {
               return true; // Returning false excludes axis objects from the new array
             } else {
