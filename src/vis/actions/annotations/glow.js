@@ -1,5 +1,6 @@
 import Color from '../../visualization/color';
 import Annotator from './annotator'
+import * as d3 from 'd3';
 
 const COLOR = new Color();
 
@@ -15,7 +16,7 @@ class Glow extends Annotator {
      * @description Fill target marks with color.
      * 
      * @param {Chart} chart src/vis/charts/chart.js
-     * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{field_1: value_1}, ..., {field_k, value_k}]. By default, the target is the entire data.
+     * @param {Array} target It describes the data scope of the annotation, which is defined by a list of filters: [{axis_1}, {axis_2}, {field_1: value_1}, ..., {field_k, value_k}]. Where {axis} stands for target as a coordinate axis and {field, value} stands for target as a point. By default, the target is the entire data.
      * @param {{color: string}} style Style parameters of the annotation.
      * @param {{delay: number, duration: number}} animation Animation parameters of the annotation.
      * 
@@ -50,12 +51,120 @@ class Glow extends Annotator {
         feMerge.append("feMergeNode")
             .attr("in", "FillPaint");
 
+        // points in target: {"field": field, "value": value}
+        var dataTarget = target.filter(function(item) {
+            if ('field' in item && 'value' in item) {
+              return true; // Returning false excludes axis objects from the new array
+            } else {
+              return false; 
+            }
+          });
+        //  axis in target: {"axis": x, "axis": y}
+        var axisTarget = target.filter(function(item) {
+            if ('axis' in item) {
+              return true; // Returning false excludes axis objects from the new array
+            } else {
+              return false; 
+            }
+          });
+
+        // target is the axis(s) 
+        if (axisTarget.length !== 0) {
+            axisTarget.forEach(function(item) {
+                if ('axis' in item) {
+                  // Handle cases that contain "axis"
+                  if(item.axis === "x"){
+                    // domain path
+                    svg.select(".axis_x")
+                       .selectAll(".domain")
+                       .attr("opacity",1)
+                       .style("filter", "url(#drop-shadow)")
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .style("stroke",  function() {
+                           if ('color' in style) {
+                               return style['color']
+                           } else {
+                               return COLOR.ANNOTATION
+                           }
+                       })
+                       .attr("opacity",1)
+                    
+                    filter.select("feGaussianBlur")
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .attrTween("stdDeviation", function() {
+                           return d3.interpolateNumber(0, 2); // 从0过渡到2
+                       });
+                 
+
+                    // tick
+                    svg.select(".axis_x")
+                       .selectAll(".tick")
+                       .selectAll("line")
+                       .attr("opacity",1)
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .style("stroke",  function() {
+                           if ('color' in style) {
+                               return style['color']
+                           } else {
+                               return COLOR.ANNOTATION
+                           }
+                       })
+                       .attr("opacity",1)
+                  }
+                  else if(item.axis === "y"){
+                    // domain path
+                    svg.select(".axis_y")
+                       .selectAll(".domain")
+                       .attr("opacity",1)
+                       .style("filter", "url(#drop-shadow)")
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .style("stroke",  function() {
+                           if ('color' in style) {
+                               return style['color']
+                           } else {
+                               return COLOR.ANNOTATION
+                           }
+                       })
+                       .attr("opacity",1)
+
+                    filter.select("feGaussianBlur")
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .attrTween("stdDeviation", function() {
+                           return d3.interpolateNumber(0, 2); // 从0过渡到2
+                       });
+                    
+                    // tick
+                    svg.select(".axis_y")
+                       .selectAll(".tick")
+                       .selectAll("line")
+                       .attr("opacity",1)
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .style("stroke",  function() {
+                           if ('color' in style) {
+                               return style['color']
+                           } else {
+                               return COLOR.ANNOTATION
+                           }
+                       })
+                       .attr("opacity",1)
+                  }
+                }
+            })
+        }
+
+        // target is the point(s) 
         svg.selectAll(".mark")
             .filter(function(d) {
-                if (target.length === 0) {
+                if (dataTarget.length === 0) {
                     return true
                 }
-                for (const item of target) {
+                for (const item of dataTarget) {
                     if (d[item.field] === item.value) {
                         continue
                     } else {

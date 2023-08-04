@@ -32,7 +32,7 @@
         - [Tooltip](#tooltip)
         - [Reference](#reference)
         - [Regression](#regression)
-      - [5. Title & Caption](#5-title--caption)
+      - [5. Title \& Caption](#5-title--caption)
         - [Title](#title)
         - [Caption](#caption)
       - [6. Image](#6-image)
@@ -303,7 +303,7 @@ Remove Encoding
 
 #### 4. Annotation
 
-Annotating certain data marks in the chart by changing the marks' graphical appearance or adding additional objects such as arrows and circles.
+Annotating certain data marks or axis in the chart by changing the marks'/axis' graphical appearance or adding additional objects such as arrows and circles.
 
 ```
 {
@@ -371,6 +371,9 @@ Annotating certain data marks in the chart by changing the marks' graphical appe
         {
             "field": field,
             "value": value
+        },
+        {
+             "axis": x/y
         }
     ],
     "style": {
