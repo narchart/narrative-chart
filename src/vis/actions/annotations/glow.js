@@ -1,5 +1,6 @@
 import Color from '../../visualization/color';
 import Annotator from './annotator'
+import * as d3 from 'd3';
 
 const COLOR = new Color();
 
@@ -56,11 +57,12 @@ class Glow extends Annotator {
             target.forEach(function(item) {
                 if ('axis' in item) {
                   // Handle cases that contain "axis"
-                  console.log('Axis:', item.axis);
                   if(item.axis === "x"){
                     // domain path
                     svg.select(".axis_x")
                        .selectAll(".domain")
+                       .attr("opacity",1)
+                       .style("filter", "url(#drop-shadow)")
                        .transition()
                        .duration('duration' in animation ? animation['duration']: 0)
                        .style("stroke",  function() {
@@ -70,14 +72,21 @@ class Glow extends Annotator {
                                return COLOR.ANNOTATION
                            }
                        })
-                       .attr("stroke-opacity", 1)
-                       .attr("stroke-width", 2)
-                       .style("filter", "url(#drop-shadow)")
                        .attr("opacity",1)
+                    
+                    filter.select("feGaussianBlur")
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .attrTween("stdDeviation", function() {
+                           return d3.interpolateNumber(0, 2); // 从0过渡到2
+                       });
+                 
+
                     // tick
                     svg.select(".axis_x")
                        .selectAll(".tick")
                        .selectAll("line")
+                       .attr("opacity",1)
                        .transition()
                        .duration('duration' in animation ? animation['duration']: 0)
                        .style("stroke",  function() {
@@ -87,15 +96,14 @@ class Glow extends Annotator {
                                return COLOR.ANNOTATION
                            }
                        })
-                       .attr("stroke-opacity", 1)
-                       .attr("stroke-width", 2)
-                    //    .style("filter", "url(#drop-shadow)")
                        .attr("opacity",1)
                   }
                   else if(item.axis === "y"){
                     // domain path
                     svg.select(".axis_y")
                        .selectAll(".domain")
+                       .attr("opacity",1)
+                       .style("filter", "url(#drop-shadow)")
                        .transition()
                        .duration('duration' in animation ? animation['duration']: 0)
                        .style("stroke",  function() {
@@ -105,14 +113,20 @@ class Glow extends Annotator {
                                return COLOR.ANNOTATION
                            }
                        })
-                       .attr("stroke-opacity", 1)
-                       .attr("stroke-width", 2)
-                       .style("filter", "url(#drop-shadow)")
                        .attr("opacity",1)
+
+                    filter.select("feGaussianBlur")
+                       .transition()
+                       .duration('duration' in animation ? animation['duration']: 0)
+                       .attrTween("stdDeviation", function() {
+                           return d3.interpolateNumber(0, 2); // 从0过渡到2
+                       });
+                    
                     // tick
                     svg.select(".axis_y")
                        .selectAll(".tick")
                        .selectAll("line")
+                       .attr("opacity",1)
                        .transition()
                        .duration('duration' in animation ? animation['duration']: 0)
                        .style("stroke",  function() {
@@ -122,9 +136,6 @@ class Glow extends Annotator {
                                return COLOR.ANNOTATION
                            }
                        })
-                       .attr("stroke-opacity", 1)
-                       .attr("stroke-width", 2)
-                    //    .style("filter", "url(#drop-shadow)")
                        .attr("opacity",1)
                   }
                 }
